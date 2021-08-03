@@ -1,0 +1,87 @@
+body {
+    font-family: 'Segoe UI Light', Arial;
+    color: black;
+    background-color: #F3F3F4;
+  
+ }
+
+
+h3{
+    color: black;
+    font-family: 'Digital-7', monospace;
+    font-size: 18px;
+    margin: 5px;
+}
+
+
+a {
+    margin: 3px;
+    font-size: 16.5px;
+    font-family: "Liberation",sans-serif;
+    text-decoration: none;
+    color: #784CBE;
+}
+
+a:hover{
+  color: rgba(216, 138, 46, 0.9)
+}
+
+button {
+    background: #D9DAEA;
+    border-radius: 6px;
+    width: auto;
+    font-size: 14.8px;
+    margin: 1px;
+}
+
+
+button:hover {
+    background: #EFDBC8;
+}
+
+.apl{
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    margin: 6px;
+}
+.apl button{
+    font-size: 17px;
+    padding: 2px 6px 2px 6px;
+}
+
+.cm{
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    font-size: 17.5px;
+    text-align: right;
+    /*justify-content: space-between;*/
+
+}
+.cm p{
+    margin: 3px;
+}
+
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  margin: 6px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 1;
+  width: 20px;
+  height: 20px;
+  background-color: #568;
+}
+.switch input:checked{
+    background-color: #568;
+}
+
+.switch p{
+    margin-top: -1px;
+}
