@@ -18,7 +18,7 @@ Fonctionnalités :
 - Entrez n'importe quelle valeur (sans limite)
 - Support partiel de l'audio web (audio html5)
 - Vous pouvez réactiver la préservation des tonalités
-- Utiliser vos propre racoucis clavier grace au menu 'commands' (touches par défault : __* + - .__ sur le clavier numérique)
+- Utiliser vos propres racoucis clavier grâce au menu 'commands' (touches par défault : __* + - .__ sur le clavier numérique)
 <br/>
 
 **Download (Firefox only) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**
