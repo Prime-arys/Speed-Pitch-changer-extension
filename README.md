@@ -1,4 +1,4 @@
-# Speed-Pitch-changer-extension
+# Speed-Pitch changer
 
 &nbsp;&nbsp;&nbsp;&nbsp; ![logo](/icons/border-128.png)
 
