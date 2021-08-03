@@ -9,6 +9,7 @@ if (setg.length < 5){
     localStorage.setItem('Xytspch_sett', tmp_rkc);
     cad_sett=tmp_rkc;
     console.log("updated !")
+    browser.runtime.reload()
 }
 
 if (cad_isen == 'yes'){
