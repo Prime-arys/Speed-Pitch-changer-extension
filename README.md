@@ -7,7 +7,8 @@
 Features :
 - Enter any value (no limit)
 - Partial support for web audio (audio html5)
-- Use your own keyboard shortcuts through the 'commands' menu (default keys : * + - . on the numeric keypad)
+- You can reactivate the pitch preservation
+- Use your own keyboard shortcuts through the 'commands' menu (default keys : __* + - .__ on the numeric keypad)
 
 <br/>
 
@@ -16,7 +17,8 @@ Features :
 Fonctionnalités :
 - Entrez n'importe quelle valeur (sans limite)
 - Support partiel de l'audio web (audio html5)
-- Utiliser vos propre racoucis clavier grace au menu 'commands' (touches par défault : * + - . sur le clavier numerique)
+- Vous pouvez réactiver la préservation des tonalités
+- Utiliser vos propre racoucis clavier grace au menu 'commands' (touches par défault : __* + - .__ sur le clavier numerique)
 <br/>
 
 **Download (Firefox only) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**
