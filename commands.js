@@ -119,25 +119,43 @@ document.onkeyup = function(evt)
  if (ca_kc[4] == 1){
    document.getElementById("on_off_sp").checked = true;
  }
+ if (ca_kc[5] == 1){
+   document.getElementById("on_off_bt").checked = true;
+ }
 
 var Checkbox = document.querySelector('input[value="isenable_sp"]');
 Checkbox.onchange = function(){
   
   if(Checkbox.checked) {
-    var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],1];
+    var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],1,ca_kc[5]];
     localStorage.setItem('Xytspch_sett',tmp_rkc );
     console.log(Checkbox.checked);
 
   } else {
 
-      var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],!1];
+      var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],!1,ca_kc[5]];
       localStorage.setItem('Xytspch_sett',tmp_rkc );
       console.log(Checkbox.checked);
 
   }
 }
 
+var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
+Checkbox2.onchange = function(){
+  
+  if(Checkbox2.checked) {
+    var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],ca_kc[4],1];
+    localStorage.setItem('Xytspch_sett',tmp_rkc );
+    console.log(Checkbox.checked);
 
+  } else {
+
+      var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],ca_kc[4],0];
+      localStorage.setItem('Xytspch_sett',tmp_rkc );
+      console.log(Checkbox.checked);
+
+  }
+}
 
 
 aply.onclick = function aplu(){

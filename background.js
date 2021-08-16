@@ -4,8 +4,9 @@ var cad_sett = localStorage.getItem('Xytspch_sett');
 var executing = browser.tabs.executeScript({code: "document.location.reload();"});
 
 var setg = cad_sett.split(',');
-if (setg.length < 5){
-    var tmp_rkc=[setg[0],setg[1],setg[2],setg[3],!1];
+
+if (setg.length < 6){
+    var tmp_rkc=[setg[0],setg[1],setg[2],setg[3],!1,1];
     localStorage.setItem('Xytspch_sett', tmp_rkc);
     cad_sett=tmp_rkc;
     console.log("updated !")
@@ -29,15 +30,12 @@ var registered = register(defaultHosts);
 else {browser.browserAction.setIcon({path: "icons/border-16d.png"});}
 
 
-
-
 function topop(value){
 browser.runtime.sendMessage({
     msg:"pup",
     val: value
 });
 }
-
 
 
 "use strict";

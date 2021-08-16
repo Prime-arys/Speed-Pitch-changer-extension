@@ -1,6 +1,6 @@
 //console.log("loaded")
 let actpsp=1;
-var rkc=[0,0,0,0,0]
+var rkc=[0,0,0,0,0,0]
 var ytSpeed=false;
 
 function main(){
@@ -94,18 +94,19 @@ function pressKey(keyCode)
 
 document.onkeydown = function(evt)
 {
-  var keyboardEvent = document.createEvent("KeyboardEvent");
-  var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
-  //console.log(evt.keyCode)
+  if (rkc[5] == 1) {
+    var keyboardEvent = document.createEvent("KeyboardEvent");
+    var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    //console.log(evt.keyCode)
 
-
-  switch (evt.keyCode)
-  {
-    case parseInt(rkc[0]): notifyBackgroundPage("xpres"); break;
-    case parseInt(rkc[1]): notifyBackgroundPage("xpup"); break;
-    case parseInt(rkc[2]): notifyBackgroundPage("xpdw"); break;
-    case parseInt(rkc[3]): xpdef(); break;
-
+      switch (evt.keyCode)
+      {
+          case parseInt(rkc[0]): notifyBackgroundPage("xpres"); break;
+          case parseInt(rkc[1]): notifyBackgroundPage("xpup"); break;
+          case parseInt(rkc[2]): notifyBackgroundPage("xpdw"); break;
+          case parseInt(rkc[3]): xpdef(); break;
+  
+    }
   }
 };
 

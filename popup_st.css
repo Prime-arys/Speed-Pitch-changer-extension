@@ -85,8 +85,6 @@ img:hover{
 }
 
 
-
-
  /* The switch - the box around the slider */
 .switch {
   position: relative;
@@ -149,5 +147,3 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 } 
-
-

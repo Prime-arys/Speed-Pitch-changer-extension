@@ -19,6 +19,7 @@ getting.then(onGot, onError);
 function onOpen(ishiden){
   if (true) {
     if (typeof xui !== 'undefined') {var alm = document.getElementById("xui");alm.textContent = "(incognito or passive)";}
+    if (ishiden == true) {var acid = document.getElementById("ish_sw");acid.style.display = "none";};
   };
 }
 
@@ -48,8 +49,9 @@ browser.runtime.onMessage.addListener(
  }
 
  if (cad_sett == null){
-   rkc = [106,107,109,110,!1];
+   rkc = [106,107,109,110,!1,1];
    localStorage.setItem('Xytspch_sett', rkc);
+   var cad_sett = localStorage.getItem('Xytspch_sett');
 }
 
  var ca_kc = cad_sett.split(",");
@@ -67,14 +69,15 @@ function logTabs(tabs) {
     //var domain = data[0];
     var ishiden = tab.incognito;
     //console.log(domain);
+    //console.log(tabs);
+    //console.log(tab);
+    //console.log(ishiden);
     onOpen(ishiden)
-    
   }
 }
 
 var querying = browser.tabs.query({currentWindow: true, active: true});
 querying.then(logTabs, onError);
-
 
 
 function onExecuted(result) {
@@ -89,25 +92,19 @@ Checkbox.onchange = function(){
     localStorage.setItem('Xytspch_isen', 'yes');
 		console.log(Checkbox.checked);
 
-    var executing = browser.tabs.executeScript({
-    code: "document.location.reload();"
+    //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
 
-    
-        });
     browser.runtime.reload()
   } else {
 
-      localStorage.setItem('Xytspch_isen', 'no');
-  		console.log(Checkbox.checked);
+    localStorage.setItem('Xytspch_isen', 'no');
+  	console.log(Checkbox.checked);
 
-    var executing = browser.tabs.executeScript({
-    code: "document.location.reload();"
+    //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
 
-        });
     browser.runtime.reload()
   }
 }
-
 
 
 
@@ -159,8 +156,4 @@ spRes.addEventListener("mouseout",function(){spRes.src="icons/clean_svg/res.svg"
 
 spDef.addEventListener("mouseover",function(){sDef.src="icons/clean_svg/defh.svg";})
 spDef.addEventListener("mouseout",function(){sDef.src="icons/clean_svg/def.svg";})
-
-
-
-
 
