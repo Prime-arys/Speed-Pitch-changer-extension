@@ -138,6 +138,9 @@ Checkbox.onchange = function(){
       console.log(Checkbox.checked);
 
   }
+  
+  var cad_sett = localStorage.getItem('Xytspch_sett');
+  var ca_kc = cad_sett.split(",");
 }
 
 var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
@@ -155,6 +158,9 @@ Checkbox2.onchange = function(){
       console.log(Checkbox.checked);
 
   }
+
+  var cad_sett = localStorage.getItem('Xytspch_sett');
+  var ca_kc = cad_sett.split(",");
 }
 
 
