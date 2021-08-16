@@ -125,6 +125,8 @@ document.onkeyup = function(evt)
 
 var Checkbox = document.querySelector('input[value="isenable_sp"]');
 Checkbox.onchange = function(){
+  var cad_sett = localStorage.getItem('Xytspch_sett');
+  var ca_kc = cad_sett.split(",");
   
   if(Checkbox.checked) {
     var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],1,ca_kc[5]];
@@ -138,29 +140,27 @@ Checkbox.onchange = function(){
       console.log(Checkbox.checked);
 
   }
-  
-  var cad_sett = localStorage.getItem('Xytspch_sett');
-  var ca_kc = cad_sett.split(",");
+
 }
 
 var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
 Checkbox2.onchange = function(){
+  var cad_sett = localStorage.getItem('Xytspch_sett');
+  var ca_kc = cad_sett.split(",");
   
   if(Checkbox2.checked) {
     var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],ca_kc[4],1];
     localStorage.setItem('Xytspch_sett',tmp_rkc );
-    console.log(Checkbox.checked);
+    console.log(Checkbox2.checked);
 
   } else {
 
       var tmp_rkc=[ca_kc[0],ca_kc[1],ca_kc[2],ca_kc[3],ca_kc[4],0];
       localStorage.setItem('Xytspch_sett',tmp_rkc );
-      console.log(Checkbox.checked);
+      console.log(Checkbox2.checked);
 
   }
 
-  var cad_sett = localStorage.getItem('Xytspch_sett');
-  var ca_kc = cad_sett.split(",");
 }
 
 
