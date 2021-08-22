@@ -23,7 +23,7 @@ var	fres = parseInt(ca_kc[0])
 var	fsup = parseInt(ca_kc[1])
 var fsdw = parseInt(ca_kc[2])
 var fset = parseInt(ca_kc[3])
-var ffkc=[fres,fsup,fsdw,fset];
+var ffkc=[fres,fsup,fsdw,fset,ca_kc[4],ca_kc[5]];
 
 dres.addEventListener("mouseover",function(){dres.style.background = "#EFDBC8"})
 dres.addEventListener("mouseout",function(){dres.style.background = "#D9DAEA"})
