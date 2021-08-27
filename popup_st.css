@@ -49,18 +49,15 @@ a:hover{
 img {
     float: right;
     /*border: solid 1px;*/
-
     background: transparent;
     margin-right: 3px;
     margin-left: 3px;
     margin-bottom: 5px;
     padding: 1px;
     font-size: 14px;
-
     /*color: #101213;*/
     /*background-color: rgba(206, 190, 222, 0.25);*/
     /*border-radius: 4px;*/
-
     
 }
 
@@ -76,7 +73,6 @@ img:hover{
   flex: auto;
   margin: auto;
   justify-content: center;
-
 }
 
 .struct_cm{

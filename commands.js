@@ -39,10 +39,11 @@ dsup.onclick = function cm_dsup(){getKC(1);xxch=1;}
 dsdw.onclick = function cm_dsdw(){getKC(2);xxch=2;}
 dset.onclick = function cm_dset(){getKC(3);xxch=3;}
 
+
 function getKC(xh) {
 	ddd=1
 	var zlm = document.getElementById("CMs");
-    zlm.innerHTML = "Waiting for a key press";
+    zlm.textContent = "Waiting for a key press";
 }
 
 function pressKey(keyCode)
@@ -105,9 +106,12 @@ document.onkeyup = function(evt)
   if (ddd==1) {
   	//console.log(ffkc)
   	ddd=0
+    var cad_sett = localStorage.getItem('Xytspch_sett');
+    var ca_kc = cad_sett.split(",");
   	var zlm = document.getElementById("CMs");
-    zlm.innerHTML = "Commands (custom) :";
-    localStorage.setItem('Xytspch_sett', ffkc);
+    zlm.textContent = "Commands (custom) :";
+    var updK = [ffkc[0],ffkc[1],ffkc[2],ffkc[3],ca_kc[4],ca_kc[5]]
+    localStorage.setItem('Xytspch_sett', updK);
     window.location.reload()
     
     

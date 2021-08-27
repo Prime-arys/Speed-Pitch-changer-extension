@@ -1,5 +1,4 @@
 //console.log("loaded")
-let actpsp=1;
 var rkc=[0,0,0,0,0,0]
 var ytSpeed=false;
 
@@ -33,10 +32,7 @@ function notifyBackgroundPage(e,xfg) {
 
 notifyBackgroundPage("dm1");
 
-
-function lg(){
-  console.log(ytSpeed.playbackRate)
-}
+/*function lg(){console.log(ytSpeed.playbackRate)}*/
 
 function xpup(){
   ytSpeed.speedUp();
@@ -66,7 +62,6 @@ function zpdef(x){
   ytSpeed.updateVideos()
   //console.log(x)
 }
-
 
 
 

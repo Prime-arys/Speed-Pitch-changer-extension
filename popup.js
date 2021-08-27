@@ -156,4 +156,3 @@ spRes.addEventListener("mouseout",function(){spRes.src="icons/clean_svg/res.svg"
 
 spDef.addEventListener("mouseover",function(){sDef.src="icons/clean_svg/defh.svg";})
 spDef.addEventListener("mouseout",function(){sDef.src="icons/clean_svg/def.svg";})
-
