@@ -1,6 +1,6 @@
 # Speed-Pitch changer
 
-&nbsp;&nbsp;&nbsp;&nbsp; ![logo](/icons/border-128.png)
+&nbsp;&nbsp;&nbsp;&nbsp; ![logo](/firefox/icons/border-128.png)
 
 **[EN]** Simple extension to change the tone according to the speed of a video on the web (a "pitch fader"). <br/>_Can be useful for people who like "nightcore"._
 
@@ -22,3 +22,4 @@ Fonctionnalités :
 <br/>
 
 **Download (Firefox only) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**
+**Download (Chrome) : ???**
