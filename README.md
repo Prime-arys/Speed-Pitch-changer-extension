@@ -22,4 +22,5 @@ Fonctionnalités :
 <br/>
 
 **Download (Firefox only) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**
+<br/>
 **Download (Chrome) : ???**
