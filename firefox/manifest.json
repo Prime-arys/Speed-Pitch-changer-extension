@@ -1,0 +1,39 @@
+{
+    "name": "Speed-Pitch changer",
+    "description": "Modify the speed with the pitch of an html5 video",
+    "version": "1.2.4",
+    "manifest_version": 2,
+	"browser_action": {
+        "default_icon": "icons/border-48.png",
+        "default_title": "Speed/Pitch changer",
+        "default_popup": "popup.html"   
+},
+
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "SpeedPitch_changer@despaa.id",
+            "strict_min_version": "60.0"
+        }
+},
+    
+    "icons": {
+        "16": "icons/border-16.png",
+        "32": "icons/border-32.png",
+        "38": "icons/border-38.png",
+  		"48": "icons/border-48.png",
+        "128": "icons/border-128.png"
+	},
+
+    "background": {
+    "scripts": [ "background.js" ]
+},
+
+    "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "<all_urls>"
+]
+
+}
+
