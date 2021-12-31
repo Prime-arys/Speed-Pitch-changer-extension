@@ -46,7 +46,7 @@ function xpdw(){
 
 function xpres(){
   ytSpeed.reset();
-  var player = document.querySelector(".html5-main-video");
+  //var player = document.querySelector(".html5-main-video");
   //lg();
   //ytSpeed.playbackRate=1;
 }

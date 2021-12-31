@@ -36,13 +36,35 @@ h6{
 
 }
 
+.CM_lien {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  justify-content: center;
+  margin: 6px;
+  margin-bottom: 13px;
+}
+
+#CM_lnk:hover {
+  color: rgba(216, 138, 46, 0.9);
+
+}
+
+#CM_props {
+  white-space: pre-line;
+  font-size: 13px;
+  margin-top: -6px;
+  margin-bottom: 6px;
+  color: #545A65;
+}
+
 a{
   text-decoration: none;
   color: #664DCC;
 }
 
 a:hover{
-  color: rgba(216, 138, 46, 0.9)
+  color: rgba(216, 138, 46, 0.9);
 }
 
 
@@ -72,6 +94,7 @@ img:hover{
   flex-direction: row;
   flex: auto;
   margin: auto;
+  margin-top: 12px;
   justify-content: center;
 }
 

@@ -30,12 +30,13 @@ var registered = register(defaultHosts);
 else {browser.browserAction.setIcon({path: "icons/border-16d.png"});}
 
 
-function topop(value){
+function topop(value,key){
 browser.runtime.sendMessage({
-    msg:"pup",
+    msg: key,
     val: value
 });
 }
+
 
 
 "use strict";
@@ -54,7 +55,7 @@ function sendMessageToTabs(tabs) {
       //console.log("M cs:");
       //console.log(response.response);
       var klp=response.response;
-      topop(klp);
+      topop(klp,"pup");
     }).catch(onError);
   }
 }
@@ -66,7 +67,10 @@ function ms(){
 };
 
 
+
+
 function handleMessage(request, sender, sendResponse) {
+  //console.log("message !")
   if(request.setit == "dm1"){
     sendResponse({response_dm1: cad_sett});
   }
@@ -84,7 +88,14 @@ function handleMessage(request, sender, sendResponse) {
     //console.log(fdef)
     var executing = browser.tabs.executeScript({code: fdef,allFrames: true});
   }
-  
+  // incognito
+  if (request.type == 'get_tab') {
+    ms();
+  }
+  if (request.type == "get_cstt") {
+    topop(cad_sett,"pup2");
+  }
+
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
