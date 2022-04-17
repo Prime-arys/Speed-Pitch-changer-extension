@@ -8,6 +8,21 @@ body {
 
  }
 
+ .CM_lien {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  justify-content: center;
+  margin: 6px;
+  margin-bottom: 8px;
+}
+
+#CM_lnk:hover {
+  color: rgba(216, 138, 46, 0.9);
+
+}
+
+
 p {
     margin: 2px;
     padding: 1px;

@@ -1,9 +1,10 @@
 //console.log("loaded")
+
 var rkc=[0,0,0,0,0,0]
 var ytSpeed=false;
 
 function main(){
-  var ytSpeed;void 0===ytSpeed&&(ytSpeed={playbackRate:1,preservesPitch:(rkc[4] === '1'),init:function(){new MutationObserver(function(a){ytSpeed.updateVideos()}).observe(document.querySelector("body"),{attributes:!0,childList:!0,characterData:!0,subtree:!0}),ytSpeed.updateVideos()},updateVideos:function(){for(var a=document.querySelectorAll("video,audio"),b=0;b<a.length;++b){var c=a[b];c.playbackRate=this.playbackRate,c.mozPreservesPitch=this.preservesPitch&&1!=this.playbackRate}},speedUp:function(){this.playbackRate*=1.05946309436,ytSpeed.updateVideos()},speedDown:function(){this.playbackRate/=1.05946309436,ytSpeed.updateVideos()},reset:function(){this.playbackRate=1,ytSpeed.updateVideos()},prompt:function(){var a=prompt("New playback speed:",this.playbackRate);a&&(this.playbackRate=a,ytSpeed.updateVideos())}},ytSpeed.init());
+  var ytSpeed;void 0===ytSpeed&&(ytSpeed={playbackRate:1,preservesPitch:(rkc[4] === '1'),init:function(){new MutationObserver(function(a){ytSpeed.updateVideos()}).observe(document.querySelector("body"),{attributes:!0,childList:!0,characterData:!0,subtree:!0}),ytSpeed.updateVideos()},updateVideos:function(){for(var a=document.querySelectorAll("video,audio,source"),b=0;b<a.length;++b){var c=a[b];c.playbackRate=this.playbackRate,c.mozPreservesPitch=this.preservesPitch&&1!=this.playbackRate}},speedUp:function(){this.playbackRate*=1.05946309436,ytSpeed.updateVideos()},speedDown:function(){this.playbackRate/=1.05946309436,ytSpeed.updateVideos()},reset:function(){this.playbackRate=1,ytSpeed.updateVideos()},prompt:function(){var a=prompt("New playback speed:",this.playbackRate);a&&(this.playbackRate=a,ytSpeed.updateVideos())}},ytSpeed.init());
   return ytSpeed;
 }
 
@@ -46,7 +47,7 @@ function xpdw(){
 
 function xpres(){
   ytSpeed.reset();
-  var player = document.querySelector(".html5-main-video");
+  //var player = document.querySelector(".html5-main-video");
   //lg();
   //ytSpeed.playbackRate=1;
 }
@@ -113,3 +114,11 @@ browser.runtime.onMessage.addListener(request => {
   if (request.greeting == "bgs"){
   return Promise.resolve({response: ytSpeed.playbackRate});}
 });
+
+//remplace audio context on soundcloud
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext = new AudioContext();
+console.log(audioContext);
+console.log(audioContext.sampleRate);
+console.log("2");
+console.log(AudioContext);

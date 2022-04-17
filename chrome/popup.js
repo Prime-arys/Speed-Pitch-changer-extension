@@ -1,4 +1,3 @@
-let enis =0;
 function onGot(page) {
   var a=page.ms();
   //console.log(a)
@@ -53,8 +52,16 @@ if (cad_sett == null){
 }
 
 var ca_kc = cad_sett.split(",");
+var acid = document.getElementById("CM_lnk");
+var CMi = document.getElementById("CM");
 if (ca_kc[4]=='1') {
  if (typeof xui !== 'undefined') {var alm = document.getElementById("desc");alm.textContent = "(preserved pitch mode)";}
+}
+if (ca_kc[5] == '0') {
+  acid.textContent = "*";
+  acid.title = "Shortcuts are disabled";
+  CMi.style.marginRight = "-4px";
+  CMi.style.marginBottom = "-2px";
 }
 
 
@@ -118,9 +125,6 @@ spDef.onclick = function yt_spDef(){
 });
   onGot(getting)
 }
-
-
-
 
 
 spUp.addEventListener("mouseover",function(){sUp.src="icons/clean_svg/uph.svg";})
