@@ -31,7 +31,7 @@ var registered = register(defaultHosts);
 else {browser.browserAction.setIcon({path: "icons/border-16d.png"});}
 
 
-function topop(value,key){
+function topop(value, key) {
 browser.runtime.sendMessage({
     msg: key,
     val: value
@@ -47,13 +47,11 @@ function onError(error) {
 }
 
 function sendMessageToTabs(tabs) {
-  //console.log(tabs)
   for (let tab of tabs) {
     browser.tabs.sendMessage(
       tab.id,
       {greeting: "bgs"}
     ).then(response => {
-      //console.log("M cs:");
       //console.log(response.response);
       var klp=response.response;
       topop(klp,"pup");
@@ -71,7 +69,6 @@ function ms(){
 
 
 function handleMessage(request, sender, sendResponse) {
-  //console.log("message !")
   if(request.setit == "dm1"){
     sendResponse({response_dm1: cad_sett});
   }
@@ -85,8 +82,7 @@ function handleMessage(request, sender, sendResponse) {
     var executing = browser.tabs.executeScript({code: "xpres();",allFrames: true, matchAboutBlank: true});
   }
   if(request.setit == "xpdef"){
-    var fdef = "zpdef("+request.xdf+");"
-    //console.log(fdef)
+    var fdef = "zpdef(" + request.xdf + ");";
     var executing = browser.tabs.executeScript({code: fdef,allFrames: true, matchAboutBlank: true});
   }
   // incognito
@@ -94,7 +90,14 @@ function handleMessage(request, sender, sendResponse) {
     ms();
   }
   if (request.type == "get_cstt") {
-    topop(cad_sett,"pup2");
+    topop(cad_sett, "pup2");
+    //renvoi cad_sett en réponse
+    cad_sett = localStorage.getItem('Xytspch_sett');
+    sendResponse({ response_cstt: cad_sett });
+  }
+  if (request.type == "set_cstt") {
+    cad_sett = request.val;
+    localStorage.setItem('Xytspch_sett', cad_sett);
   }
 }
 
