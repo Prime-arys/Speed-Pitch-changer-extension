@@ -21,4 +21,4 @@ Fonctionnalités :
 - Utiliser vos propres racoucis clavier grâce au menu 'commands' (touches par défault : __* + - .__ sur le clavier numérique)
 <br/>
 
-**Download (Firefox only) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**
+**Download (Firefox) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**

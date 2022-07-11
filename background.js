@@ -89,7 +89,6 @@ function handleMessage(request, sender, sendResponse) {
     //console.log(fdef)
     var executing = browser.tabs.executeScript({code: fdef,allFrames: true, matchAboutBlank: true});
   }
-
   // incognito
   if (request.type == 'get_tab') {
     ms();
@@ -97,9 +96,6 @@ function handleMessage(request, sender, sendResponse) {
   if (request.type == "get_cstt") {
     topop(cad_sett,"pup2");
   }
-
-
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
-

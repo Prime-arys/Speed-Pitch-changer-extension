@@ -21,7 +21,6 @@ var ca_kc = cad_sett.split(",");
 function onGot(page) {
   if (hidden == false){
     var a=page.ms();
-    //console.log(a)
   } else{
     browser.runtime.sendMessage({type: 'get_tab'}).then(response5 => {
       getting =  response5.response
@@ -34,7 +33,7 @@ function onError(error) {
   console.log(`Error: ${error}`);
 }
 
-if (typeof ver !== 'undefined') {
+if (typeof aver == 'undefined') {
           var aver = document.getElementById("ver");
           aver.textContent = browser.runtime.getManifest().version;
       }
@@ -150,24 +149,27 @@ var spDef = document.getElementById("sDef");
 
 spUp.onclick = function yt_spUp(){
   var executing = browser.tabs.executeScript({
-  code: "xpup();",
-  allFrames: true
+    code: "xpup();",
+    allFrames: true,
+    matchAboutBlank: true
 });
   if (hidden == false){getting.then(onGot, onError)}else{onGot();};
 }
 
 spDw.onclick = function yt_spDw(){
   var executing = browser.tabs.executeScript({
-  code: "xpdw();",
-  allFrames: true
+    code: "xpdw();",
+    allFrames: true,
+    matchAboutBlank: true
 });
   if (hidden == false){getting.then(onGot, onError)}else{onGot();};
 }
 
 spRes.onclick = function yt_spRes(){
   var executing = browser.tabs.executeScript({
-  code: "xpres();",
-  allFrames: true
+    code: "xpres();",
+    allFrames: true,
+    matchAboutBlank: true
 });
   if (hidden == false){getting.then(onGot, onError)}else{onGot();};
 }

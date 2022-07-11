@@ -1,10 +1,10 @@
 //console.log("loaded")
-
 var rkc=[0,0,0,0,0,0]
-var ytSpeed=false;
+var ytSpeed = false;
+var Elem = "video,audio,source";
 
 function main(){
-  var ytSpeed;void 0===ytSpeed&&(ytSpeed={playbackRate:1,preservesPitch:(rkc[4] === '1'),init:function(){new MutationObserver(function(a){ytSpeed.updateVideos()}).observe(document.querySelector("body"),{attributes:!0,childList:!0,characterData:!0,subtree:!0}),ytSpeed.updateVideos()},updateVideos:function(){for(var a=document.querySelectorAll("video,audio,source"),b=0;b<a.length;++b){var c=a[b];c.playbackRate=this.playbackRate,c.mozPreservesPitch=this.preservesPitch&&1!=this.playbackRate}},speedUp:function(){this.playbackRate*=1.05946309436,ytSpeed.updateVideos()},speedDown:function(){this.playbackRate/=1.05946309436,ytSpeed.updateVideos()},reset:function(){this.playbackRate=1,ytSpeed.updateVideos()},prompt:function(){var a=prompt("New playback speed:",this.playbackRate);a&&(this.playbackRate=a,ytSpeed.updateVideos())}},ytSpeed.init());
+  var ytSpeed;void 0===ytSpeed&&(ytSpeed={playbackRate:1,preservesPitch:(rkc[4] === '1'),init:function(){new MutationObserver(function(a){ytSpeed.updateVideos()}).observe(document.querySelector("body"),{attributes:!0,childList:!0,characterData:!0,subtree:!0}),ytSpeed.updateVideos()},updateVideos:function(){for(var a=document.querySelectorAll(Elem),b=0;b<a.length;++b){var c=a[b];c.playbackRate=this.playbackRate,(c.mozPreservesPitch=this.preservesPitch&&1!=this.playbackRate)||(c.preservesPitch=this.preservesPitch&&1!=this.playbackRate)/*add ff101+ compatibility*/}},speedUp:function(){this.playbackRate*=1.05946309436,ytSpeed.updateVideos()},speedDown:function(){this.playbackRate/=1.05946309436,ytSpeed.updateVideos()},reset:function(){this.playbackRate=1,ytSpeed.updateVideos()},prompt:function(){var a=prompt("New playback speed:",this.playbackRate);a&&(this.playbackRate=a,ytSpeed.updateVideos())}},ytSpeed.init());
   return ytSpeed;
 }
 
@@ -56,6 +56,7 @@ function xpdef(){
   ytSpeed.prompt();
   notifyBackgroundPage("xpdef",ytSpeed.playbackRate);
   //lg();
+  
 }
 
 function zpdef(x){
@@ -114,3 +115,5 @@ browser.runtime.onMessage.addListener(request => {
   if (request.greeting == "bgs"){
   return Promise.resolve({response: ytSpeed.playbackRate});}
 });
+
+
