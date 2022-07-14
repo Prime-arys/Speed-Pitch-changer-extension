@@ -81,6 +81,15 @@ button:hover {
     /*justify-content: space-between;*/
 
 }
+
+.lnk{
+    margin-top: -4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
 .cm p{
     margin: 5px;
     margin-top: -5px;

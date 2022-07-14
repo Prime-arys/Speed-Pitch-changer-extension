@@ -1,7 +1,18 @@
 const defaultHosts = "<all_urls>";
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
-var executing = browser.tabs.executeScript({code: "document.location.reload();"});
+var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
+
+if (cad_sett == null) {
+  cad_sett = [106, 107, 109, 110, !1, 1];
+  localStorage.setItem('Xytspch_sett', cad_sett);
+}
+
+if (cad_isen == null) {
+  cad_isen = "no";
+  localStorage.setItem('Xytspch_isen', cad_isen);
+  browser.runtime.reload()
+}
 
 var setg = cad_sett.split(',');
 
@@ -90,14 +101,24 @@ function handleMessage(request, sender, sendResponse) {
     ms();
   }
   if (request.type == "get_cstt") {
-    topop(cad_sett, "pup2");
+    //topop(cad_sett, "pup2");
     //renvoi cad_sett en réponse
     cad_sett = localStorage.getItem('Xytspch_sett');
     sendResponse({ response_cstt: cad_sett });
   }
+  if (request.type == "get_isen") {
+    //topop(cad_sett, "pup2");
+    //renvoi cad_isen en réponse
+    cad_isen = localStorage.getItem('Xytspch_isen');
+    sendResponse({ response_isen: cad_isen });
+  }
   if (request.type == "set_cstt") {
     cad_sett = request.val;
     localStorage.setItem('Xytspch_sett', cad_sett);
+  }
+  if (request.type == "set_isen") {
+    cad_isen = request.val;
+    localStorage.setItem('Xytspch_isen', cad_isen);
   }
 }
 
