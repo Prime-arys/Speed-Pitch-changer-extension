@@ -50,21 +50,20 @@ browser.runtime.sendMessage({
 }
 
 
-
 "use strict";
 
 function onError(error) {
   console.error(`Error: ${error}`);
 }
 
+
 function sendMessageToTabs(tabs) {
   for (let tab of tabs) {
     browser.tabs.sendMessage(
       tab.id,
-      {greeting: "bgs"}
+      {greeting: "actual_speed"}
     ).then(response => {
-      //console.log(response.response);
-      var klp=response.response;
+      var klp=response.actual_speed;
       topop(klp,"pup");
     }).catch(onError);
   }
@@ -80,37 +79,38 @@ function ms(){
 
 
 function handleMessage(request, sender, sendResponse) {
-  if(request.setit == "dm1"){
-    sendResponse({response_dm1: cad_sett});
+  //FOR MAIN
+  if(request.title == "dm1"){
+    sendResponse({dm1: cad_sett});
   }
-  if(request.setit == "xpup"){
+  if(request.title == "xpup"){
     var executing = browser.tabs.executeScript({code: "xpup();",allFrames: true, matchAboutBlank: true});
   }
-  if(request.setit == "xpdw"){
+  if(request.title == "xpdw"){
     var executing = browser.tabs.executeScript({code: "xpdw();",allFrames: true, matchAboutBlank: true});
   }
-  if(request.setit == "xpres"){
+  if(request.title == "xpres"){
     var executing = browser.tabs.executeScript({code: "xpres();",allFrames: true, matchAboutBlank: true});
   }
-  if(request.setit == "xpdef"){
-    var fdef = "zpdef(" + request.xdf + ");";
+  if(request.title == "xpdef"){
+    var fdef = "zpdef(" + request.data + ");";
     var executing = browser.tabs.executeScript({code: fdef,allFrames: true, matchAboutBlank: true});
   }
-  // incognito
-  if (request.type == 'get_tab') {
+
+  //FOR POP
+
+  if (request.type == 'act_speed_val') {
     ms();
   }
   if (request.type == "get_cstt") {
-    //topop(cad_sett, "pup2");
-    //renvoi cad_sett en réponse
+    //renvoie cad_sett en réponse
     cad_sett = localStorage.getItem('Xytspch_sett');
-    sendResponse({ response_cstt: cad_sett });
+    sendResponse({ cstt: cad_sett });
   }
   if (request.type == "get_isen") {
-    //topop(cad_sett, "pup2");
-    //renvoi cad_isen en réponse
+    //renvoie cad_isen en réponse
     cad_isen = localStorage.getItem('Xytspch_isen');
-    sendResponse({ response_isen: cad_isen });
+    sendResponse({ isen: cad_isen });
   }
   if (request.type == "set_cstt") {
     cad_sett = request.val;

@@ -1,5 +1,8 @@
 //console.log("loaded")
-var rkc=[0,0,0,0,0,0]
+
+//INITIAL
+
+var rkc=[0,0,0,0,0,0] // settings
 var ytSpeed = false;
 var Elem = "video,audio,source";
 
@@ -9,12 +12,11 @@ function main(){
 }
 
 function handleResponse (message) {
-  if (typeof message !== 'undefined'){
-    var setg = message.response_dm1.split(',');
+  if (typeof message !== 'undefined') {
+    var setg = message.dm1.split(','); //get the settings from BG
     rkc = setg;
-    ytSpeed=main();
-    //console.log(setg);
-    //console.log(rkc[4]);
+    ytSpeed=main(); //active main fx
+    
   }
 }
 
@@ -25,13 +27,15 @@ function handleError(error) {
 
 function notifyBackgroundPage(e,xfg) {
   var sending = browser.runtime.sendMessage({
-    setit: e,
-    xdf: xfg
+    title: e,
+    data: xfg
   });
   sending.then(handleResponse, handleError);
 }
 
-notifyBackgroundPage("dm1");
+//START
+
+notifyBackgroundPage("dm1"); //request settings
 
 /*function lg(){console.log(ytSpeed.playbackRate)}*/
 
@@ -112,8 +116,8 @@ browser.runtime.onMessage.addListener(request => {
   //console.log("Message from the background script:");
   //console.log(request.greeting);
   //console.log(ytSpeed.playbackRate);
-  if (request.greeting == "bgs"){
-  return Promise.resolve({response: ytSpeed.playbackRate});}
+  if (request.greeting == "actual_speed"){
+  return Promise.resolve({actual_speed: ytSpeed.playbackRate});}
 });
 
 

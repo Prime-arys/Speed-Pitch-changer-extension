@@ -1,3 +1,4 @@
+import { onError, message } from "./utils_BG.js";
 
 var hidden = false;
 var getting = true;
@@ -5,45 +6,18 @@ var cad_isen;
 var cad_sett;
 var master;
 
-function onError(error) {
-    console.log(`Error: ${error}`);
-}
 
 if (typeof aver == 'undefined') {
     var aver = document.getElementById("ver");
     aver.textContent = browser.runtime.getManifest().version;
 }
 
-  
-function get_cstt() {
-    return new Promise(function (resolve) {
-      browser.runtime.sendMessage({ type: "get_cstt" }).then(response => {
-        resolve(response.response_cstt);
-      }).catch(onError);
-    });
-}
-  
-function get_isen() {
-    return new Promise(function (resolve) {
-      browser.runtime.sendMessage({ type: "get_isen" }).then(response => {
-        resolve(response.response_isen);
-      }).catch(onError);
-    });
-}
-
-function set_cstt(val) {
-    browser.runtime.sendMessage({ type: "set_cstt", val: val });
-}
-  
-function set_isen(val) {
-    browser.runtime.sendMessage({ type: "set_isen", val: val });
-}
 
 
 
 async function main() {
-    cad_sett = await get_cstt();
-    cad_isen = await get_isen();
+  cad_sett = (await message('get_cstt')).cstt; //return cstt
+  cad_isen = (await message('get_isen')).isen; //return isen
 
     if (cad_isen == 'yes') {
         document.getElementById("on_off").checked = true;
@@ -72,16 +46,10 @@ async function main() {
     querying.then(logTabs, onError);
 
 
-    function onGot(page) {
-        if (hidden == false){
-          var a=page.ms();
-        } else{
-          browser.runtime.sendMessage({type: 'get_tab'}).then(response5 => {
-            getting =  response5.response
-          }) //INCOGNITO COMPATIBLE METHODE
-          
+    function onGot() {
+      //browser.runtime.sendMessage({ type: 'act_speed_val' });
+      message('act_speed_val');
         }
-      }
 
 
     var CMi = document.getElementById("CM");
@@ -89,13 +57,10 @@ async function main() {
     function onOpen(ishiden) {
 
       if (typeof xui !== 'undefined') {var alm = document.getElementById("xui");alm.textContent = "(passive)";}
-      if (ishiden == true){
+      if (ishiden == true) {
         hidden = true;
-        onGot();
-      } else {
-        getting = browser.runtime.getBackgroundPage();
-        getting.then(onGot, onError); 
       }
+      onGot();
       ifcmdis();
 
     }
@@ -109,11 +74,12 @@ async function main() {
 
 
     browser.runtime.onMessage.addListener(
-        function(request) {
+      function (request) {
+            //request.msg = head of message from topop()
             if (request.msg === "pup") {
               if (typeof xui !== 'undefined') {
                 var alm = document.getElementById("xui");
-                alm.textContent = request.val;
+                alm.textContent = request.val; //.val = actual_speed value
               }
             }
             //if (request.msg === "pup2") { cad_sett = request.val; ca_kc = cad_sett.split(","); ifcmdis();}
@@ -130,7 +96,7 @@ async function main() {
       Checkbox.onchange = function(){
           
           if(Checkbox.checked) {
-                set_isen("yes");
+            message('set_isen', 'yes');
                 console.log(Checkbox.checked);
       
           //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
@@ -138,7 +104,7 @@ async function main() {
           browser.runtime.reload()
         } else {
       
-            set_isen("no");
+            message('set_isen', 'no');
             console.log(Checkbox.checked);
       
           //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
@@ -158,7 +124,7 @@ async function main() {
         allFrames: true,
         matchAboutBlank: true
     });
-      if (hidden == false){getting.then(onGot, onError)}else{onGot();};
+      onGot();
     }
 
     spDw.onclick = function yt_spDw(){
@@ -167,7 +133,7 @@ async function main() {
         allFrames: true,
         matchAboutBlank: true
     });
-      if (hidden == false){getting.then(onGot, onError)}else{onGot();};
+      onGot();
     }
 
     spRes.onclick = function yt_spRes(){
@@ -176,7 +142,7 @@ async function main() {
         allFrames: true,
         matchAboutBlank: true
     });
-      if (hidden == false){getting.then(onGot, onError)}else{onGot();};
+      onGot();
     }
 
     spDef.onclick = function yt_spDef(){
@@ -184,7 +150,7 @@ async function main() {
       code: "xpdef();"
       //allFrames: true
     });
-      if (hidden == false){getting.then(onGot, onError)}else{onGot();};
+      onGot();
     }
 
     spUp.addEventListener("mouseover",function(){sUp.src="icons/clean_svg/uph.svg";})

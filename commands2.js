@@ -1,8 +1,5 @@
 import ipc_kco from './char_kcode.js';
-
-function onError(error) {
-    console.log(`Error: ${error}`);
-  }
+import {onError, message } from "./utils_BG.js";
 
 var hidden = false;
 var master = false;
@@ -12,20 +9,6 @@ var fkc =0;
 var xxch = 0;
 //console.log("Chargement de la page");
 
-//async function get_cstt() qui recupère le contenu de localStorage grâce au message avec background.js à l'aide de la méthode sendMessage et d'une promesse
-function get_cstt() {
-  return new Promise(function (resolve) {
-    browser.runtime.sendMessage({ type: "get_cstt" }).then(response => {
-      resolve(response.response_cstt);
-    }).catch(onError);
-  });
-}
-
-
-
-function set_cstt(val) {
-  browser.runtime.sendMessage({ type: "set_cstt", val: val });
-}
 
 function logTabs(tabs) {
   for (let tab of tabs) {
@@ -39,14 +22,14 @@ querying.then(logTabs, onError);
 
 async function main() {
 
-  var cad_sett = await get_cstt();
+  var cad_sett = (await message('get_cstt')).cstt; //return cstt
 
   var dres = document.getElementById("res");
   var dsup = document.getElementById("sup");
   var dsdw = document.getElementById("sdw");
   var dset = document.getElementById("set");
   var aply = document.getElementById("apl");
-  var tKC =0;
+  var tKC = 0;
 
   dres.textContent=ipc_kco[cad_sett.split(",")[0]];
   dsup.textContent=ipc_kco[cad_sett.split(",")[1]];
@@ -114,12 +97,13 @@ async function main() {
     if (ddd==1) {
     	//console.log(ffkc)
     	ddd=0
-      var cad_sett = await get_cstt();
+      var cad_sett = (await message('get_cstt')).cstt; //return cstt
       var ca_kc = cad_sett.split(",");
     	var zlm = document.getElementById("CMs");
       zlm.textContent = "Commands (custom) :";
       var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5]];
-      set_cstt(updK);
+      //set_cstt(updK);
+      message('set_cstt', updK);
       window.location.reload()
 
 
@@ -138,18 +122,20 @@ async function main() {
  
   var Checkbox = document.querySelector('input[value="isenable_sp"]');
   Checkbox.onchange = async function(){
-    var cad_sett = await get_cstt();
+    var cad_sett = (await message('get_cstt')).cstt; //return cstt
     var ca_kc = cad_sett.split(",");
 
     if(Checkbox.checked) {
       var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5]];
-      set_cstt(tmp_rkc);
+      //set_cstt(tmp_rkc);
+      message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
     
     } else {
     
         var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5]];
-        set_cstt(tmp_rkc);
+      //set_cstt(tmp_rkc);
+      message('set_cstt', tmp_rkc);
         console.log(Checkbox.checked);
     
     }
@@ -158,19 +144,21 @@ async function main() {
  
   var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
   Checkbox2.onchange = async function(){
-    var cad_sett = await get_cstt();
+    var cad_sett = (await message('get_cstt')).cstt; //return cstt
     var ca_kc = cad_sett.split(",");
     
 
     if(Checkbox2.checked) {
       var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1];
-      set_cstt(tmp_rkc);
+      //set_cstt(tmp_rkc);
+      message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
     
     } else {
     
         var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0];
-        set_cstt(tmp_rkc);
+      //set_cstt(tmp_rkc);
+      message('set_cstt', tmp_rkc);
         console.log(Checkbox2.checked);
     
     }
