@@ -18,4 +18,19 @@ export function message(head, body = null) {
             }
       }).catch(onError);
     });
+}
+  
+
+//Background
+
+export async function register(hosts,myfile,run) {
+
+    return await browser.contentScripts.register({
+      "matches": [hosts],
+      "js": [{file: myfile}], // "./file.js"
+      "allFrames": true,
+      "runAt": run, // "document_idle" | "document_start"
+      "matchAboutBlank": true
+    });
+  
   }

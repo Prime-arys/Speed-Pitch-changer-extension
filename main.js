@@ -20,19 +20,6 @@ function handleResponse (message) {
   }
 }
 
-function handleError(error) {
-  console.log(`Error: ${error}`);
-
-}
-
-function notifyBackgroundPage(e,xfg) {
-  var sending = browser.runtime.sendMessage({
-    title: e,
-    data: xfg
-  });
-  sending.then(handleResponse, handleError);
-}
-
 //START
 
 notifyBackgroundPage("dm1"); //request settings
@@ -117,7 +104,11 @@ browser.runtime.onMessage.addListener(request => {
   //console.log(request.greeting);
   //console.log(ytSpeed.playbackRate);
   if (request.greeting == "actual_speed"){
-  return Promise.resolve({actual_speed: ytSpeed.playbackRate});}
+    return Promise.resolve({actual_speed: ytSpeed.playbackRate});
+  }
+  if (request.dmn == "actual_domain"){
+    return Promise.resolve({actual_domain: document.domain});
+  }
 });
 
 

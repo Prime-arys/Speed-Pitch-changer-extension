@@ -51,9 +51,9 @@ async function main() {
       message('act_speed_val');
         }
 
-
     var CMi = document.getElementById("CM");
     var acid = document.getElementById("CM_lnk");
+    
     function onOpen(ishiden) {
 
       if (typeof xui !== 'undefined') {var alm = document.getElementById("xui");alm.textContent = "(passive)";}

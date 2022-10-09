@@ -1,3 +1,5 @@
+import { onError, message, register } from "./utils_BG.js";
+
 const defaultHosts = "<all_urls>";
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
@@ -25,19 +27,11 @@ if (setg.length < 6){
 }
 
 if (cad_isen == 'yes'){
-async function register(hosts) {
 
-  return await browser.contentScripts.register({
-    "matches": [hosts],
-    "js": [{file: "/main.js"}],
-    "allFrames": true,
-    "runAt": "document_idle",
-    "matchAboutBlank": true
-  });
-
-}
-
-var registered = register(defaultHosts);
+  register(defaultHosts, "./utils_CO.js", "document_start");
+  register(defaultHosts, "./main.js", "document_idle");
+  
+  
 }
 else {browser.browserAction.setIcon({path: "icons/border-16d.png"});}
 
@@ -51,10 +45,10 @@ browser.runtime.sendMessage({
 
 
 "use strict";
-
+/*
 function onError(error) {
   console.error(`Error: ${error}`);
-}
+}*/
 
 
 function sendMessageToTabs(tabs) {
