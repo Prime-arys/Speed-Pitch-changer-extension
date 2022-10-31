@@ -1,5 +1,5 @@
-import ipc_kco from './char_kcode.js';
-import {onError, message } from "./utils_BG.js";
+import ipc_kco from '../utils/char_kcode.js';
+import {onError, message } from "../utils/utils_BG.js";
 
 var hidden = false;
 var master = false;

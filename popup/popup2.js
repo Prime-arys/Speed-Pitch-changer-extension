@@ -1,10 +1,11 @@
-import { onError, message } from "./utils_BG.js";
+import { onError, message } from "../utils/utils_BG.js";
 
 var hidden = false;
 var getting = true;
 var cad_isen;
 var cad_sett;
 var master;
+//console.log("POP Load")
 
 
 if (typeof aver == 'undefined') {
@@ -153,17 +154,17 @@ async function main() {
       onGot();
     }
 
-    spUp.addEventListener("mouseover",function(){sUp.src="icons/clean_svg/uph.svg";})
-    spUp.addEventListener("mouseout",function(){sUp.src="icons/clean_svg/up.svg";})
+    spUp.addEventListener("mouseover",function(){sUp.src="../icons/clean_svg/uph.svg";})
+    spUp.addEventListener("mouseout",function(){sUp.src="../icons/clean_svg/up.svg";})
 
-    spDw.addEventListener("mouseover",function(){sDw.src="icons/clean_svg/dwh.svg";})
-    spDw.addEventListener("mouseout",function(){sDw.src="icons/clean_svg/dw.svg";})
+    spDw.addEventListener("mouseover",function(){sDw.src="../icons/clean_svg/dwh.svg";})
+    spDw.addEventListener("mouseout",function(){sDw.src="../icons/clean_svg/dw.svg";})
 
-    spRes.addEventListener("mouseover",function(){spRes.src="icons/clean_svg/resh.svg";})
-    spRes.addEventListener("mouseout",function(){spRes.src="icons/clean_svg/res.svg";})
+    spRes.addEventListener("mouseover",function(){spRes.src="../icons/clean_svg/resh.svg";})
+    spRes.addEventListener("mouseout",function(){spRes.src="../icons/clean_svg/res.svg";})
 
-    spDef.addEventListener("mouseover",function(){sDef.src="icons/clean_svg/defh.svg";})
-    spDef.addEventListener("mouseout",function(){sDef.src="icons/clean_svg/def.svg";})
+    spDef.addEventListener("mouseover",function(){sDef.src="../icons/clean_svg/defh.svg";})
+    spDef.addEventListener("mouseout",function(){sDef.src="../icons/clean_svg/def.svg";})
 
     
 }
