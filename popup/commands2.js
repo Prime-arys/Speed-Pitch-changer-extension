@@ -17,6 +17,20 @@ function logTabs(tabs) {
   master = main();
 }
 
+function msgforyou(m, reset) {
+  var zlm = document.getElementById("CMs");
+  if (reset == false){
+  zlm.textContent = m;
+  /*ajout une classe*/
+    zlm.classList.add("surligne");
+  }else{
+    zlm.textContent = "Commands (customize) :";
+    /*supprime la classe*/
+    zlm.classList.remove("surligne");
+  }
+
+}
+
 var querying = browser.tabs.query({currentWindow: true, active: true});
 querying.then(logTabs, onError);
 
@@ -29,6 +43,9 @@ async function main() {
   var dsdw = document.getElementById("sdw");
   var dset = document.getElementById("set");
   var aply = document.getElementById("apl");
+  var rad_st = document.getElementsByName("btn_meth");
+  var rad_2val = document.getElementById("rad2val");
+  var rad_3val = document.getElementById("rad3val");
   var tKC = 0;
 
   dres.textContent=ipc_kco[cad_sett.split(",")[0]];
@@ -42,21 +59,74 @@ async function main() {
   var	fsup = parseInt(ca_kc[1])
   var fsdw = parseInt(ca_kc[2])
   var fset = parseInt(ca_kc[3])
-  var ffkc=[fres,fsup,fsdw,fset,ca_kc[4],ca_kc[5]];
+  var ffkc=[fres,fsup,fsdw,fset,ca_kc[4],ca_kc[5],ca_kc[6],ca_kc[7],ca_kc[8]];
 
   dres.addEventListener("mouseover",function(){dres.style.background = "#EFDBC8"})
-  dres.addEventListener("mouseout",function(){dres.style.background = "#D9DAEA"})
+  dres.addEventListener("mouseout",function(){dres.style.background = "#D9DAE8"})
   dsup.addEventListener("mouseover",function(){dsup.style.background = "#EFDBC8"})
-  dsup.addEventListener("mouseout",function(){dsup.style.background = "#D9DAEA"})
+  dsup.addEventListener("mouseout",function(){dsup.style.background = "#D9DAE8"})
   dsdw.addEventListener("mouseover",function(){dsdw.style.background = "#EFDBC8"})
-  dsdw.addEventListener("mouseout",function(){dsdw.style.background = "#D9DAEA"})
+  dsdw.addEventListener("mouseout",function(){dsdw.style.background = "#D9DAE8"})
   dset.addEventListener("mouseover",function(){dset.style.background = "#EFDBC8"})
-  dset.addEventListener("mouseout",function(){dset.style.background = "#D9DAEA"})
+  dset.addEventListener("mouseout", function () { dset.style.background = "#D9DAE8" })
+  
+  rad_2val.addEventListener("change", function () { rule_set(); });
+  rad_3val.addEventListener("change", function () { rule_set(); });
+  rad_2val.value = ca_kc[7];
+  rad_3val.value = ca_kc[8];
 
   dres.onclick = function cm_dres(){getKC(0);xxch=0;}
   dsup.onclick = function cm_dsup(){getKC(1);xxch=1;}
   dsdw.onclick = function cm_dsdw(){getKC(2);xxch=2;}
-  dset.onclick = function cm_dset(){getKC(3);xxch=3;}
+  dset.onclick = function cm_dset() { getKC(3); xxch = 3; }
+
+  rad_st.forEach(function (item) {
+    item.onclick = function () { rule_set(); }
+    if (item.value == ca_kc[6]) item.checked = true, rule_set();
+    else item.checked = false;
+  });
+
+  
+  
+async function rule_set () {
+    var cad_sett = (await message('get_cstt')).cstt; //return cstt
+    var ca_kc = cad_sett.split(","); 
+
+    if (rad_st[0].checked) {
+      rad_2val.disabled = true;
+      rad_3val.disabled = true;
+      ca_kc[6] = 1;
+      /*ca_kc[7] = 1.1;*/
+    }
+    else if (rad_st[1].checked) {
+      rad_3val.disabled = true;
+      rad_2val.disabled = false;
+      ca_kc[6] = 2;
+      if (rad_2val.value <= 1.0) {
+        ca_kc[7] = 1.001;
+        msgforyou("The value must be greater than 1.0",false);
+      }
+      else {
+        ca_kc[7] = rad_2val.value;
+        msgforyou("", true);
+      }
+      
+    }
+    else if (rad_st[2].checked) {
+      rad_2val.disabled = true;
+      rad_3val.disabled = false;
+      ca_kc[6] = 3;
+      if (rad_3val.value <= 0) {
+        ca_kc[8] = 0.001;
+        msgforyou("The value must be greater than 0",false);
+      }
+      else {
+        ca_kc[8] = rad_3val.value;
+        msgforyou("", true);
+      }
+    }
+    message('set_cstt', ca_kc.join(","));
+  };
   
 
   document.onkeydown = function(evt)
@@ -74,7 +144,7 @@ async function main() {
     }
     if (ddd==1){
     	fkc=tKC;
-    	ffkc[xxch]=fkc;
+      ffkc[xxch] = fkc;
 
     }
 
@@ -89,19 +159,19 @@ async function main() {
     //console.log(tKC)
     //console.log(cad_sett)
     if (ddd==0){
-    	if(tKC == fres ){document.getElementById("res").style.background = "#D9DAEA";};
-    	if(tKC == fsup ){document.getElementById("sup").style.background = "#D9DAEA";};
-    	if(tKC == fsdw ){document.getElementById("sdw").style.background = "#D9DAEA";};
-    	if(tKC == fset ){document.getElementById("set").style.background = "#D9DAEA";};
+    	if(tKC == fres ){document.getElementById("res").style.background = "#D9DAE8";};
+    	if(tKC == fsup ){document.getElementById("sup").style.background = "#D9DAE8";};
+    	if(tKC == fsdw ){document.getElementById("sdw").style.background = "#D9DAE8";};
+    	if(tKC == fset ){document.getElementById("set").style.background = "#D9DAE8";};
   	}
     if (ddd==1) {
     	//console.log(ffkc)
     	ddd=0
       var cad_sett = (await message('get_cstt')).cstt; //return cstt
       var ca_kc = cad_sett.split(",");
-    	var zlm = document.getElementById("CMs");
-      zlm.textContent = "Commands (custom) :";
-      var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5]];
+    	msgforyou("",true);
+      
+      var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8]];
       //set_cstt(updK);
       message('set_cstt', updK);
       window.location.reload()
@@ -126,14 +196,14 @@ async function main() {
     var ca_kc = cad_sett.split(",");
 
     if(Checkbox.checked) {
-      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5]];
+      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6],ca_kc[7],ca_kc[8]];
       //set_cstt(tmp_rkc);
       message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
     
     } else {
     
-        var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5]];
+        var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7],ca_kc[8]];
       //set_cstt(tmp_rkc);
       message('set_cstt', tmp_rkc);
         console.log(Checkbox.checked);
@@ -149,14 +219,14 @@ async function main() {
     
 
     if(Checkbox2.checked) {
-      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1];
+      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6],ca_kc[7],ca_kc[8]];
       //set_cstt(tmp_rkc);
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
     
     } else {
     
-        var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0];
+        var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7],ca_kc[8]];
       //set_cstt(tmp_rkc);
       message('set_cstt', tmp_rkc);
         console.log(Checkbox2.checked);
@@ -176,8 +246,7 @@ async function main() {
 
 function getKC(xh) {
 	ddd=1
-	var zlm = document.getElementById("CMs");
-    zlm.textContent = "Waiting for a key press";
+	msgforyou("Press a key", false);
 }
 
 function pressKey(keyCode)

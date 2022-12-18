@@ -1,7 +1,7 @@
 body {
     font-family: 'Segoe UI Light', Arial;
     color: black;
-    background-color: #F3F3F4;
+    background-color: /*#F3F3F4;*/ #f5f4f3;
   
  }
 
@@ -27,7 +27,9 @@ a:hover{
 }
 
 button {
-    background: #D9DAEA;
+  text-decoration: none;
+  display: inline-block;
+    background: #d9dae8;
     border-radius: 6px;
     width: auto;
     font-size: 14.8px;
@@ -77,6 +79,7 @@ button:hover {
     flex-direction: row;
     margin: 5px;
     font-size: 17.5px;
+    font-family: 'Segoe UI';
     text-align: right;
     /*justify-content: space-between;*/
 
@@ -161,3 +164,18 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 } 
+
+
+#CMs{
+    margin-bottom: 12px;
+    margin-top: 12px;
+    text-align: center;
+    justify-content: space-between;
+}
+
+/*surligne le texte */
+.surligne {
+    background-color: hsla(60, 100%, 50%, 0.395);
+}
+
+

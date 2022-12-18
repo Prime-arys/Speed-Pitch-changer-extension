@@ -6,9 +6,10 @@ var cad_sett = localStorage.getItem('Xytspch_sett');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 
 //console.log("BG Load")
+var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1];
 
 if (cad_sett == null) {
-  cad_sett = [106, 107, 109, 110, !1, 1];
+  cad_sett = default_sett;
   localStorage.setItem('Xytspch_sett', cad_sett);
 }
 
@@ -20,8 +21,19 @@ if (cad_isen == null) {
 
 var setg = cad_sett.split(',');
 
-if (setg.length < 6){
-    var tmp_rkc=[setg[0],setg[1],setg[2],setg[3],!1,1];
+if (setg.length < 9){
+  //Update settings
+  var tmp_rkc = [];
+  default_sett.forEach(function (value, index) {
+    if (typeof setg[index] == 'undefined') {
+      tmp_rkc.push(default_sett[index]);
+    }
+    else {
+      tmp_rkc.push(setg[index]);
+    }
+    //console.log(tmp_rkc);
+  });
+    //var tmp_rkc=[setg[0],setg[1],setg[2],setg[3],!1,1,1,1.1,1.1];
     localStorage.setItem('Xytspch_sett', tmp_rkc);
     cad_sett=tmp_rkc;
     console.log("updated !")
@@ -31,11 +43,18 @@ if (setg.length < 6){
 if (cad_isen == 'yes'){
 
   register(defaultHosts, "../utils/utils_CO.js", "document_start");
+  register(defaultHosts, "../utils/ace1.js", "document_start");
+  register(defaultHosts, "../utils/ace2.js", "document_start");
   register(defaultHosts, "../contentScript/main.js", "document_idle");
   
-  
 }
-else {browser.browserAction.setIcon({path: "../icons/border-16d.png"});}
+else {
+  var plat = navigator.userAgent.toLowerCase();
+  if (!plat.includes("android")) {
+    /*pas de changement d'icone sur android*/
+    browser.browserAction.setIcon({ path: "../icons/border-16d.png" });
+  }
+}
 
 
 function topop(value, key) {

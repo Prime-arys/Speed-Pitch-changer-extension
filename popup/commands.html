@@ -31,10 +31,33 @@
     	    	<p> : preserved pitch</p>
     	    </div>
     	</label>
+		
+		<div>
+    		<fieldset>
+				<legend>Select ➕ ➖ behavior</legend>
+			
+				<div class="cm">
+				  <input type="radio" name="btn_meth" id="rad1" value="1" checked>
+				  <label for="rad1">default</label>
+				</div>
+			
+				<div class="cm">
+				  <input type="radio" name="btn_meth" id="rad2" value="2">
+				  <label for="rad2">x ÷ <input type="number" id="rad2val" step="0.01" min="1.00" value="1.1" /></label>
+				</div>
+			
+				<div class="cm">
+				  <input type="radio" name="btn_meth" id="rad3" value="3">
+				  <label for="rad3">+ - <input type="number" id="rad3val" step="0.01" min="0"value="1.1" /></label>
+				</div>
+			</fieldset>
+		</div>
+    	    
 	</div>
 	<div class="apl"><button id="apl">Load</button></div>
 	<div class="lnk">
 		<a href="popup.html">return</a>
+		<a href="info.html">info</a>
 	</div>
 
 </body>
