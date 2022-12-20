@@ -33,7 +33,6 @@ if (setg.length < 9){
     }
     //console.log(tmp_rkc);
   });
-    //var tmp_rkc=[setg[0],setg[1],setg[2],setg[3],!1,1,1,1.1,1.1];
     localStorage.setItem('Xytspch_sett', tmp_rkc);
     cad_sett=tmp_rkc;
     console.log("updated !")
@@ -66,11 +65,6 @@ browser.runtime.sendMessage({
 
 
 "use strict";
-/*
-function onError(error) {
-  console.error(`Error: ${error}`);
-}*/
-
 
 function sendMessageToTabs(tabs) {
   for (let tab of tabs) {
@@ -89,7 +83,6 @@ function ms(){
   btqz.then(sendMessageToTabs).catch(onError);
   
 };
-
 
 
 

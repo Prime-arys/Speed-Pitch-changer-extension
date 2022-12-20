@@ -1,4 +1,5 @@
-var mdc2=true;
+// Taken and adapted from: https://github.com/faf0/spotitySpeedExtension/tree/faf0/fix-issue-7
+var mdc2 = true;
 var ace2 =
     `
   var base = document.createElement; /* A backup reference to the browser's original document.createElement */

@@ -46,6 +46,7 @@ button:hover {
     align-items: center;
     justify-items: center;
     margin: 6px;
+    margin-top: 12px;
 }
 .apl button{
     font-size: 17px;

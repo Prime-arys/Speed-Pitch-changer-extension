@@ -41,18 +41,18 @@ notifyBackgroundPage("dm1"); //request settings
 
 function xpup(){
   ytSpeed.speedUp();
-  lg();
+  ace_next();
 }
 
 function xpdw(){
   ytSpeed.speedDown();
-  lg(); 
+  ace_next(); 
 }
 
 function xpres(){
   ytSpeed.reset();
   //var player = document.querySelector(".html5-main-video");
-  lg();
+  ace_next();
   //ytSpeed.playbackRate=1;
 }
 
@@ -67,7 +67,7 @@ function zpdef(x){
   ytSpeed.playbackRate=x;
   ytSpeed.updateVideos()
   //console.log(x)
-  lg();
+  ace_next();
 }
 
 
@@ -128,11 +128,7 @@ browser.runtime.onMessage.addListener(request => {
 
 
 
-
-
-
-
-function lg() {
+function ace_next() {
   //console.log("ace : ",ytSpeed.playbackRate);
 
   var ace1 =

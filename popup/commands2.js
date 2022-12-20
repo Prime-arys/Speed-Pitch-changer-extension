@@ -197,15 +197,12 @@ async function rule_set () {
 
     if(Checkbox.checked) {
       var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6],ca_kc[7],ca_kc[8]];
-      //set_cstt(tmp_rkc);
       message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
     
     } else {
-    
         var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7],ca_kc[8]];
-      //set_cstt(tmp_rkc);
-      message('set_cstt', tmp_rkc);
+        message('set_cstt', tmp_rkc);
         console.log(Checkbox.checked);
     
     }
@@ -220,22 +217,17 @@ async function rule_set () {
 
     if(Checkbox2.checked) {
       var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6],ca_kc[7],ca_kc[8]];
-      //set_cstt(tmp_rkc);
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
     
     } else {
-    
-        var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7],ca_kc[8]];
-      //set_cstt(tmp_rkc);
+      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7],ca_kc[8]];
       message('set_cstt', tmp_rkc);
-        console.log(Checkbox2.checked);
+      console.log(Checkbox2.checked);
     
     }
    
   }
-  //if(hidden == true){Checkbox.disabled = true;Checkbox2.disabled = true;}
- 
  
   aply.onclick = function aplu(){
     browser.runtime.reload()
