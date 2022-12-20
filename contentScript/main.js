@@ -151,11 +151,11 @@ function ace_next() {
   
   var ace2 =
     `
-    for(var i = 0; i < VideoElementsMade.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
-				VideoElementsMade[i].playbackRate = ${ytSpeed.playbackRate};
-				VideoElementsMade[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
-        VideoElementsMade[i].preservesPitch = ${ytSpeed.preservesPitch};
-        VideoElementsMade[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
+    for(var i = 0; i < spc_VideoElementsMade.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
+      spc_VideoElementsMade[i].playbackRate = ${ytSpeed.playbackRate};
+      spc_VideoElementsMade[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
+      spc_VideoElementsMade[i].preservesPitch = ${ytSpeed.preservesPitch};
+      spc_VideoElementsMade[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
 			}
       `
 
