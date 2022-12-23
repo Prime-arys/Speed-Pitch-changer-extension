@@ -6,6 +6,14 @@ var rkc=[0,0,0,0,0,0,0,0,0] // settings
 var ytSpeed = false;
 var Elem = "video,audio,source";
 
+if (typeof mdc1 == 'undefined') {
+  var mdc1 = false;
+}
+
+if (typeof mdc2 == 'undefined') {
+  var mdc2 = false;
+}
+
 function meth_upd_p(el, n) {
   //console.log("METH ",el,n)
   if (n == 1) return el *= 1.05946309436;
@@ -133,6 +141,7 @@ function ace_next() {
 
   var ace1 =
     `
+    //console.log("ace1")
     if(typeof SpeedPitchChangerEll == "undefined"){
 
     console.log("ERROR: SpeedPitchChangerEll is undefined, init failed")
@@ -151,6 +160,7 @@ function ace_next() {
   
   var ace2 =
     `
+    //console.log("ace2")
     for(var i = 0; i < spc_VideoElementsMade.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
       spc_VideoElementsMade[i].playbackRate = ${ytSpeed.playbackRate};
       spc_VideoElementsMade[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
@@ -158,8 +168,12 @@ function ace_next() {
       spc_VideoElementsMade[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
 			}
       `
-
-  if (mdc1) { window.eval(ace1); }
-  if (mdc2) { window.eval(ace2); }
+  if (mdc1) {
+    window.eval(ace1);
+  }
+  if (mdc2) {
+    window.eval(ace2);
+  }
+  
 }
 

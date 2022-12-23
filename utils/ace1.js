@@ -1,4 +1,6 @@
-var mdc1=true;
+//console.log("initEvent")
+var mdc1 = true;
+//var mcd2 = false;
 var ace1 =
     `
 

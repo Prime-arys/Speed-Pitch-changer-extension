@@ -1,4 +1,6 @@
 // Taken and adapted from: https://github.com/faf0/spotitySpeedExtension/tree/faf0/fix-issue-7
+//console.log("initEvent_SPOTIFY")
+//var mcd1 = false;
 var mdc2 = true;
 var ace2 =
     `

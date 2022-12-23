@@ -40,10 +40,12 @@ if (setg.length < 9){
 }
 
 if (cad_isen == 'yes'){
+  var soundcloud = "*://soundcloud.com/*";
+  var spotify = "*://*.spotify.com/*";
 
   register(defaultHosts, "../utils/utils_CO.js", "document_start");
-  register(defaultHosts, "../utils/ace1.js", "document_start");
-  register(defaultHosts, "../utils/ace2.js", "document_start");
+  register(soundcloud, "../utils/ace1.js", "document_start");
+  register(spotify, "../utils/ace2.js", "document_start");
   register(defaultHosts, "../contentScript/main.js", "document_idle");
   
 }
