@@ -1,4 +1,4 @@
-//console.log("loaded")
+console.log("MAIN loaded")
 
 //INITIAL
 
@@ -13,6 +13,7 @@ if (typeof mdc1 == 'undefined') {
 if (typeof mdc2 == 'undefined') {
   var mdc2 = false;
 }
+
 
 function meth_upd_p(el, n) {
   //console.log("METH ",el,n)
@@ -142,13 +143,13 @@ function ace_next() {
   var ace1 =
     `
     //console.log("ace1")
-    if(typeof SpeedPitchChangerEll == "undefined"){
+    if(typeof SpeedPitchChanger_despaEll_1 == "undefined"){
 
-    console.log("ERROR: SpeedPitchChangerEll is undefined, init failed")
+    console.log("ERROR: SpeedPitchChanger_despaEll_1 is undefined, init failed")
         
     } else {
       Audio.prototype.play = Audio.prototype.original_play;
-      SpeedPitchChangerEll.forEach(function (spc_audio_element) {
+      SpeedPitchChanger_despaEll_1.forEach(function (spc_audio_element) {
         spc_audio_element.playbackRate = ${ytSpeed.playbackRate};
         spc_audio_element.defaultPlaybackRate = ${ytSpeed.playbackRate};
         spc_audio_element.mozPreservesPitch = ${ytSpeed.preservesPitch};
@@ -161,11 +162,11 @@ function ace_next() {
   var ace2 =
     `
     //console.log("ace2")
-    for(var i = 0; i < spc_VideoElementsMade.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
-      spc_VideoElementsMade[i].playbackRate = ${ytSpeed.playbackRate};
-      spc_VideoElementsMade[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
-      spc_VideoElementsMade[i].preservesPitch = ${ytSpeed.preservesPitch};
-      spc_VideoElementsMade[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
+    for(var i = 0; i < SpeedPitchChanger_despaEll_2.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
+        SpeedPitchChanger_despaEll_2[i].playbackRate = ${ytSpeed.playbackRate};
+        SpeedPitchChanger_despaEll_2[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
+        SpeedPitchChanger_despaEll_2[i].preservesPitch = ${ytSpeed.preservesPitch};
+        SpeedPitchChanger_despaEll_2[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
 			}
       `
   if (mdc1) {

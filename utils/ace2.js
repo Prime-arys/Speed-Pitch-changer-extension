@@ -1,27 +1,37 @@
 // Taken and adapted from: https://github.com/faf0/spotitySpeedExtension/tree/faf0/fix-issue-7
 //console.log("initEvent_SPOTIFY")
 //var mcd1 = false;
+"use strict";
 var mdc2 = true;
-var ace2 =
-    `
-  var base = document.createElement; /* A backup reference to the browser's original document.createElement */
-	var spc_VideoElementsMade = []; /* Array of video/audio elements made by spotify's scripts */
-	function debugLog(text) {
-		console.log(text)
-	}
+var ace2 = `
+console.log("ace2")
+// Création de la fonction qui remplacera la méthode createElement
+var SpeedPitchChanger_despaEll_2 = [];
+
+var originalCreateElement = Document.prototype.createElement;
+Document.prototype.createElement_origin = originalCreateElement;
+Document.prototype.createElement = Document.prototype.createElement_origin;
+
+Document.prototype.createElement = function (tagName) {
+	//console.log(this, tagName);
 	
-	/* Replacing the DOM's original reference to the browser's createElement function */
-	document.createElement = function(message) {
-		/* base.apply is calling the backup reference of createElement with the arguments sent to our function and assigning it to our variable named element */
-		var element = base.apply(this, arguments); 
-		
-		/* we check the first argument sent to us Examp. document.createElement('video') would have message = 'video' */
-		/* ignores the many document.createElement('div'), document.createElement('nav'), ect... */
-		if(message === 'video' || message === 'audio'){ /* Checking if spotify scripts are making a video or audio element */
-			spc_VideoElementsMade.push(element); /* Add a reference to the element in our array. Arrays hold references not copies by default in javascript. */
-		}
-		return element /* return the element and complete the loop so the page is allowed to be made */
-	};
-  `
+	var p = this.createElement_origin(tagName);
+	if (tagName === 'video' || tagName === 'audio') {
+		SpeedPitchChanger_despaEll_2.push(p);
+		//Document.prototype.createElement = Document.prototype.createElement_origin;
+	}
+	return p;
+
+};
+`;
 
 window.eval(ace2);
+
+
+/*
+var script2 = document.createElement('script');
+script2.textContent = ace2;
+(document.head || document.documentElement).appendChild(script2);
+script2.remove();
+
+  */

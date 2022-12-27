@@ -1,11 +1,12 @@
 //console.log("initEvent")
+"use strict";
 var mdc1 = true;
 //var mcd2 = false;
 var ace1 =
-    `
-
+  `
+    console.log("ace1")
     var OGP = Audio.prototype.play;
-    var SpeedPitchChangerEll = [];
+    var SpeedPitchChanger_despaEll_1 = [];
 
       Audio.prototype.original_play = OGP;
 
@@ -13,11 +14,17 @@ var ace1 =
 
       Audio.prototype.play = function () {
         console.log(this)
-        SpeedPitchChangerEll.push(this);
+        SpeedPitchChanger_despaEll_1.push(this);
         Audio.prototype.play = Audio.prototype.original_play;
           this.original_play(arguments);
     }
     
-    `
+    `;
 
-window.eval(ace1);
+//window.eval(ace1);
+
+//ajout le script dans la page
+var script = document.createElement('script');
+script.textContent = ace1;
+(document.head || document.documentElement).appendChild(script);
+script.remove();
