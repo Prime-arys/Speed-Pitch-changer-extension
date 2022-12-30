@@ -1,6 +1,7 @@
-import { onError, message, register } from "../utils/utils_BG.js";
+import { onError, message, register, blacklist_manager } from "../utils/utils_BG.js";
 
 const defaultHosts = "<all_urls>";
+var blacklistHost = localStorage.getItem('Xytspch_blacklist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
@@ -13,6 +14,12 @@ if (cad_sett == null) {
   localStorage.setItem('Xytspch_sett', cad_sett);
 }
 
+if (blacklistHost == null) {
+  blacklistHost = ["*://developer.mozilla.org/*"];
+  localStorage.setItem('Xytspch_blacklist', blacklistHost);
+  
+}
+
 if (cad_isen == null) {
   cad_isen = "no";
   localStorage.setItem('Xytspch_isen', cad_isen);
@@ -20,6 +27,7 @@ if (cad_isen == null) {
 }
 
 var setg = cad_sett.split(',');
+var blacklistHost = blacklistHost.split(',');
 
 if (setg.length < 9){
   //Update settings
@@ -42,11 +50,11 @@ if (setg.length < 9){
 if (cad_isen == 'yes'){
   var soundcloud = "*://soundcloud.com/*";
   var spotify = "*://*.spotify.com/*";
-
-  register(defaultHosts, "../utils/utils_CO.js", "document_start");
-  register(defaultHosts, "../utils/ace1.js", "document_start");
-  register(defaultHosts, "../utils/ace2.js", "document_start");
-  register(defaultHosts, "../contentScript/main.js", "document_idle");
+  console.log(blacklistHost);
+  register([defaultHosts], "../utils/utils_CO.js", "document_start",blacklistHost);
+  register([defaultHosts], "../utils/ace1.js", "document_start",blacklistHost);
+  register([defaultHosts], "../utils/ace2.js", "document_start",blacklistHost);
+  register([defaultHosts], "../contentScript/main.js", "document_idle",blacklistHost);
 
   
 }
@@ -69,21 +77,35 @@ browser.runtime.sendMessage({
 
 "use strict";
 
-function sendMessageToTabs(tabs) {
+
+function sendMessageToTabs(tabs, dom=false) {
   for (let tab of tabs) {
-    browser.tabs.sendMessage(
-      tab.id,
-      {greeting: "actual_speed"}
-    ).then(response => {
-      var klp=response.actual_speed;
-      topop(klp,"pup");
-    }).catch(onError);
+    //console.log("tab");
+    if (!dom) {
+      browser.tabs.sendMessage(
+        tab.id,
+        { greeting: "actual_speed" }
+      ).then(response => {
+        var klp = response.actual_speed;
+        topop(klp, "pup");
+      }).catch(onError);
+    } else {
+      //console.log(tab.url);
+      var domain = (tab.url).split("/")[2];
+      blacklist_manager(blacklistHost, "is_in", domain).then((result) => {
+        topop([domain,result], "mDom");
+      });
+    }
+
   }
 }
 
-function ms(){
-  var btqz = browser.tabs.query({currentWindow: true, active: true});
-  btqz.then(sendMessageToTabs).catch(onError);
+function ms(dom=false) {
+  var btqz = browser.tabs.query({ currentWindow: true, active: true });
+  //console.log(btqz);
+  btqz.then((tabs) => {
+    sendMessageToTabs(tabs, dom);
+  }).catch(onError);
   
 };
 
@@ -113,6 +135,11 @@ function handleMessage(request, sender, sendResponse) {
   if (request.type == 'act_speed_val') {
     ms();
   }
+  if (request.type == 'get_domain') {
+    //console.log("get_domain ms");
+    ms(true);
+  }
+
   if (request.type == "get_cstt") {
     //renvoie cad_sett en réponse
     cad_sett = localStorage.getItem('Xytspch_sett');
@@ -130,6 +157,20 @@ function handleMessage(request, sender, sendResponse) {
   if (request.type == "set_isen") {
     cad_isen = request.val;
     localStorage.setItem('Xytspch_isen', cad_isen);
+  }
+  if (request.type == "get_blacklist") {
+    //renvoie blacklistHost en réponse
+    sendResponse({ blacklist: blacklist_manager(blacklistHost, "get", null) });
+  }
+  if (request.type == "set_ban") {
+    //ajoute un domaine à la blacklist
+    blacklist_manager(blacklistHost, "add", request.val);
+    browser.runtime.reload()
+  }
+  if (request.type == "set_unban") {
+    //supprime un domaine de la blacklist
+    blacklist_manager(blacklistHost, "del", request.val);
+    browser.runtime.reload()
   }
 }
 

@@ -1,12 +1,13 @@
 body {
     text-align: center;
     font-family: 'Open Sans', 'Segoe UI Light', Arial;
-    background-color: #CCCCE6;
+    background-color: /*#CCCCE6*/#F5F4F2;
     background-image: url("../icons/clean_svg/frame1.svg");
     background-size: none;
     background-repeat: repeat-x;
 
  }
+
 
 p {
     margin: 1px;
@@ -25,7 +26,7 @@ h4{
     margin: 4px;
     text-decoration: underline;
     padding: 4px;
-
+    background-color: #525170;
 }
 
 h6{

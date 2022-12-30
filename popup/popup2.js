@@ -5,6 +5,7 @@ var getting = true;
 var cad_isen;
 var cad_sett;
 var master;
+var actual_domain;
 //console.log("POP Load")
 
 
@@ -50,6 +51,7 @@ async function main() {
     function onGot() {
       //browser.runtime.sendMessage({ type: 'act_speed_val' });
       message('act_speed_val');
+      message('get_domain');
         }
 
     var CMi = document.getElementById("CM");
@@ -82,7 +84,21 @@ async function main() {
                 var alm = document.getElementById("xui");
                 alm.textContent = request.val; //.val = actual_speed value
               }
-            }
+        }
+        if (request.msg === "mDom") {
+          actual_domain = request.val;
+          var dmn = document.getElementById("act_domain");
+          //console.log("Act domain: " + actual_domain);
+          dmn.textContent = actual_domain[0];
+          dmn.title = actual_domain[1];
+          if(actual_domain[1] == false){
+            btban.checked = true;
+          }
+          else{
+            btban.checked = false;
+          }
+
+        }
             //if (request.msg === "pup2") { cad_sett = request.val; ca_kc = cad_sett.split(","); ifcmdis();}
         }
     );
@@ -118,6 +134,18 @@ async function main() {
     var spRes = document.getElementById("sRes");
     var spDw = document.getElementById("sDw");
     var spDef = document.getElementById("sDef");
+    var btban = document.getElementById("btn_ban");
+  
+  btban.onchange = function () {
+    if (btban.checked) {
+      message('set_unban', actual_domain[0]);
+      console.log(btban.checked);
+    } else {
+      
+      message('set_ban', actual_domain[0]);
+      console.log(btban.checked);
+    }
+  }
 
     spUp.onclick = function yt_spUp(){
       var executing = browser.tabs.executeScript({
@@ -152,7 +180,8 @@ async function main() {
       //allFrames: true
     });
       onGot();
-    }
+  }
+  
 
     spUp.addEventListener("mouseover",function(){sUp.src="../icons/clean_svg/uph.svg";})
     spUp.addEventListener("mouseout",function(){sUp.src="../icons/clean_svg/up.svg";})
