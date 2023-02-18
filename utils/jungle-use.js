@@ -1,3 +1,5 @@
+
+
 // Stuff from:
 // https://github.com/mmckegg/soundbank-pitch-shift/blob/master/index.js
 // https://github.com/foxdog-studios/pitch-shifter-chrome-extension/blob/master/src/jungle.js
@@ -7,11 +9,11 @@
 
 // Copyright 2012, Google Inc.
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //     * Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
 //     * Redistributions in binary form must reproduce the above
@@ -21,7 +23,7 @@
 //     * Neither the name of Google Inc. nor the names of its
 // contributors may be used to endorse or promote products derived from
 // this software without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,14 +37,22 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-function createFadeBuffer(context, activeTime, fadeTime) {
+
+//VARs
+var delayTime_SpeedPitchChanger_despaEll_jungle = 0.100;
+var fadeTime_SpeedPitchChanger_despaEll_jungle = 0.050;
+var bufferTime_SpeedPitchChanger_despaEll_jungle = 0.100;
+var previousPitch_SpeedPitchChanger_despaEll_jungle = -1;
+
+
+function createFadeBuffer(context, activeTime, fadeTime_SpeedPitchChanger_despaEll_jungle) {
     var length1 = activeTime * context.sampleRate;
-    var length2 = (activeTime - 2*fadeTime) * context.sampleRate;
+    var length2 = (activeTime - 2*fadeTime_SpeedPitchChanger_despaEll_jungle) * context.sampleRate;
     var length = length1 + length2;
     var buffer = context.createBuffer(1, length, context.sampleRate);
     var p = buffer.getChannelData(0);
 
-    var fadeLength = fadeTime * context.sampleRate;
+    var fadeLength = fadeTime_SpeedPitchChanger_despaEll_jungle * context.sampleRate;
 
     var fadeIndex1 = fadeLength;
     var fadeIndex2 = length1 - fadeLength;
@@ -71,9 +81,9 @@ function createFadeBuffer(context, activeTime, fadeTime) {
     return buffer;
 }
 
-function createDelayTimeBuffer(context, activeTime, fadeTime, shiftUp) {
+function createDelayTimeBuffer(context, activeTime, fadeTime_SpeedPitchChanger_despaEll_jungle, shiftUp) {
     var length1 = activeTime * context.sampleRate;
-    var length2 = (activeTime - 2*fadeTime) * context.sampleRate;
+    var length2 = (activeTime - 2*fadeTime_SpeedPitchChanger_despaEll_jungle) * context.sampleRate;
     var length = length1 + length2;
     var buffer = context.createBuffer(1, length, context.sampleRate);
     var p = buffer.getChannelData(0);
@@ -96,9 +106,7 @@ function createDelayTimeBuffer(context, activeTime, fadeTime, shiftUp) {
     return buffer;
 }
 
-var delayTime = 0.100;
-var fadeTime = 0.050;
-var bufferTime = 0.100;
+
 
 function Jungle(context) {
     this.context = context;
@@ -108,16 +116,16 @@ function Jungle(context) {
     this.input = input;
     this.output = output;
 
-    this.previousPitch = 0;
-    this.previousPitchNumber = 0;
+    this.previousPitch_SpeedPitchChanger_despaEll_jungle = 0;
+    this.previousPitchNumber_SpeedPitchChanger_despaEll_jungle = 0;
 
     // Delay modulation.
     var mod1 = context.createBufferSource();
     var mod2 = context.createBufferSource();
     var mod3 = context.createBufferSource();
     var mod4 = context.createBufferSource();
-    this.shiftDownBuffer = createDelayTimeBuffer(context, bufferTime, fadeTime, false);
-    this.shiftUpBuffer = createDelayTimeBuffer(context, bufferTime, fadeTime, true);
+    this.shiftDownBuffer = createDelayTimeBuffer(context, bufferTime_SpeedPitchChanger_despaEll_jungle, fadeTime_SpeedPitchChanger_despaEll_jungle, false);
+    this.shiftUpBuffer = createDelayTimeBuffer(context, bufferTime_SpeedPitchChanger_despaEll_jungle, fadeTime_SpeedPitchChanger_despaEll_jungle, true);
     mod1.buffer = this.shiftDownBuffer;
     mod2.buffer = this.shiftDownBuffer;
     mod3.buffer = this.shiftUpBuffer;
@@ -156,7 +164,7 @@ function Jungle(context) {
     // Crossfading.
     var fade1 = context.createBufferSource();
     var fade2 = context.createBufferSource();
-    var fadeBuffer = createFadeBuffer(context, bufferTime, fadeTime);
+    var fadeBuffer = createFadeBuffer(context, bufferTime_SpeedPitchChanger_despaEll_jungle, fadeTime_SpeedPitchChanger_despaEll_jungle);
     fade1.buffer = fadeBuffer
     fade2.buffer = fadeBuffer;
     fade1.loop = true;
@@ -180,7 +188,7 @@ function Jungle(context) {
 
     // Start
     var t = context.currentTime + 0.050;
-    var t2 = t + bufferTime - fadeTime;
+    var t2 = t + bufferTime_SpeedPitchChanger_despaEll_jungle - fadeTime_SpeedPitchChanger_despaEll_jungle;
     mod1.start(t);
     mod2.start(t2);
     mod3.start(t);
@@ -203,19 +211,17 @@ function Jungle(context) {
     this.delay1 = delay1;
     this.delay2 = delay2;
 
-    this.setDelay(delayTime);
+    this.setDelay(delayTime_SpeedPitchChanger_despaEll_jungle);
 }
 
-Jungle.prototype.setDelay = function(delayTime) {
-    this.modGain1.gain.setTargetAtTime(0.5*delayTime, this.context.currentTime, 0.010);
-    this.modGain2.gain.setTargetAtTime(0.5*delayTime, this.context.currentTime, 0.010);
+Jungle.prototype.setDelay = function(delayTime_SpeedPitchChanger_despaEll_jungle) {
+    this.modGain1.gain.setTargetAtTime(0.5*delayTime_SpeedPitchChanger_despaEll_jungle, this.context.currentTime, 0.010);
+    this.modGain2.gain.setTargetAtTime(0.5*delayTime_SpeedPitchChanger_despaEll_jungle, this.context.currentTime, 0.010);
 }
-
-var previousPitch = -1;
 
 
 Jungle.prototype.setPitchOffset = function (mult, transpose) {
-    this.previousPitchNumber = mult;
+    this.previousPitchNumber_SpeedPitchChanger_despaEll_jungle = mult;
     if (transpose) {
       // Divide by 2 for semitones
       mult = this.transpose(mult / 2);
@@ -231,9 +237,9 @@ Jungle.prototype.setPitchOffset = function (mult, transpose) {
         this.mod3Gain.gain.value = 0;
         this.mod4Gain.gain.value = 0;
     }
-    this.setDelay(delayTime*Math.abs(mult));
-    this.previousPitch = mult;
-    previousPitch = mult;
+    this.setDelay(delayTime_SpeedPitchChanger_despaEll_jungle*Math.abs(mult));
+    this.previousPitch_SpeedPitchChanger_despaEll_jungle = mult;
+    previousPitch_SpeedPitchChanger_despaEll_jungle = mult;
 }
 
 
@@ -261,28 +267,55 @@ Jungle.prototype.transpose = function (x){
   }
 
 }
+var jungleCode_0 = `
+var delayTime_SpeedPitchChanger_despaEll_jungle = 0.100;
+var fadeTime_SpeedPitchChanger_despaEll_jungle = 0.050;
+var bufferTime_SpeedPitchChanger_despaEll_jungle = 0.100;
+var previousPitch_SpeedPitchChanger_despaEll_jungle = -1;
+`
+var jungleCode_1 = createFadeBuffer.toString();
+var jungleCode_2 = createDelayTimeBuffer.toString();
+var jungleCode_3 = Jungle.toString();
+var jungleCode_4 = Jungle.prototype.setDelay.toString();
+var jungleCode_5 = Jungle.prototype.setPitchOffset.toString();
+var jungleCode_6 = Jungle.prototype.transpose.toString();
+
+var jungleCode = jungleCode_0 +"\n\n"+ jungleCode_1 +"\n\n"+ jungleCode_2 +"\n\n"+ jungleCode_3 +"\n\n"+ jungleCode_4 +"\n\n"+ jungleCode_5 +"\n\n"+ jungleCode_6 +"\n\n";
+
+console.log(jungleCode);
 
 
+
+/*
 //########### TEST #############
 
-
 // Create a new audio context.
-var context = new AudioContext();
+var context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
 
 // get the video element
-var audio = document.querySelector('video');
+var ell_SpeedPitchChanger_despaEll_jungle = document.querySelectorAll('video, audio');
 
 // Set up the audio source as a element.
-var source = context.createMediaElementSource(audio);
+var source_SpeedPitchChanger_despaEll_jungle = [];
+for (var i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
+  source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
+}
 
 // Create a new Jungle object.
-var jungle = new Jungle(context);
+var jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
 
 // Connect the Jungle to the destination.
-jungle.output.connect(context.destination);
+jungle_SpeedPitchChanger_despaEll_jungle.output.connect(context_SpeedPitchChanger_despaEll_jungle.destination);
 
 // Connect the source to the Jungle.
-source.connect(jungle.input);
+
+source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
+    element.connect(jungle_SpeedPitchChanger_despaEll_jungle.input);
+    
+});
 
 // Set the pitch offset.
-jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
+jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
+
+*/
+

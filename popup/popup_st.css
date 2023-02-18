@@ -167,3 +167,15 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 } 
+
+.mycenter {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+}
+
+.mycenter p {
+  margin: -0.4em 0.6em 0.1em 0.6em;
+
+}

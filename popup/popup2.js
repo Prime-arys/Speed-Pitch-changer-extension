@@ -84,13 +84,24 @@ async function main() {
                 var alm = document.getElementById("xui");
                 alm.textContent = request.val; //.val = actual_speed value
               }
+
         }
+        if (request.msg === "pup2") { 
+          if (typeof xui2 !== 'undefined') {
+            var alm2 = document.getElementById("xui2");
+            alm2.textContent = request.val; //.val = actual_pitch value
+          }
+        };
         if (request.msg === "mDom") {
           actual_domain = request.val;
           var dmn = document.getElementById("act_domain");
           //console.log("Act domain: " + actual_domain);
           dmn.textContent = actual_domain[0];
           dmn.title = actual_domain[1];
+          if (actual_domain[0] == "developer.mozilla.org") {
+            btban.style.display = "none";
+            dmn.title = "This domain can't be treated by this extension";
+          }
           if(actual_domain[1] == false){
             btban.checked = true;
           }
@@ -135,6 +146,8 @@ async function main() {
     var spDw = document.getElementById("sDw");
     var spDef = document.getElementById("sDef");
     var btban = document.getElementById("btn_ban");
+    var spRight = document.getElementById("pR");
+    var spLeft = document.getElementById("pL");
   
   btban.onchange = function () {
     if (btban.checked) {
@@ -181,6 +194,25 @@ async function main() {
     });
       onGot();
   }
+
+  spRight.onclick = function yt_spRight() {
+    var executing = browser.tabs.executeScript({
+      code: "vpup();",
+      allFrames: true,
+      matchAboutBlank: true
+    });
+    onGot();
+  }
+
+  spLeft.onclick = function yt_spLeft() {
+    var executing = browser.tabs.executeScript({
+      code: "vpdw();",
+      allFrames: true,
+      matchAboutBlank: true
+    });
+    onGot();
+  }
+
   
 
     spUp.addEventListener("mouseover",function(){sUp.src="../icons/clean_svg/uph.svg";})
@@ -193,7 +225,13 @@ async function main() {
     spRes.addEventListener("mouseout",function(){spRes.src="../icons/clean_svg/res.svg";})
 
     spDef.addEventListener("mouseover",function(){sDef.src="../icons/clean_svg/defh.svg";})
-    spDef.addEventListener("mouseout",function(){sDef.src="../icons/clean_svg/def.svg";})
+    spDef.addEventListener("mouseout", function () { sDef.src = "../icons/clean_svg/def.svg"; })
+  
+    spRight.addEventListener("mouseover", function () { pR.src = "../icons/clean_svg/rightS.svg"; })
+    spRight.addEventListener("mouseout", function () { pR.src = "../icons/clean_svg/right.svg"; })
+
+    spLeft.addEventListener("mouseover", function () { pL.src = "../icons/clean_svg/leftS.svg"; })
+    spLeft.addEventListener("mouseout", function () { pL.src = "../icons/clean_svg/left.svg"; })
 
     
 }

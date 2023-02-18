@@ -6,6 +6,12 @@ var rkc=[0,0,0,0,0,0,0,0,0] // settings
 var ytSpeed = false;
 var Elem = "video,audio,source";
 
+var context_SpeedPitchChanger_despaEll_jungle;
+var ell_SpeedPitchChanger_despaEll_jungle;
+var source_SpeedPitchChanger_despaEll_jungle;
+var jungle_SpeedPitchChanger_despaEll_jungle;
+var jungle_inject = false;
+
 if (typeof mdc1 == 'undefined') {
   var mdc1 = false;
 }
@@ -79,6 +85,42 @@ function zpdef(x){
   ace_next();
 }
 
+function inject_jungle() {
+
+context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
+  ell_SpeedPitchChanger_despaEll_jungle = document.querySelectorAll("video,audio");
+  console.log(ell_SpeedPitchChanger_despaEll_jungle);
+source_SpeedPitchChanger_despaEll_jungle = [];
+for (var i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
+  source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
+}
+jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
+jungle_SpeedPitchChanger_despaEll_jungle.output.connect(context_SpeedPitchChanger_despaEll_jungle.destination);
+source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
+    element.connect(jungle_SpeedPitchChanger_despaEll_jungle.input);
+});
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
+  jungle_inject = true;
+}
+
+function vpup() {
+  if (jungle_inject == false) {
+    inject_jungle();
+    console.log("INJECT JUNGLE");
+  }
+  var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
+}
+
+function vpdw() {
+  if (jungle_inject == false) {
+    inject_jungle();
+    console.log("INJECT JUNGLE");
+  }
+  var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
+}
+
 
 
 function pressKey(keyCode)
@@ -126,12 +168,23 @@ browser.runtime.onMessage.addListener(request => {
   //console.log("Message from the background script:");
   //console.log(request.greeting);
   //console.log(ytSpeed.playbackRate);
-  if (request.greeting == "actual_speed"){
-    return Promise.resolve({actual_speed: ytSpeed.playbackRate});
-  }
+  if (request.greeting == "actual_speed") {
+    var a = 0;
+    try {
+      a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
+    } catch (error) {
+      a = 0;
+    }
+    var mess = {
+      actual_speed: ytSpeed.playbackRate,
+      actual_pitch: a
+    };
+    return Promise.resolve(mess);
+  };
+
   if (request.dmn == "actual_domain"){
     return Promise.resolve({actual_domain: document.domain});
-  }
+  };
 });
 
 
@@ -142,13 +195,20 @@ function ace_next() {
 
   var ace1 =
     `
-    //console.log("ace1")
-    if(typeof SpeedPitchChanger_despaEll_1 == "undefined"){
+    console.log("ace1")
+    console.log(SpeedPitchChanger_despaEll_1);
+
+    if (SpeedPitchChanger_despaEll_firstPlay==true && document.domain == "dezzer.com") {
+      //...
+      
+    }
+
+    if(typeof SpeedPitchChanger_despaEll_1 == "undefined" || SpeedPitchChanger_despaEll_1 == []){
 
     console.log("ERROR: SpeedPitchChanger_despaEll_1 is undefined, init failed")
         
     } else {
-      Audio.prototype.play = Audio.prototype.original_play;
+      //Audio.prototype.play = Audio.prototype.original_play;
       SpeedPitchChanger_despaEll_1.forEach(function (spc_audio_element) {
         spc_audio_element.playbackRate = ${ytSpeed.playbackRate};
         spc_audio_element.defaultPlaybackRate = ${ytSpeed.playbackRate};
@@ -161,7 +221,8 @@ function ace_next() {
   
   var ace2 =
     `
-    //console.log("ace2")
+    console.log("ace2")
+    console.log(SpeedPitchChanger_despaEll_2);
     for(var i = 0; i < SpeedPitchChanger_despaEll_2.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
         SpeedPitchChanger_despaEll_2[i].playbackRate = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
@@ -177,4 +238,5 @@ function ace_next() {
   }
   
 }
+
 

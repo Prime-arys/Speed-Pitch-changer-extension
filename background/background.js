@@ -5,6 +5,7 @@ var blacklistHost = localStorage.getItem('Xytspch_blacklist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
+var UPD = false;
 
 //console.log("BG Load")
 var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1];
@@ -12,19 +13,54 @@ var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1];
 if (cad_sett == null) {
   cad_sett = default_sett;
   localStorage.setItem('Xytspch_sett', cad_sett);
+  UPD = true;
 }
 
 if (blacklistHost == null) {
-  blacklistHost = ["*://developer.mozilla.org/*"];
+  blacklistHost = ["*://developer.mozilla.org/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
   localStorage.setItem('Xytspch_blacklist', blacklistHost);
+  UPD = true;
   
 }
 
 if (cad_isen == null) {
   cad_isen = "no";
   localStorage.setItem('Xytspch_isen', cad_isen);
-  browser.runtime.reload()
+  UPD = true;
 }
+
+if (UPD) {
+  browser.runtime.reload();
+}
+
+//check for update on mozilla addons
+//get the version of the addon on manifest.json
+var manifestData = browser.runtime.getManifest();
+var version = manifestData.version;
+//get the version of the addon on the server
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://addons.mozilla.org/api/v3/addons/addon/speed-pitch-changer/", true);
+xhr.onreadystatechange = function () {
+  //console.log("xhr.readyState: " + xhr.readyState);
+  if (xhr.readyState == 4) {
+    //console.log("xhr.responseText: " + xhr.responseText);
+    var response = JSON.parse(xhr.responseText);
+    var serverVersion = response.current_version.version;
+    if (version < serverVersion) {
+      //console.log("New version available");
+      //mettre en gras le message
+      browser.notifications.create({
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("icons/border-48.png"),
+        "title": "Speed Pitch Changer "+version+" -> "+serverVersion,
+        "message": "\nNew version available : "+serverVersion+"\nPlease update the addon on \nthe addons.mozilla.org website."
+      });
+    }
+  }
+}
+xhr.send();
+
+
 
 var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
@@ -53,7 +89,9 @@ if (cad_isen == 'yes'){
   console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start",blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start",blacklistHost);
-  register([defaultHosts], "../utils/ace2.js", "document_start",blacklistHost);
+  register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
+  register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);
+  //register(["*://www.deezer.com/*"], "../utils/ace1.js", "document_idle", blacklistHost); //deezer
   register([defaultHosts], "../contentScript/main.js", "document_idle",blacklistHost);
 
   
@@ -87,7 +125,9 @@ function sendMessageToTabs(tabs, dom=false) {
         { greeting: "actual_speed" }
       ).then(response => {
         var klp = response.actual_speed;
+        var klp2 = response.actual_pitch;
         topop(klp, "pup");
+        topop(klp2, "pup2");
       }).catch(onError);
     } else {
       //console.log(tab.url);
