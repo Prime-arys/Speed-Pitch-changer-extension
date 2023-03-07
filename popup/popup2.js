@@ -129,7 +129,8 @@ async function main() {
       
           //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
       
-          browser.runtime.reload()
+            browser.runtime.reload()
+            //window.location.reload();
         } else {
       
             message('set_isen', 'no');
@@ -137,7 +138,8 @@ async function main() {
       
           //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
       
-          browser.runtime.reload()
+            browser.runtime.reload()
+            //window.location.reload();
         }
     }
     

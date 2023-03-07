@@ -103,22 +103,44 @@ source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
   jungle_inject = true;
 }
 
+function inject_jungle_unDOM() {
+
+  context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
+  ell_SpeedPitchChanger_despaEll_jungle = SpeedPitchChanger_despaEll_1.concat(SpeedPitchChanger_despaEll_2);
+    console.log(ell_SpeedPitchChanger_despaEll_jungle);
+  source_SpeedPitchChanger_despaEll_jungle = [];
+  for (var i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
+    source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
+  }
+  jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
+  jungle_SpeedPitchChanger_despaEll_jungle.output.connect(context_SpeedPitchChanger_despaEll_jungle.destination);
+  source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
+      element.connect(jungle_SpeedPitchChanger_despaEll_jungle.input);
+  });
+    jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
+    jungle_inject = true;
+  }
+
 function vpup() {
   if (jungle_inject == false) {
     inject_jungle();
+    window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
     console.log("INJECT JUNGLE");
   }
   var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
+  window.eval("var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);")
 }
 
 function vpdw() {
   if (jungle_inject == false) {
     inject_jungle();
+    window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
     console.log("INJECT JUNGLE");
   }
   var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
+  window.eval("var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);")
 }
 
 

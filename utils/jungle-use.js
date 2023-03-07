@@ -276,14 +276,23 @@ var previousPitch_SpeedPitchChanger_despaEll_jungle = -1;
 var jungleCode_1 = createFadeBuffer.toString();
 var jungleCode_2 = createDelayTimeBuffer.toString();
 var jungleCode_3 = Jungle.toString();
-var jungleCode_4 = Jungle.prototype.setDelay.toString();
-var jungleCode_5 = Jungle.prototype.setPitchOffset.toString();
-var jungleCode_6 = Jungle.prototype.transpose.toString();
+var jungleCode_4 = "Jungle.prototype.setDelay = " + Jungle.prototype.setDelay.toString();
+var jungleCode_5 = "Jungle.prototype.setPitchOffset = " + Jungle.prototype.setPitchOffset.toString();
+var jungleCode_6 = "Jungle.prototype.transpose = " + Jungle.prototype.transpose.toString();
 
 var jungleCode = jungleCode_0 +"\n\n"+ jungleCode_1 +"\n\n"+ jungleCode_2 +"\n\n"+ jungleCode_3 +"\n\n"+ jungleCode_4 +"\n\n"+ jungleCode_5 +"\n\n"+ jungleCode_6 +"\n\n";
 
-console.log(jungleCode);
-
+//console.log(jungleCode);
+window.eval(jungleCode);
+/*
+window.eval(jungleCode_0);
+window.eval(jungleCode_1);
+window.eval(jungleCode_2);
+window.eval(jungleCode_3);
+window.eval(jungleCode_4);
+window.eval(jungleCode_5);
+window.eval(jungleCode_6);
+*/
 
 
 /*
