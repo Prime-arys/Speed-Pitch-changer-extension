@@ -2,15 +2,15 @@ console.log("MAIN loaded")
 
 //INITIAL
 
-var rkc=[0,0,0,0,0,0,0,0,0] // settings
+let rkc=[0,0,0,0,0,0,0,0,0] // settings
 var ytSpeed = false;
-var Elem = "video,audio,source";
+const Elem = "video,audio,source";
 
-var context_SpeedPitchChanger_despaEll_jungle;
-var ell_SpeedPitchChanger_despaEll_jungle;
-var source_SpeedPitchChanger_despaEll_jungle;
-var jungle_SpeedPitchChanger_despaEll_jungle;
-var jungle_inject = false;
+let context_SpeedPitchChanger_despaEll_jungle;
+let ell_SpeedPitchChanger_despaEll_jungle;
+let source_SpeedPitchChanger_despaEll_jungle;
+let jungle_SpeedPitchChanger_despaEll_jungle;
+let jungle_inject = false;
 
 if (typeof mdc1 == 'undefined') {
   var mdc1 = false;
@@ -41,8 +41,9 @@ function main(){
 
 function handleResponse (message) {
   if (typeof message !== 'undefined') {
-    var setg = message.dm1.split(','); //get the settings from BG
-    rkc = setg;
+    //let setg = message.dm1.split(','); //get the settings from BG
+    //rkc = setg;
+    rkc = message.dm1.split(','); //get the settings from BG
     ytSpeed=main(); //active main fx
     
   }
@@ -51,6 +52,7 @@ function handleResponse (message) {
 //START
 
 notifyBackgroundPage("dm1"); //request settings
+
 
 /*function lg(){console.log(ytSpeed.playbackRate)}*/
 
@@ -84,6 +86,9 @@ function zpdef(x){
   //console.log(x)
   ace_next();
 }
+
+
+
 
 function inject_jungle() {
 
@@ -127,9 +132,10 @@ function vpup() {
     window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
     console.log("INJECT JUNGLE");
   }
-  var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
+  let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
-  window.eval("var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);")
+  window.eval("jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle + 1, true);")
+  //var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
 }
 
 function vpdw() {
@@ -138,16 +144,17 @@ function vpdw() {
     window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
     console.log("INJECT JUNGLE");
   }
-  var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
+  let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
-  window.eval("var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);")
+  window.eval("jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle - 1, true);")
+  //var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
 }
 
 
 
 function pressKey(keyCode)
 {
-  var eventObj = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
+  let eventObj = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
 
   if(eventObj.initEvent)
   {
@@ -170,8 +177,8 @@ function pressKey(keyCode)
 document.onkeydown = function(evt)
 {
   if (rkc[5] == 1) {
-    var keyboardEvent = document.createEvent("KeyboardEvent");
-    var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    let keyboardEvent = document.createEvent("KeyboardEvent");
+    let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
     //console.log(evt.keyCode)
 
       switch (evt.keyCode)
@@ -191,13 +198,13 @@ browser.runtime.onMessage.addListener(request => {
   //console.log(request.greeting);
   //console.log(ytSpeed.playbackRate);
   if (request.greeting == "actual_speed") {
-    var a = 0;
+    let a = 0;
     try {
       a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
     } catch (error) {
       a = 0;
     }
-    var mess = {
+    let mess = {
       actual_speed: ytSpeed.playbackRate,
       actual_pitch: a
     };
@@ -217,13 +224,9 @@ function ace_next() {
 
   var ace1 =
     `
-    console.log("ace1")
-    console.log(SpeedPitchChanger_despaEll_1);
+    //console.log("ace1")
+    //console.log(SpeedPitchChanger_despaEll_1);
 
-    if (SpeedPitchChanger_despaEll_firstPlay==true && document.domain == "dezzer.com") {
-      //...
-      
-    }
 
     if(typeof SpeedPitchChanger_despaEll_1 == "undefined" || SpeedPitchChanger_despaEll_1 == []){
 
@@ -243,8 +246,8 @@ function ace_next() {
   
   var ace2 =
     `
-    console.log("ace2")
-    console.log(SpeedPitchChanger_despaEll_2);
+    //console.log("ace2")
+    //console.log(SpeedPitchChanger_despaEll_2);
     for(var i = 0; i < SpeedPitchChanger_despaEll_2.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
         SpeedPitchChanger_despaEll_2[i].playbackRate = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
@@ -260,5 +263,6 @@ function ace_next() {
   }
   
 }
+
 
 

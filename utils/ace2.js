@@ -19,9 +19,7 @@ Document.prototype.createElement = function (tagName) {
 	if (tagName === 'video' || tagName === 'audio') {
 		console.log('SpeedPitchChanger_despaEll_2 elt : ',p);
 		SpeedPitchChanger_despaEll_2.push(p);
-		if (document.domain == "deezer.com") {
-			console.log("deezer");
-		}
+		
 		//Document.prototype.createElement = Document.prototype.createElement_origin;
 	}
 	return p;

@@ -129,8 +129,13 @@ async function main() {
       
           //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
       
-            browser.runtime.reload()
+            browser.runtime.reload();
             //window.location.reload();
+            //force quit popup on android
+            if (navigator.userAgent.indexOf("Android") != -1) {
+              window.close();
+            }
+            
         } else {
       
             message('set_isen', 'no');
@@ -138,8 +143,12 @@ async function main() {
       
           //var executing = browser.tabs.executeScript({code: "document.location.reload();"});
       
-            browser.runtime.reload()
+            browser.runtime.reload();
             //window.location.reload();
+            //force quit popup on android
+            if (navigator.userAgent.indexOf("Android") != -1) {
+              window.close();
+            }
         }
     }
     

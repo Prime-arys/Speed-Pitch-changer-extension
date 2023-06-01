@@ -6,7 +6,7 @@ var ace1 =
   `
   console.log("ace1")
   var SpeedPitchChanger_despaEll_firstPlay = true;
-  var SpeedPitchChanger_despaEll_ct = 0;
+  //var SpeedPitchChanger_despaEll_ct = 0;
   if (SpeedPitchChanger_despaEll_firstPlay == true) {
   var OGP = Audio.prototype.play;
   }
@@ -18,15 +18,21 @@ var ace1 =
     Audio.prototype.play = Audio.prototype.original_play;
 
     Audio.prototype.play = function () {
-      SpeedPitchChanger_despaEll_ct++;
-      console.log("play ct: ", SpeedPitchChanger_despaEll_ct);
-      console.log(this)
+      //console.log("# playing ");
+      //SpeedPitchChanger_despaEll_ct++;
+      //console.log("play ct: ", SpeedPitchChanger_despaEll_ct);
+      //console.log(this)
       //verifier si l'element est deja dans le tableau
       if (SpeedPitchChanger_despaEll_1.includes(this)) {
-        console.log("already in array");
-        console.log(SpeedPitchChanger_despaEll_1);
+        //console.log("already in array");
+        //console.log(SpeedPitchChanger_despaEll_1);
       } else {
+        /*this.addEventListener("canplay", function () {
+          SpeedPitchChanger_despaEll_1.push(this);
+          console.log("canplay");
+        });*/
         SpeedPitchChanger_despaEll_1.push(this);
+        //console.log("pushed ###############");
       }
       var p = this.original_play(arguments);
       if (SpeedPitchChanger_despaEll_firstPlay == true) {
@@ -34,7 +40,7 @@ var ace1 =
         this.pause();
         //SpeedPitchChanger_despaEll_firstPlay = false;
       }
-      
+      //console.log("### playing ");
       return p;
 }
 
@@ -45,11 +51,11 @@ Audio.prototype.original_pause = OGPu;
 Audio.prototype.pause = Audio.prototype.original_pause;
 
 Audio.prototype.pause = function () {
-  console.log(this)
+  //console.log(this)
   //verifier si l'element est deja dans le tableau
   if (SpeedPitchChanger_despaEll_1.includes(this)) {
-    console.log("already in array");
-    console.log(SpeedPitchChanger_despaEll_1);
+    //console.log("already in array");
+    //console.log(SpeedPitchChanger_despaEll_1);
   } else {
     SpeedPitchChanger_despaEll_1.push(this);
   }
@@ -64,6 +70,22 @@ Audio.prototype.pause = function () {
   return p;
 }
 
+const SpeedPitchChanger_despaEll_originalAudio = window.Audio;
+
+// Remplacez la méthode Audio par une version modifiée
+window.Audio = function() {
+  // Créez une nouvelle instance de l'élément audio en utilisant l'implémentation d'origine
+  const SpeedPitchChanger_despaEll_audioElement = new SpeedPitchChanger_despaEll_originalAudio();
+
+  // Modifiez le playbackRate
+  //audioElement.playbackRate = 2.5;
+
+  //ajouter à la liste
+  SpeedPitchChanger_despaEll_1.push(SpeedPitchChanger_despaEll_audioElement);
+
+  // Retournez l'élément audio modifié
+  return SpeedPitchChanger_despaEll_audioElement;
+};
 
 
 
@@ -73,11 +95,6 @@ Audio.prototype.pause = function () {
 
   console.log("ace1")
 window.eval(ace1);
-
-
-
-
-
 
 
 
