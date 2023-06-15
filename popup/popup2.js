@@ -1,31 +1,36 @@
 import { onError, message } from "../utils/utils_BG.js";
 
 var hidden = false;
-var getting = true;
 var cad_isen;
 var cad_sett;
-var master;
+var cad_upd;
 var actual_domain;
 //console.log("POP Load")
 
 
 if (typeof aver == 'undefined') {
-    var aver = document.getElementById("ver");
+    let aver = document.getElementById("ver");
     aver.textContent = browser.runtime.getManifest().version;
 }
-
 
 
 
 async function main() {
   cad_sett = (await message('get_cstt')).cstt; //return cstt
   cad_isen = (await message('get_isen')).isen; //return isen
+  cad_upd = (await message('get_upd')).upd; //return upd
 
     if (cad_isen == 'yes') {
         document.getElementById("on_off").checked = true;
     }
       
-    
+  cad_upd = cad_upd.split(",");
+  if (cad_upd[0] != "nan") {
+    aver.textContent = browser.runtime.getManifest().version + "*";
+    aver.title = "New version available: " + cad_upd[0];
+    aver.style.color = "#6f5600";
+  }
+  
     var ca_kc = cad_sett.split(",");
 
     function logTabs(tabs) {
@@ -59,7 +64,7 @@ async function main() {
     
     function onOpen(ishiden) {
 
-      if (typeof xui !== 'undefined') {var alm = document.getElementById("xui");alm.textContent = "(passive)";}
+      if (typeof xui !== 'undefined') {let alm = document.getElementById("xui");alm.textContent = "(passive)";}
       if (ishiden == true) {
         hidden = true;
       }
@@ -81,14 +86,14 @@ async function main() {
             //request.msg = head of message from topop()
             if (request.msg === "pup") {
               if (typeof xui !== 'undefined') {
-                var alm = document.getElementById("xui");
+                let alm = document.getElementById("xui");
                 alm.textContent = request.val; //.val = actual_speed value
               }
 
         }
         if (request.msg === "pup2") { 
           if (typeof xui2 !== 'undefined') {
-            var alm2 = document.getElementById("xui2");
+            let alm2 = document.getElementById("xui2");
             alm2.textContent = request.val; //.val = actual_pitch value
           }
         };
@@ -115,7 +120,7 @@ async function main() {
     );
 
     if (ca_kc[4]=='1') {
-        if (typeof xui !== 'undefined') {var alm = document.getElementById("desc");alm.textContent = "(preserved pitch mode)";}
+        if (typeof xui !== 'undefined') {let alm = document.getElementById("desc");alm.textContent = "(preserved pitch mode)";}
       }
 
       
@@ -152,13 +157,15 @@ async function main() {
         }
     }
     
-    var spUp = document.getElementById("sUp");
-    var spRes = document.getElementById("sRes");
-    var spDw = document.getElementById("sDw");
-    var spDef = document.getElementById("sDef");
-    var btban = document.getElementById("btn_ban");
-    var spRight = document.getElementById("pR");
-    var spLeft = document.getElementById("pL");
+    const spUp = document.getElementById("sUp");
+    const spRes = document.getElementById("sRes");
+    const spDw = document.getElementById("sDw");
+    const spDef = document.getElementById("sDef");
+    const btban = document.getElementById("btn_ban");
+    const spRight = document.getElementById("pR");
+    const spLeft = document.getElementById("pL");
+  
+    const spJuRes = document.getElementById("xui2");
   
   btban.onchange = function () {
     if (btban.checked) {
@@ -172,7 +179,7 @@ async function main() {
   }
 
     spUp.onclick = function yt_spUp(){
-      var executing = browser.tabs.executeScript({
+      let executing = browser.tabs.executeScript({
         code: "xpup();",
         allFrames: true,
         matchAboutBlank: true
@@ -181,7 +188,7 @@ async function main() {
     }
 
     spDw.onclick = function yt_spDw(){
-      var executing = browser.tabs.executeScript({
+      let executing = browser.tabs.executeScript({
         code: "xpdw();",
         allFrames: true,
         matchAboutBlank: true
@@ -190,7 +197,7 @@ async function main() {
     }
 
     spRes.onclick = function yt_spRes(){
-      var executing = browser.tabs.executeScript({
+      let executing = browser.tabs.executeScript({
         code: "xpres();",
         allFrames: true,
         matchAboutBlank: true
@@ -199,7 +206,7 @@ async function main() {
     }
 
     spDef.onclick = function yt_spDef(){
-      var executing = browser.tabs.executeScript({
+      let executing = browser.tabs.executeScript({
       code: "xpdef();"
       //allFrames: true
     });
@@ -207,7 +214,7 @@ async function main() {
   }
 
   spRight.onclick = function yt_spRight() {
-    var executing = browser.tabs.executeScript({
+    let executing = browser.tabs.executeScript({
       code: "vpup();",
       allFrames: true,
       matchAboutBlank: true
@@ -216,13 +223,23 @@ async function main() {
   }
 
   spLeft.onclick = function yt_spLeft() {
-    var executing = browser.tabs.executeScript({
+    let executing = browser.tabs.executeScript({
       code: "vpdw();",
       allFrames: true,
       matchAboutBlank: true
     });
     onGot();
   }
+
+  spJuRes.onclick = function yt_spJuRes() {
+    let executing = browser.tabs.executeScript({
+      code: "vpres();",
+      allFrames: true,
+      matchAboutBlank: true
+    });
+    onGot();
+  }
+
 
   
 

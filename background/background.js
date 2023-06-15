@@ -4,6 +4,7 @@ const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
+var cad_upd = localStorage.getItem('Xytspch_upd');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 var UPD = false;
 
@@ -13,6 +14,12 @@ var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1];
 if (cad_sett == null) {
   cad_sett = default_sett;
   localStorage.setItem('Xytspch_sett', cad_sett);
+  UPD = true;
+}
+
+if (cad_upd == null) {
+  cad_upd = ["nan", 0]; // "xxx" : last version checked, x : 0 = notif not sent, 1 = notif sent 
+  localStorage.setItem('Xytspch_upd', cad_upd);
   UPD = true;
 }
 
@@ -33,20 +40,25 @@ if (UPD) {
   browser.runtime.reload();
 }
 
+cad_upd = cad_upd.split(",");
+
 //check for update on mozilla addons
 //get the version of the addon on manifest.json
-var manifestData = browser.runtime.getManifest();
-var version = manifestData.version;
+const manifestData = browser.runtime.getManifest();
+const version = manifestData.version;
 //get the version of the addon on the server
-var xhr = new XMLHttpRequest();
+let xhr = new XMLHttpRequest();
 xhr.open("GET", "https://addons.mozilla.org/api/v3/addons/addon/speed-pitch-changer/", true);
 xhr.onreadystatechange = function () {
   //console.log("xhr.readyState: " + xhr.readyState);
   if (xhr.readyState == 4) {
     //console.log("xhr.responseText: " + xhr.responseText);
-    var response = JSON.parse(xhr.responseText);
-    var serverVersion = response.current_version.version;
-    if (version < serverVersion) {
+    let response = JSON.parse(xhr.responseText);
+    let serverVersion = response.current_version.version;
+    if (version < serverVersion && cad_upd[1] == 0) {
+      cad_upd[0] = serverVersion;
+      cad_upd[1] = 1;
+      localStorage.setItem('Xytspch_upd', cad_upd);
       //console.log("New version available");
       //mettre en gras le message
       browser.notifications.create({
@@ -55,6 +67,12 @@ xhr.onreadystatechange = function () {
         "title": "Speed Pitch Changer "+version+" -> "+serverVersion,
         "message": "\nNew version available : "+serverVersion+"\nPlease update the addon on \nthe addons.mozilla.org website."
       });
+    }
+    else {
+      //console.log("No update available");
+      cad_upd[0] = "nan";
+      cad_upd[1] = 0;
+      localStorage.setItem('Xytspch_upd', cad_upd);
     }
   }
 }
@@ -67,7 +85,7 @@ var blacklistHost = blacklistHost.split(',');
 
 if (setg.length < 9){
   //Update settings
-  var tmp_rkc = [];
+  let tmp_rkc = [];
   default_sett.forEach(function (value, index) {
     if (typeof setg[index] == 'undefined') {
       tmp_rkc.push(default_sett[index]);
@@ -84,8 +102,8 @@ if (setg.length < 9){
 }
 
 if (cad_isen == 'yes'){
-  var soundcloud = "*://soundcloud.com/*";
-  var spotify = "*://*.spotify.com/*";
+  //var soundcloud = "*://soundcloud.com/*";
+  //var spotify = "*://*.spotify.com/*";
   console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start",blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start",blacklistHost);
@@ -97,7 +115,7 @@ if (cad_isen == 'yes'){
   
 }
 else {
-  var plat = navigator.userAgent.toLowerCase();
+  let plat = navigator.userAgent.toLowerCase();
   if (!plat.includes("android")) {
     /*pas de changement d'icone sur android*/
     browser.browserAction.setIcon({ path: "../icons/border-16d.png" });
@@ -124,14 +142,14 @@ function sendMessageToTabs(tabs, dom=false) {
         tab.id,
         { greeting: "actual_speed" }
       ).then(response => {
-        var klp = response.actual_speed;
-        var klp2 = response.actual_pitch;
+        let klp = response.actual_speed;
+        let klp2 = response.actual_pitch;
         topop(klp, "pup");
         topop(klp2, "pup2");
       }).catch(onError);
     } else {
       //console.log(tab.url);
-      var domain = (tab.url).split("/")[2];
+      let domain = (tab.url).split("/")[2];
       blacklist_manager(blacklistHost, "is_in", domain).then((result) => {
         topop([domain,result], "mDom");
       });
@@ -157,17 +175,17 @@ function handleMessage(request, sender, sendResponse) {
     sendResponse({dm1: cad_sett});
   }
   if(request.title == "xpup"){
-    var executing = browser.tabs.executeScript({code: "xpup();",allFrames: true, matchAboutBlank: true});
+    let executing = browser.tabs.executeScript({code: "xpup();",allFrames: true, matchAboutBlank: true});
   }
   if(request.title == "xpdw"){
-    var executing = browser.tabs.executeScript({code: "xpdw();",allFrames: true, matchAboutBlank: true});
+    let executing = browser.tabs.executeScript({code: "xpdw();",allFrames: true, matchAboutBlank: true});
   }
   if(request.title == "xpres"){
-    var executing = browser.tabs.executeScript({code: "xpres();",allFrames: true, matchAboutBlank: true});
+    let executing = browser.tabs.executeScript({code: "xpres();",allFrames: true, matchAboutBlank: true});
   }
   if(request.title == "xpdef"){
-    var fdef = "zpdef(" + request.data + ");";
-    var executing = browser.tabs.executeScript({code: fdef,allFrames: true, matchAboutBlank: true});
+    let fdef = "zpdef(" + request.data + ");";
+    let executing = browser.tabs.executeScript({code: fdef,allFrames: true, matchAboutBlank: true});
   }
 
   //FOR POP
@@ -189,6 +207,11 @@ function handleMessage(request, sender, sendResponse) {
     //renvoie cad_isen en réponse
     cad_isen = localStorage.getItem('Xytspch_isen');
     sendResponse({ isen: cad_isen });
+  }
+  if (request.type == "get_upd") {
+    //renvoie cad_upd en réponse
+    cad_upd = localStorage.getItem('Xytspch_upd');
+    sendResponse({ upd: cad_upd });
   }
   if (request.type == "set_cstt") {
     cad_sett = request.val;

@@ -18,7 +18,7 @@ function logTabs(tabs) {
 }
 
 function msgforyou(m, reset) {
-  var zlm = document.getElementById("CMs");
+  let zlm = document.getElementById("CMs");
   if (reset == false){
   zlm.textContent = m;
   /*ajout une classe*/
@@ -38,14 +38,14 @@ async function main() {
 
   var cad_sett = (await message('get_cstt')).cstt; //return cstt
 
-  var dres = document.getElementById("res");
-  var dsup = document.getElementById("sup");
-  var dsdw = document.getElementById("sdw");
-  var dset = document.getElementById("set");
-  var aply = document.getElementById("apl");
-  var rad_st = document.getElementsByName("btn_meth");
-  var rad_2val = document.getElementById("rad2val");
-  var rad_3val = document.getElementById("rad3val");
+  const dres = document.getElementById("res");
+  const dsup = document.getElementById("sup");
+  const dsdw = document.getElementById("sdw");
+  const dset = document.getElementById("set");
+  const aply = document.getElementById("apl");
+  const rad_st = document.getElementsByName("btn_meth");
+  const rad_2val = document.getElementById("rad2val");
+  const rad_3val = document.getElementById("rad3val");
   var tKC = 0;
 
   dres.textContent=ipc_kco[cad_sett.split(",")[0]];
@@ -196,12 +196,12 @@ async function rule_set () {
     var ca_kc = cad_sett.split(",");
 
     if(Checkbox.checked) {
-      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6],ca_kc[7],ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6],ca_kc[7],ca_kc[8]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
     
     } else {
-        var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7],ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7],ca_kc[8]];
         message('set_cstt', tmp_rkc);
         console.log(Checkbox.checked);
     
@@ -216,12 +216,12 @@ async function rule_set () {
     
 
     if(Checkbox2.checked) {
-      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6],ca_kc[7],ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6],ca_kc[7],ca_kc[8]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
     
     } else {
-      var tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7],ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7],ca_kc[8]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
     

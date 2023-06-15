@@ -179,3 +179,22 @@ input:checked + .slider:before {
   margin: -0.4em 0.6em 0.1em 0.6em;
 
 }
+
+#xui2{
+  margin-right: 1.3em;
+  margin-left: 1.3em;
+  margin-top: -3.8px;
+
+  padding: 0.2em 0.8em 0.2em 0.8em;
+
+  border-radius: 16px;
+  
+  font-size: 15px;
+  font-family: 'Open Sans', 'Segoe UI Light', Arial;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /*cursor: pointer;*/
+
+
+}
