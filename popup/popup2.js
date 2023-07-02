@@ -7,6 +7,10 @@ var cad_upd;
 var actual_domain;
 //console.log("POP Load")
 
+if (navigator.userAgent.indexOf("Android") != -1) {
+  document.querySelector("body").setAttribute("class", "android");
+}
+
 
 if (typeof aver == 'undefined') {
     let aver = document.getElementById("ver");

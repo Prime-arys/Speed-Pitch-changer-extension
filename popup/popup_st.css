@@ -6,7 +6,26 @@ body {
     background-size: none;
     background-repeat: repeat-x;
 
+    /* no scroll */
+    overflow: hidden;
+    max-width: 100%;
+    
+    display: block;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+
+
+
  }
+
+ .android {
+  width: 100vw; /* Utilise toute la largeur de la fenêtre */
+  transform-origin: top center;
+  transform: scale(6);
+  padding-left: calc(100vw - 90%);
+  
+}
 
 
 p {
