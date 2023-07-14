@@ -96,7 +96,7 @@ context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
   ell_SpeedPitchChanger_despaEll_jungle = document.querySelectorAll("video,audio");
   console.log(ell_SpeedPitchChanger_despaEll_jungle);
 source_SpeedPitchChanger_despaEll_jungle = [];
-for (var i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
+for (let i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
   source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
 }
 jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
@@ -114,7 +114,7 @@ function inject_jungle_unDOM() {
   ell_SpeedPitchChanger_despaEll_jungle = SpeedPitchChanger_despaEll_1.concat(SpeedPitchChanger_despaEll_2);
     console.log(ell_SpeedPitchChanger_despaEll_jungle);
   source_SpeedPitchChanger_despaEll_jungle = [];
-  for (var i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
+  for (let i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
     source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
   }
   jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);

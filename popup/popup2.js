@@ -13,7 +13,7 @@ if (navigator.userAgent.indexOf("Android") != -1) {
 
 
 if (typeof aver == 'undefined') {
-    let aver = document.getElementById("ver");
+    var aver = document.getElementById("ver");
     aver.textContent = browser.runtime.getManifest().version;
 }
 
@@ -107,7 +107,8 @@ async function main() {
           //console.log("Act domain: " + actual_domain);
           dmn.textContent = actual_domain[0];
           dmn.title = actual_domain[1];
-          if (actual_domain[0] == "developer.mozilla.org") {
+          const unavliable_domain = ["addons.mozilla.org", "developer.mozilla.org", "this-firefox", "", null, undefined];
+          if (unavliable_domain.includes(actual_domain[0])) {
             btban.style.display = "none";
             dmn.title = "This domain can't be treated by this extension";
           }

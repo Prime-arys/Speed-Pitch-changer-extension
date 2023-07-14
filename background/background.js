@@ -68,6 +68,10 @@ xhr.onreadystatechange = function () {
         "message": "\nNew version available : "+serverVersion+"\nPlease update the addon on \nthe addons.mozilla.org website."
       });
     }
+    else if (cad_upd[1] == 1) {
+      //do nothing
+    }
+
     else {
       //console.log("No update available");
       cad_upd[0] = "nan";

@@ -8,12 +8,12 @@ var ace1 =
   var SpeedPitchChanger_despaEll_firstPlay = true;
   //var SpeedPitchChanger_despaEll_ct = 0;
   if (SpeedPitchChanger_despaEll_firstPlay == true) {
-  var OGP = Audio.prototype.play;
+  var SpeedPitchChanger_despaEll_OGP = Audio.prototype.play;
   }
   var SpeedPitchChanger_despaEll_1 = [];
   
 
-    Audio.prototype.original_play = OGP;
+    Audio.prototype.original_play = SpeedPitchChanger_despaEll_OGP;
 
     Audio.prototype.play = Audio.prototype.original_play;
 
@@ -34,19 +34,20 @@ var ace1 =
         SpeedPitchChanger_despaEll_1.push(this);
         //console.log("pushed ###############");
       }
-      var p = this.original_play(arguments);
+      //let p = this.original_play(arguments);
       if (SpeedPitchChanger_despaEll_firstPlay == true) {
         console.log("first play");
         this.pause();
         //SpeedPitchChanger_despaEll_firstPlay = false;
       }
       //console.log("### playing ");
-      return p;
+      //return p;
+      return this.original_play(arguments);
 }
 
-var OGPu = Audio.prototype.pause;
+var SpeedPitchChanger_despaEll_OGPu = Audio.prototype.pause;
 
-Audio.prototype.original_pause = OGPu;
+Audio.prototype.original_pause = SpeedPitchChanger_despaEll_OGPu;
 
 Audio.prototype.pause = Audio.prototype.original_pause;
 
@@ -65,9 +66,10 @@ Audio.prototype.pause = function () {
     this.play();
     
   }
-  var p = this.original_pause(arguments);
+  //let p = this.original_pause(arguments);
   
-  return p;
+  //return p;
+  return this.original_pause(arguments);
 }
 
 const SpeedPitchChanger_despaEll_originalAudio = window.Audio;
