@@ -63,13 +63,21 @@ xhr.onreadystatechange = function () {
       //mettre en gras le message
       browser.notifications.create({
         "type": "basic",
-        "iconUrl": browser.extension.getURL("icons/border-48.png"),
+        //"iconUrl": browser.extension.getURL("icons/border-48.png"),
+        "iconUrl": "../icons/border-48.png",
         "title": "Speed Pitch Changer "+version+" -> "+serverVersion,
         "message": "\nNew version available : "+serverVersion+"\nPlease update the addon on \nthe addons.mozilla.org website."
       });
     }
     else if (cad_upd[1] == 1) {
+      //if the server version is the same or lower than the local version, reset the update notification
+      if (version >= serverVersion) {
+        cad_upd[0] = "nan";
+        cad_upd[1] = 0;
+        localStorage.setItem('Xytspch_upd', cad_upd);
+      }
       //do nothing
+
     }
 
     else {
@@ -108,7 +116,7 @@ if (setg.length < 9){
 if (cad_isen == 'yes'){
   //var soundcloud = "*://soundcloud.com/*";
   //var spotify = "*://*.spotify.com/*";
-  console.log(blacklistHost);
+  //console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start",blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start",blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);

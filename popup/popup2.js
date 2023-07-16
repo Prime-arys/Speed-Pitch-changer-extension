@@ -175,11 +175,11 @@ async function main() {
   btban.onchange = function () {
     if (btban.checked) {
       message('set_unban', actual_domain[0]);
-      console.log(btban.checked);
+      //console.log(btban.checked);
     } else {
       
       message('set_ban', actual_domain[0]);
-      console.log(btban.checked);
+      //console.log(btban.checked);
     }
   }
 

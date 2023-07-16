@@ -29,14 +29,14 @@ var ace1 =
       } else {
         /*this.addEventListener("canplay", function () {
           SpeedPitchChanger_despaEll_1.push(this);
-          console.log("canplay");
+          //console.log("canplay");
         });*/
         SpeedPitchChanger_despaEll_1.push(this);
         //console.log("pushed ###############");
       }
       //let p = this.original_play(arguments);
       if (SpeedPitchChanger_despaEll_firstPlay == true) {
-        console.log("first play");
+        //console.log("first play");
         this.pause();
         //SpeedPitchChanger_despaEll_firstPlay = false;
       }
@@ -61,7 +61,7 @@ Audio.prototype.pause = function () {
     SpeedPitchChanger_despaEll_1.push(this);
   }
   if (SpeedPitchChanger_despaEll_firstPlay == true) {
-    console.log("first play");
+    //console.log("first play");
     SpeedPitchChanger_despaEll_firstPlay = false;
     this.play();
     

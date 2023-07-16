@@ -17,7 +17,7 @@ Document.prototype.createElement = function (tagName) {
 	
 	let p = this.createElement_origin(tagName);
 	if (tagName === 'video' || tagName === 'audio') {
-		console.log('SpeedPitchChanger_despaEll_2 elt : ',p);
+		//console.log('SpeedPitchChanger_despaEll_2 elt : ',p);
 		SpeedPitchChanger_despaEll_2.push(p);
 		
 		//Document.prototype.createElement = Document.prototype.createElement_origin;

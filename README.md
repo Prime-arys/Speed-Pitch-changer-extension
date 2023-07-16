@@ -6,9 +6,11 @@
 
 Features :
 - Enter any value (no limit)
-- Partial support for web audio (audio html5)
+- Support for web audio (should work with any HTMLAudioElement)
 - You can reactivate the pitch preservation
 - Use your own keyboard shortcuts through the 'commands' menu (default keys : __* + - .__ on the numeric keypad)
+- You can change the pitch of an element independently of its speed
+- Choose the sites on which the extension should be active
 
 <br/>
 
@@ -16,9 +18,16 @@ Features :
 
 Fonctionnalités :
 - Entrez n'importe quelle valeur (sans limite)
-- Support partiel de l'audio web (audio html5)
+- Support de l'audio web (devrait fonctionner avec n'importe quel HTMLAudioElement)
 - Vous pouvez réactiver la préservation des tonalités
-- Utiliser vos propres racoucis clavier grâce au menu 'commands' (touches par défault : __* + - .__ sur le clavier numérique)
+- Utiliser vos propres raccourcis clavier grâce au menu 'commands' (touches par défaut : __* + - .__ sur le clavier numérique)
+- Vous pouvez modifier la tonalité d'un élément indépendamment de sa vitesse.
+- Choisissez les sites sur lesquels l'extension doit être active
+
 <br/>
+
+
+Buy me some chocolate 🍫 : (**XMR**) _8BNYW7dYzPy65J9ksFdVJLSemaHGtwKW4QPTZ6xkSyafcwz2iPyfSPgS5LbqwHK1w9P6VKUWMG1XWDm6cMgQs5dXPdHE5Q1_
+
 
 **Download (Firefox) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**

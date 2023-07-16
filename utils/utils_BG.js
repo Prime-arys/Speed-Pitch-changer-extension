@@ -24,7 +24,7 @@ export function message(head, body = null) {
 //Background
 
 export async function register(hosts,myfile,run,blacklist) {
-    console.log(blacklist);
+    //console.log(blacklist);
     return await browser.contentScripts.register({
       "matches": hosts,
       "excludeMatches": blacklist,
@@ -37,15 +37,15 @@ export async function register(hosts,myfile,run,blacklist) {
 }
   
 export async function blacklist_manager(blacklist, action, domain) {
-    console.log("Blacklist manager");
+    //console.log("Blacklist manager");
     domain = "*://"+domain+"/*";
     if (action == "add") {
-        console.log("Adding domain to blacklist");
+        //console.log("Adding domain to blacklist");
         blacklist.push(domain);
         localStorage.setItem("Xytspch_blacklist", blacklist);
     }
     else if (action == "del") {
-        console.log("Removing domain from blacklist");
+        //console.log("Removing domain from blacklist");
       var index = blacklist.indexOf(domain);
       if (index > -1) {
           blacklist.splice(index, 1);
@@ -56,11 +56,11 @@ export async function blacklist_manager(blacklist, action, domain) {
         }
     }
     else if (action == "get") {
-        console.log("Getting blacklist");
+        //console.log("Getting blacklist");
       return blacklist;
     }
     else if (action == "is_in") {
-        console.log("Checking if domain is in blacklist");
+        //console.log("Checking if domain is in blacklist");
         console.log(blacklist.includes(domain));
       return blacklist.includes(domain);
     }
