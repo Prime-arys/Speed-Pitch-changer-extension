@@ -4,7 +4,7 @@ var mdc1 = true;
 //var mcd2 = false;
 var ace1 =
   `
-  console.log("ace1")
+  //console.log("ace1");
   var SpeedPitchChanger_despaEll_firstPlay = true;
   //var SpeedPitchChanger_despaEll_ct = 0;
   if (SpeedPitchChanger_despaEll_firstPlay == true) {
@@ -95,7 +95,7 @@ window.Audio = function() {
 
 //wait for the page to load
 
-  console.log("ace1")
+  //console.log("ace1")
 window.eval(ace1);
 
 

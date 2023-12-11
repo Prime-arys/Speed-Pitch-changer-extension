@@ -221,10 +221,14 @@ Jungle.prototype.setDelay = function(delayTime_SpeedPitchChanger_despaEll_jungle
 
 
 Jungle.prototype.setPitchOffset = function (mult, transpose) {
-    this.previousPitchNumber_SpeedPitchChanger_despaEll_jungle = mult;
+  this.previousPitchNumber_SpeedPitchChanger_despaEll_jungle = mult;
+  //console.log("MULT: " + mult);
     if (transpose) {
       // Divide by 2 for semitones
-      mult = this.transpose(mult / 2);
+      //mult = this.transpose(mult / 2);
+      //mult = mult / 6;
+      mult = this.SemiToneTranspose(mult);
+      //console.log("MULT out: " + mult);
     }
     if (mult>0) { // pitch up
         this.mod1Gain.gain.value = 0;
@@ -243,7 +247,8 @@ Jungle.prototype.setPitchOffset = function (mult, transpose) {
 }
 
 
-Jungle.prototype.transpose = function (x){
+/* Jungle.prototype.transpose = function (x) {
+  console.log("Transpose Mult in: " + x);
 
   if (x<0){
     return x/12
@@ -263,10 +268,20 @@ Jungle.prototype.transpose = function (x){
     var x4 = x*x*x*x
     var x5 = x*x*x*x*x
 
+    console.log("Transpose Mult out: " + (a0 + x1*a1 + x2*a2 + x3*a3 + x4*a4 + x5*a5));
     return a0 + x1*a1 + x2*a2 + x3*a3 + x4*a4 + x5*a5
   }
 
+} */
+
+
+Jungle.prototype.SemiToneTranspose = function (x) {
+  // Suite géométrique des demi-tons / Geometric series of semitones
+  let a = 1.0594630943592953
+  return (Math.pow(a, x)-1) * 2
 }
+
+
 var jungleCode_0 = `
 var delayTime_SpeedPitchChanger_despaEll_jungle = 0.100;
 var fadeTime_SpeedPitchChanger_despaEll_jungle = 0.050;
@@ -278,7 +293,7 @@ var jungleCode_2 = createDelayTimeBuffer.toString();
 var jungleCode_3 = Jungle.toString();
 var jungleCode_4 = "Jungle.prototype.setDelay = " + Jungle.prototype.setDelay.toString();
 var jungleCode_5 = "Jungle.prototype.setPitchOffset = " + Jungle.prototype.setPitchOffset.toString();
-var jungleCode_6 = "Jungle.prototype.transpose = " + Jungle.prototype.transpose.toString();
+var jungleCode_6 = "Jungle.prototype.SemiToneTranspose = " + Jungle.prototype.SemiToneTranspose.toString();
 
 var jungleCode = jungleCode_0 +"\n\n"+ jungleCode_1 +"\n\n"+ jungleCode_2 +"\n\n"+ jungleCode_3 +"\n\n"+ jungleCode_4 +"\n\n"+ jungleCode_5 +"\n\n"+ jungleCode_6 +"\n\n";
 

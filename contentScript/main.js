@@ -1,4 +1,4 @@
-console.log("MAIN loaded")
+//console.log("MAIN loaded")
 
 //INITIAL
 
@@ -130,7 +130,7 @@ function vpup() {
   if (jungle_inject == false) {
     inject_jungle();
     window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
-    console.log("INJECT JUNGLE");
+    //console.log("INJECT JUNGLE");
   }
   let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
@@ -142,7 +142,7 @@ function vpdw() {
   if (jungle_inject == false) {
     inject_jungle();
     window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
-    console.log("INJECT JUNGLE");
+    //console.log("INJECT JUNGLE");
   }
   let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
@@ -154,7 +154,7 @@ function vpres() {
   if (jungle_inject == false) {
     inject_jungle();
     window.eval(inject_jungle_unDOM.toString() + "inject_jungle_unDOM();");
-    console.log("INJECT JUNGLE");
+    //console.log("INJECT JUNGLE");
   }
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true);
   window.eval("jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true);")

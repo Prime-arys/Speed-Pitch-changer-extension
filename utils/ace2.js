@@ -4,7 +4,7 @@
 "use strict";
 var mdc2 = true;
 var ace2 = `
-console.log("ace2")
+//console.log("ace2");
 // Création de la fonction qui remplacera la méthode createElement
 var SpeedPitchChanger_despaEll_2 = [];
 
