@@ -27,7 +27,7 @@ if (blacklistHost == null) {
   blacklistHost = ["*://developer.mozilla.org/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
   localStorage.setItem('Xytspch_blacklist', blacklistHost);
   UPD = true;
-  
+
 }
 
 if (cad_isen == null) {
@@ -65,8 +65,8 @@ xhr.onreadystatechange = function () {
         "type": "basic",
         //"iconUrl": browser.extension.getURL("icons/border-48.png"),
         "iconUrl": "../icons/border-48.png",
-        "title": "Speed Pitch Changer "+version+" -> "+serverVersion,
-        "message": "\nNew version available : "+serverVersion+"\nPlease update the addon on \nthe addons.mozilla.org website."
+        "title": "Speed Pitch Changer " + version + " -> " + serverVersion,
+        "message": "\nNew version available : " + serverVersion + "\nPlease update the addon on \nthe addons.mozilla.org website."
       });
     }
     else if (cad_upd[1] == 1) {
@@ -95,7 +95,7 @@ xhr.send();
 var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
 
-if (setg.length < 9){
+if (setg.length < 9) {
   //Update settings
   let tmp_rkc = [];
   default_sett.forEach(function (value, index) {
@@ -107,24 +107,24 @@ if (setg.length < 9){
     }
     //console.log(tmp_rkc);
   });
-    localStorage.setItem('Xytspch_sett', tmp_rkc);
-    cad_sett=tmp_rkc;
-    console.log("updated !")
-    browser.runtime.reload()
+  localStorage.setItem('Xytspch_sett', tmp_rkc);
+  cad_sett = tmp_rkc;
+  console.log("updated !")
+  browser.runtime.reload()
 }
 
-if (cad_isen == 'yes'){
+if (cad_isen == 'yes') {
   //var soundcloud = "*://soundcloud.com/*";
   //var spotify = "*://*.spotify.com/*";
   //console.log(blacklistHost);
-  register([defaultHosts], "../utils/utils_CO.js", "document_start",blacklistHost);
-  register([defaultHosts], "../utils/ace1.js", "document_start",blacklistHost);
+  register([defaultHosts], "../utils/utils_CO.js", "document_start", blacklistHost);
+  register([defaultHosts], "../utils/ace1.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);
   //register(["*://www.deezer.com/*"], "../utils/ace1.js", "document_idle", blacklistHost); //deezer
-  register([defaultHosts], "../contentScript/main.js", "document_idle",blacklistHost);
+  register([defaultHosts], "../contentScript/main.js", "document_idle", blacklistHost);
 
-  
+
 }
 else {
   let plat = navigator.userAgent.toLowerCase();
@@ -136,17 +136,17 @@ else {
 
 
 function topop(value, key) {
-browser.runtime.sendMessage({
+  browser.runtime.sendMessage({
     msg: key,
     val: value
-});
+  });
 }
 
 
 "use strict";
 
 
-function sendMessageToTabs(tabs, dom=false) {
+function sendMessageToTabs(tabs, dom = false) {
   for (let tab of tabs) {
     //console.log("tab");
     if (!dom) {
@@ -163,41 +163,41 @@ function sendMessageToTabs(tabs, dom=false) {
       //console.log(tab.url);
       let domain = (tab.url).split("/")[2];
       blacklist_manager(blacklistHost, "is_in", domain).then((result) => {
-        topop([domain,result], "mDom");
+        topop([domain, result], "mDom");
       });
     }
 
   }
 }
 
-function ms(dom=false) {
+function ms(dom = false) {
   var btqz = browser.tabs.query({ currentWindow: true, active: true });
   //console.log(btqz);
   btqz.then((tabs) => {
     sendMessageToTabs(tabs, dom);
   }).catch(onError);
-  
+
 };
 
 
 
 function handleMessage(request, sender, sendResponse) {
   //FOR MAIN
-  if(request.title == "dm1"){
-    sendResponse({dm1: cad_sett});
+  if (request.title == "dm1") {
+    sendResponse({ dm1: cad_sett });
   }
-  if(request.title == "xpup"){
-    let executing = browser.tabs.executeScript({code: "xpup();",allFrames: true, matchAboutBlank: true});
+  if (request.title == "xpup") {
+    let executing = browser.tabs.executeScript({ code: "xpup();", allFrames: true, matchAboutBlank: true });
   }
-  if(request.title == "xpdw"){
-    let executing = browser.tabs.executeScript({code: "xpdw();",allFrames: true, matchAboutBlank: true});
+  if (request.title == "xpdw") {
+    let executing = browser.tabs.executeScript({ code: "xpdw();", allFrames: true, matchAboutBlank: true });
   }
-  if(request.title == "xpres"){
-    let executing = browser.tabs.executeScript({code: "xpres();",allFrames: true, matchAboutBlank: true});
+  if (request.title == "xpres") {
+    let executing = browser.tabs.executeScript({ code: "xpres();", allFrames: true, matchAboutBlank: true });
   }
-  if(request.title == "xpdef"){
+  if (request.title == "xpdef") {
     let fdef = "zpdef(" + request.data + ");";
-    let executing = browser.tabs.executeScript({code: fdef,allFrames: true, matchAboutBlank: true});
+    let executing = browser.tabs.executeScript({ code: fdef, allFrames: true, matchAboutBlank: true });
   }
 
   //FOR POP

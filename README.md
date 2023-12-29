@@ -27,7 +27,12 @@ Fonctionnalités :
 <br/>
 
 
-Buy me some chocolate 🍫 : (**XMR**) _8BNYW7dYzPy65J9ksFdVJLSemaHGtwKW4QPTZ6xkSyafcwz2iPyfSPgS5LbqwHK1w9P6VKUWMG1XWDm6cMgQs5dXPdHE5Q1_
+### Donate
+Buy me some chocolate 🍫 : <br>
+ - <img src="https://cryptologos.cc/logos/monero-xmr-logo.svg" width="26px" align="center"> (**XMR**) `8BNYW7dYzPy65J9ksFdVJLSemaHGtwKW4QPTZ6xkSyafcwz2iPyfSPgS5LbqwHK1w9P6VKUWMG1XWDm6cMgQs5dXPdHE5Q1`
 
+ - <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" width="26px" align="center"> (**BTC**) `bc1qxw8m0t34d46r4zaned2dzvums46hahpac738f3`
+
+<br>
 
 **Download (Firefox) : https://addons.mozilla.org/fr/firefox/addon/speed-pitch-changer/**

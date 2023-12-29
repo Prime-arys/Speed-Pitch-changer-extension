@@ -95,7 +95,7 @@ window.Audio = function() {
 
 //wait for the page to load
 
-  //console.log("ace1")
+//console.log("ace1")
 window.eval(ace1);
 
 
@@ -124,7 +124,7 @@ console.log("ace1")
         Audio.prototype.play = Audio.prototype.original_play;
           this.original_play(arguments);
 }*/
-    
+
 /*
 console.log("ace1")
     var OGP = Audio.prototype.play;

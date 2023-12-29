@@ -2,7 +2,7 @@
 
 //INITIAL
 
-let rkc=[0,0,0,0,0,0,0,0,0] // settings
+let rkc = [0, 0, 0, 0, 0, 0, 0, 0, 0] // settings
 var ytSpeed = false;
 const Elem = "video,audio,source";
 
@@ -26,7 +26,7 @@ function meth_upd_p(el, n) {
   if (n == 1) return el *= 1.05946309436;
   else if (n == 2) return el *= parseFloat(rkc[7]);
   else if (n == 3) return el += parseFloat(rkc[8]);
-  }
+}
 
 function meth_upd_m(el, n) {
   if (n == 1) return el /= 1.05946309436;
@@ -34,18 +34,18 @@ function meth_upd_m(el, n) {
   else if (n == 3) return el -= parseFloat(rkc[8]);
 }
 
-function main(){
-  var ytSpeed;void 0===ytSpeed&&(ytSpeed={playbackRate:1,preservesPitch:(rkc[4] === '1'),init:function(){new MutationObserver(function(a){ytSpeed.updateVideos()}).observe(document.querySelector("body"),{attributes:!0,childList:!0,characterData:!0,subtree:!0}),ytSpeed.updateVideos()},updateVideos:function(){for(var a=document.querySelectorAll(Elem),b=0;b<a.length;++b){var c=a[b];c.playbackRate=this.playbackRate,c.defaultPlaybackRate=this.playbackRate/*ensure*/,(c.mozPreservesPitch=this.preservesPitch&&1!=this.playbackRate)||(c.preservesPitch=this.preservesPitch&&1!=this.playbackRate)/*add ff101+ compatibility*/}},speedUp:function(){this.playbackRate=meth_upd_p(this.playbackRate,rkc[6]),ytSpeed.updateVideos()},speedDown:function(){this.playbackRate=meth_upd_m(this.playbackRate,rkc[6]),ytSpeed.updateVideos()},reset:function(){this.playbackRate=1,ytSpeed.updateVideos()},prompt:function(){var a=prompt("New playback speed:",this.playbackRate);a&&(this.playbackRate=a,ytSpeed.updateVideos())}},ytSpeed.init());
+function main() {
+  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: (rkc[4] === '1'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/, (c.mozPreservesPitch = this.preservesPitch && 1 != this.playbackRate) || (c.preservesPitch = this.preservesPitch && 1 != this.playbackRate)/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed:", this.playbackRate); a && (this.playbackRate = a, ytSpeed.updateVideos()) } }, ytSpeed.init());
   return ytSpeed;
 }
 
-function handleResponse (message) {
+function handleResponse(message) {
   if (typeof message !== 'undefined') {
     //let setg = message.dm1.split(','); //get the settings from BG
     //rkc = setg;
     rkc = message.dm1.split(','); //get the settings from BG
-    ytSpeed=main(); //active main fx
-    
+    ytSpeed = main(); //active main fx
+
   }
 }
 
@@ -56,32 +56,32 @@ notifyBackgroundPage("dm1"); //request settings
 
 /*function lg(){console.log(ytSpeed.playbackRate)}*/
 
-function xpup(){
+function xpup() {
   ytSpeed.speedUp();
   ace_next();
 }
 
-function xpdw(){
+function xpdw() {
   ytSpeed.speedDown();
-  ace_next(); 
+  ace_next();
 }
 
-function xpres(){
+function xpres() {
   ytSpeed.reset();
   //var player = document.querySelector(".html5-main-video");
   ace_next();
   //ytSpeed.playbackRate=1;
 }
 
-function xpdef(){
+function xpdef() {
   ytSpeed.prompt();
-  notifyBackgroundPage("xpdef",ytSpeed.playbackRate);
+  notifyBackgroundPage("xpdef", ytSpeed.playbackRate);
   //lg();
-  
+
 }
 
-function zpdef(x){
-  ytSpeed.playbackRate=x;
+function zpdef(x) {
+  ytSpeed.playbackRate = x;
   ytSpeed.updateVideos()
   //console.log(x)
   ace_next();
@@ -92,18 +92,18 @@ function zpdef(x){
 
 function inject_jungle() {
 
-context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
+  context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
   ell_SpeedPitchChanger_despaEll_jungle = document.querySelectorAll("video,audio");
   //console.log(ell_SpeedPitchChanger_despaEll_jungle);
-source_SpeedPitchChanger_despaEll_jungle = [];
-for (let i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
-  source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
-}
-jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
-jungle_SpeedPitchChanger_despaEll_jungle.output.connect(context_SpeedPitchChanger_despaEll_jungle.destination);
-source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
+  source_SpeedPitchChanger_despaEll_jungle = [];
+  for (let i = 0; i < ell_SpeedPitchChanger_despaEll_jungle.length; i++) {
+    source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
+  }
+  jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
+  jungle_SpeedPitchChanger_despaEll_jungle.output.connect(context_SpeedPitchChanger_despaEll_jungle.destination);
+  source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
     element.connect(jungle_SpeedPitchChanger_despaEll_jungle.input);
-});
+  });
   jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
   jungle_inject = true;
 }
@@ -112,24 +112,24 @@ function inject_jungle_unDOM() {
 
   context_SpeedPitchChanger_despaEll_jungle = new AudioContext();
   ell_SpeedPitchChanger_despaEll_jungle = SpeedPitchChanger_despaEll_1.concat(SpeedPitchChanger_despaEll_2);
-    //console.log(ell_SpeedPitchChanger_despaEll_jungle);
+  //console.log(ell_SpeedPitchChanger_despaEll_jungle);
   source_SpeedPitchChanger_despaEll_jungle = [];
-  for (let i=0; i<ell_SpeedPitchChanger_despaEll_jungle.length; i++){
+  for (let i = 0; i < ell_SpeedPitchChanger_despaEll_jungle.length; i++) {
     source_SpeedPitchChanger_despaEll_jungle.push(context_SpeedPitchChanger_despaEll_jungle.createMediaElementSource(ell_SpeedPitchChanger_despaEll_jungle[i]));
   }
   jungle_SpeedPitchChanger_despaEll_jungle = new Jungle(context_SpeedPitchChanger_despaEll_jungle);
   jungle_SpeedPitchChanger_despaEll_jungle.output.connect(context_SpeedPitchChanger_despaEll_jungle.destination);
   source_SpeedPitchChanger_despaEll_jungle.forEach(element => {
-      element.connect(jungle_SpeedPitchChanger_despaEll_jungle.input);
+    element.connect(jungle_SpeedPitchChanger_despaEll_jungle.input);
   });
-    jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
-    jungle_inject = true;
-  }
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(0, true); // value between -24 and 24 (true for semitones); 0 is no change;
+  jungle_inject = true;
+}
 
 function vpup() {
   if (jungle_inject == false) {
     inject_jungle();
-    window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
+    window.eval(inject_jungle_unDOM.toString() + "inject_jungle_unDOM();");
     //console.log("INJECT JUNGLE");
   }
   let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
@@ -141,7 +141,7 @@ function vpup() {
 function vpdw() {
   if (jungle_inject == false) {
     inject_jungle();
-    window.eval(inject_jungle_unDOM.toString()+"inject_jungle_unDOM();");
+    window.eval(inject_jungle_unDOM.toString() + "inject_jungle_unDOM();");
     //console.log("INJECT JUNGLE");
   }
   let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
@@ -163,42 +163,36 @@ function vpres() {
 
 
 
-function pressKey(keyCode)
-{
+function pressKey(keyCode) {
   let eventObj = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
 
-  if(eventObj.initEvent)
-  {
+  if (eventObj.initEvent) {
     eventObj.initEvent("keydown", true, true);
   }
 
   eventObj.keyCode = keyCode;
   eventObj.shiftKey = true;
 
-  if (document.dispatchEvent)
-  {
+  if (document.dispatchEvent) {
     document.dispatchEvent(eventObj);
   }
-  else
-  {
+  else {
     document.fireEvent("onkeydown", eventObj);
   }
 }
 
-document.onkeydown = function(evt)
-{
+document.onkeydown = function (evt) {
   if (rkc[5] == 1) {
     let keyboardEvent = document.createEvent("KeyboardEvent");
     let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
     //console.log(evt.keyCode)
 
-      switch (evt.keyCode)
-      {
-          case parseInt(rkc[0]): notifyBackgroundPage("xpres"); break;
-          case parseInt(rkc[1]): notifyBackgroundPage("xpup"); break;
-          case parseInt(rkc[2]): notifyBackgroundPage("xpdw"); break;
-          case parseInt(rkc[3]): xpdef(); break;
-  
+    switch (evt.keyCode) {
+      case parseInt(rkc[0]): notifyBackgroundPage("xpres"); break;
+      case parseInt(rkc[1]): notifyBackgroundPage("xpup"); break;
+      case parseInt(rkc[2]): notifyBackgroundPage("xpdw"); break;
+      case parseInt(rkc[3]): xpdef(); break;
+
     }
   }
 };
@@ -222,8 +216,8 @@ browser.runtime.onMessage.addListener(request => {
     return Promise.resolve(mess);
   };
 
-  if (request.dmn == "actual_domain"){
-    return Promise.resolve({actual_domain: document.domain});
+  if (request.dmn == "actual_domain") {
+    return Promise.resolve({ actual_domain: document.domain });
   };
 });
 
@@ -253,8 +247,8 @@ function ace_next() {
       });
     }
     `
-  
-  
+
+
   var ace2 =
     `
     //console.log("ace2")
@@ -272,7 +266,7 @@ function ace_next() {
   if (mdc2) {
     window.eval(ace2);
   }
-  
+
 }
 
 

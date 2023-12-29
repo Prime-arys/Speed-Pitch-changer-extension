@@ -215,8 +215,8 @@ function Jungle(context) {
 }
 
 Jungle.prototype.setDelay = function(delayTime_SpeedPitchChanger_despaEll_jungle) {
-    this.modGain1.gain.setTargetAtTime(0.5*delayTime_SpeedPitchChanger_despaEll_jungle, this.context.currentTime, 0.010);
-    this.modGain2.gain.setTargetAtTime(0.5*delayTime_SpeedPitchChanger_despaEll_jungle, this.context.currentTime, 0.010);
+    this.modGain1.gain.setTargetAtTime(0.5 * delayTime_SpeedPitchChanger_despaEll_jungle, this.context.currentTime, 0.010);
+    this.modGain2.gain.setTargetAtTime(0.5 * delayTime_SpeedPitchChanger_despaEll_jungle, this.context.currentTime, 0.010);
 }
 
 
@@ -278,7 +278,7 @@ Jungle.prototype.setPitchOffset = function (mult, transpose) {
 Jungle.prototype.SemiToneTranspose = function (x) {
   // Suite géométrique des demi-tons / Geometric series of semitones
   let a = 1.0594630943592953
-  return (Math.pow(a, x)-1) * 2
+  return (Math.pow(a, x) - 1) * 2
 }
 
 
