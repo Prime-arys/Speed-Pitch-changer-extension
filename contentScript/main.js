@@ -34,8 +34,22 @@ function meth_upd_m(el, n) {
   else if (n == 3) return el -= parseFloat(rkc[8]);
 }
 
+function semitone2magic(val) {
+  let from_semitone = Math.pow(2, val / 12);
+  return from_semitone.toFixed(11);
+}
+
+function ifsemitone(val) {
+  if (val[0] == 't') {
+    return semitone2magic(val.slice(1));
+  }
+  else {
+    return val;
+  }
+  }
+
 function main() {
-  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: (rkc[4] === '1'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/, (c.mozPreservesPitch = this.preservesPitch && 1 != this.playbackRate) || (c.preservesPitch = this.preservesPitch && 1 != this.playbackRate)/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed:", this.playbackRate); a && (this.playbackRate = a, ytSpeed.updateVideos()) } }, ytSpeed.init());
+  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: (rkc[4] === '1'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/, (c.mozPreservesPitch = this.preservesPitch && 1 != this.playbackRate) || (c.preservesPitch = this.preservesPitch && 1 != this.playbackRate)/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed, t[value] for semitone:", this.playbackRate); a && (this.playbackRate = ifsemitone(a), ytSpeed.updateVideos()) } }, ytSpeed.init());
   return ytSpeed;
 }
 

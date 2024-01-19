@@ -84,14 +84,34 @@ async function main() {
       }
     }
 
+    function magic2semitone(val){
+      let magic = 1.05946309436;
+      let semitone = 0;
+      let is1 = (val <= 1) ? true : false;
+
+      if (is1) {
+        semitone += Math.log(val) / Math.log(magic);
+      }
+      else {
+        semitone += Math.log(val) / Math.log(magic);
+      }
+      
+      return semitone;
+
+    }
+
 
     browser.runtime.onMessage.addListener(
       function (request) {
+        let desc = document.getElementById("desc");
             //request.msg = head of message from topop()
             if (request.msg === "pup") {
               if (typeof xui !== 'undefined') {
                 let alm = document.getElementById("xui");
                 alm.textContent = request.val; //.val = actual_speed value
+                if (ca_kc[4] != '1') {
+                  desc.textContent = "semitone: " + magic2semitone(request.val).toFixed(2);
+                }
               }
 
         }
