@@ -30,7 +30,7 @@ async function main() {
       
   cad_upd = cad_upd.split(",");
   if (cad_upd[0] != "nan") {
-    aver.textContent = browser.runtime.getManifest().version + "*";
+    aver.textContent = browser.runtime.getManifest().version + " → " + cad_upd[0];
     aver.title = "New version available: " + cad_upd[0];
     aver.style.color = "#6f5600";
   }

@@ -5,8 +5,13 @@ var blacklistHost = localStorage.getItem('Xytspch_blacklist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
 var cad_upd = localStorage.getItem('Xytspch_upd');
+let local_module_version = localStorage.getItem('Xytspch_version');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 var UPD = false;
+
+//get the version of the addon on manifest.json
+const manifestData = browser.runtime.getManifest();
+const version = manifestData.version;
 
 //console.log("BG Load")
 var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1];
@@ -15,6 +20,14 @@ if (cad_sett == null) {
   cad_sett = default_sett;
   localStorage.setItem('Xytspch_sett', cad_sett);
   UPD = true;
+}
+
+if (local_module_version == null) {
+  localStorage.setItem('Xytspch_version', version);
+} else if (local_module_version < version) {
+  //...
+  localStorage.setItem('Xytspch_version', version);
+  //UPD = true;
 }
 
 if (cad_upd == null) {
@@ -43,9 +56,6 @@ if (UPD) {
 cad_upd = cad_upd.split(",");
 
 //check for update on mozilla addons
-//get the version of the addon on manifest.json
-const manifestData = browser.runtime.getManifest();
-const version = manifestData.version;
 //get the version of the addon on the server
 let xhr = new XMLHttpRequest();
 xhr.open("GET", "https://addons.mozilla.org/api/v3/addons/addon/speed-pitch-changer/", true);
@@ -60,14 +70,11 @@ xhr.onreadystatechange = function () {
       cad_upd[1] = 1;
       localStorage.setItem('Xytspch_upd', cad_upd);
       //console.log("New version available");
-      //mettre en gras le message
-      browser.notifications.create({
-        "type": "basic",
-        //"iconUrl": browser.extension.getURL("icons/border-48.png"),
-        "iconUrl": "../icons/border-48.png",
-        "title": "Speed Pitch Changer " + version + " -> " + serverVersion,
-        "message": "\nNew version available : " + serverVersion + "\nPlease update the addon on \nthe addons.mozilla.org website."
-      });
+      //mettre un badge sur l'icone
+      browser.browserAction.setBadgeText({ text: "⇑" });
+      browser.browserAction.setBadgeTextColor({ color: "#ead3da" });
+      browser.browserAction.setBadgeBackgroundColor({ color: "#452e6b" });
+
     }
     else if (cad_upd[1] == 1) {
       //if the server version is the same or lower than the local version, reset the update notification
