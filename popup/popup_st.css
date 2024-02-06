@@ -31,6 +31,8 @@ body {
 p {
     margin: 1px;
     color: #454a54;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 label{
@@ -107,6 +109,28 @@ img:hover{
     /*background: rgba(226, 148, 66, 0.42);*/
     border: solid 0px;
 
+}
+
+button {
+  padding: 0.2em 0.8em 0.2em 0.8em;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-family: 'Open Sans', 'Segoe UI Light', Arial;
+  text-align: center;
+  border: medium solid #525170;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+button:hover {
+  border: medium solid #8c6436;
+}
+
+/* p font-weight pour les petits écrans */
+@media screen and (max-device-width: 16in) {
+  p, button {
+    /*font-weight: 600;*/
+    font-size: 1.1rem;
+  }
 }
 
 .struct_bt {

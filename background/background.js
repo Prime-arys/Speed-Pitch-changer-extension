@@ -71,9 +71,9 @@ xhr.onreadystatechange = function () {
       localStorage.setItem('Xytspch_upd', cad_upd);
       //console.log("New version available");
       //mettre un badge sur l'icone
-      browser.browserAction.setBadgeText({ text: "⇑" });
-      browser.browserAction.setBadgeTextColor({ color: "#ead3da" });
-      browser.browserAction.setBadgeBackgroundColor({ color: "#452e6b" });
+      browser.browserAction.setBadgeText({ text: "up" });
+      browser.browserAction.setBadgeTextColor({ color: "#fbf0f3" });
+      browser.browserAction.setBadgeBackgroundColor({ color: "#5a5f55" });
 
     }
     else if (cad_upd[1] == 1) {
