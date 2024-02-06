@@ -8,6 +8,7 @@ var cad_upd = localStorage.getItem('Xytspch_upd');
 let local_module_version = localStorage.getItem('Xytspch_version');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 var UPD = false;
+var plat = navigator.userAgent.toLowerCase();
 
 //get the version of the addon on manifest.json
 const manifestData = browser.runtime.getManifest();
@@ -71,9 +72,12 @@ xhr.onreadystatechange = function () {
       localStorage.setItem('Xytspch_upd', cad_upd);
       //console.log("New version available");
       //mettre un badge sur l'icone
-      browser.browserAction.setBadgeText({ text: "up" });
-      browser.browserAction.setBadgeTextColor({ color: "#fbf0f3" });
-      browser.browserAction.setBadgeBackgroundColor({ color: "#5a5f55" });
+      if (!plat.includes("android")) {
+        /*pas de badge sur android*/
+        browser.browserAction.setBadgeText({ text: "up" });
+        browser.browserAction.setBadgeTextColor({ color: "#fbf0f3" });
+        browser.browserAction.setBadgeBackgroundColor({ color: "#5a5f55" });
+      }
 
     }
     else if (cad_upd[1] == 1) {
@@ -134,7 +138,6 @@ if (cad_isen == 'yes') {
 
 }
 else {
-  let plat = navigator.userAgent.toLowerCase();
   if (!plat.includes("android")) {
     /*pas de changement d'icone sur android*/
     browser.browserAction.setIcon({ path: "../icons/border-16d.png" });
