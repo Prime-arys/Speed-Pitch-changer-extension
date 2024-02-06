@@ -74,9 +74,13 @@ xhr.onreadystatechange = function () {
       //mettre un badge sur l'icone
       if (!plat.includes("android")) {
         /*pas de badge sur android*/
-        browser.browserAction.setBadgeText({ text: "up" });
-        browser.browserAction.setBadgeTextColor({ color: "#fbf0f3" });
-        browser.browserAction.setBadgeBackgroundColor({ color: "#5a5f55" });
+        try {
+          browser.browserAction.setBadgeText({ text: "up" });
+          browser.browserAction.setBadgeTextColor({ color: "#fbf0f3" });
+          browser.browserAction.setBadgeBackgroundColor({ color: "#5a5f55" });
+        } catch (e) {
+          console.log(e);
+        }
       }
 
     }
