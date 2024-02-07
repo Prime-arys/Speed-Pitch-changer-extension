@@ -176,7 +176,7 @@ function sendMessageToTabs(tabs, dom = false) {
     } else {
       //console.log(tab.url);
       let domain = (tab.url).split("/")[2];
-      if (domain.includes(":")) {
+      if (domain && domain.includes(":")) {
         domain = domain.split(":")[0];
       }
       blacklist_manager(blacklistHost, "is_in", domain).then((result) => {

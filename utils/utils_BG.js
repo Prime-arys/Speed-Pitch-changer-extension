@@ -61,7 +61,7 @@ export async function blacklist_manager(blacklist, action, domain) {
     }
     else if (action == "is_in") {
         //console.log("Checking if domain is in blacklist");
-        console.log(blacklist.includes(domain));
+        //console.log(blacklist.includes(domain));
       return blacklist.includes(domain);
     }
     else {
