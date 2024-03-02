@@ -2,6 +2,7 @@ import { onError, message, register, blacklist_manager } from "../utils/utils_BG
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
+var ghostliste = localStorage.getItem('Xytspch_ghostliste');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
 var cad_upd = localStorage.getItem('Xytspch_upd');
@@ -40,6 +41,13 @@ if (cad_upd == null) {
 if (blacklistHost == null) {
   blacklistHost = ["*://developer.mozilla.org/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
   localStorage.setItem('Xytspch_blacklist', blacklistHost);
+  UPD = true;
+
+}
+
+if (ghostliste == null) {
+  ghostliste = ["*://developer.mozilla.org/*","*://open.spotify.com/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
+  localStorage.setItem('Xytspch_ghostliste', ghostliste);
   UPD = true;
 
 }
@@ -109,6 +117,7 @@ xhr.send();
 
 var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
+var ghostliste = ghostliste.split(',');
 
 if (setg.length < 9) {
   //Update settings
@@ -133,6 +142,7 @@ if (cad_isen == 'yes') {
   //var spotify = "*://*.spotify.com/*";
   //console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start", blacklistHost);
+  register(ghostliste, "../utils/ghost.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);

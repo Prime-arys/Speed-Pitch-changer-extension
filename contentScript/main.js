@@ -49,7 +49,7 @@ function ifsemitone(val) {
   }
 
 function main() {
-  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: (rkc[4] === '1'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/, c.mozPreservesPitch = this.preservesPitch, c.preservesPitch = this.preservesPitch/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed, t[value] to set as semitone:", this.playbackRate); a && (this.playbackRate = ifsemitone(a), ytSpeed.updateVideos()) } }, ytSpeed.init());
+  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: (rkc[4] === '1'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/,c.playbackRate_origin = this.playbackRate, c.defaultPlaybackRate_origin = this.playbackRate, c.mozPreservesPitch = this.preservesPitch, c.preservesPitch = this.preservesPitch/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed, t[value] to set as semitone:", this.playbackRate); a && (this.playbackRate = ifsemitone(a), ytSpeed.updateVideos()) } }, ytSpeed.init());
   return ytSpeed;
 }
 
@@ -255,6 +255,7 @@ function ace_next() {
       //Audio.prototype.play = Audio.prototype.original_play;
       SpeedPitchChanger_despaEll_1.forEach(function (spc_audio_element) {
         spc_audio_element.playbackRate = ${ytSpeed.playbackRate};
+        spc_audio_element.playbackRate_origin = ${ytSpeed.playbackRate};
         spc_audio_element.defaultPlaybackRate = ${ytSpeed.playbackRate};
         spc_audio_element.mozPreservesPitch = ${ytSpeed.preservesPitch};
         spc_audio_element.preservesPitch = ${ytSpeed.preservesPitch};
@@ -269,6 +270,7 @@ function ace_next() {
     //console.log(SpeedPitchChanger_despaEll_2);
     for(var i = 0; i < SpeedPitchChanger_despaEll_2.length; i++){ /* change speed for all elements found (i havent seen this be more than 1 but you never know) */
         SpeedPitchChanger_despaEll_2[i].playbackRate = ${ytSpeed.playbackRate};
+        SpeedPitchChanger_despaEll_2[i].playbackRate_origin = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].preservesPitch = ${ytSpeed.preservesPitch};
         SpeedPitchChanger_despaEll_2[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
