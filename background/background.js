@@ -1,8 +1,8 @@
-import { onError, message, register, blacklist_manager } from "../utils/utils_BG.js";
+import { onError, message, register, BWlist_manager } from "../utils/utils_BG.js";
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
-var ghostliste = localStorage.getItem('Xytspch_ghostliste');
+var ghostlist = localStorage.getItem('Xytspch_ghostlist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
 var cad_upd = localStorage.getItem('Xytspch_upd');
@@ -39,15 +39,15 @@ if (cad_upd == null) {
 }
 
 if (blacklistHost == null) {
-  blacklistHost = ["*://developer.mozilla.org/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
+  blacklistHost = ["*://developer.mozilla.org/*","*://addons.mozilla.org/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
   localStorage.setItem('Xytspch_blacklist', blacklistHost);
   UPD = true;
 
 }
 
-if (ghostliste == null) {
-  ghostliste = ["*://developer.mozilla.org/*","*://open.spotify.com/*"];// default domain in the blacklist (MDN), we can't act on this domain anyway
-  localStorage.setItem('Xytspch_ghostliste', ghostliste);
+if (ghostlist == null) {
+  ghostlist = ["*://addons.mozilla.org/*","*://open.spotify.com/*"];// default domain in the ghostlist
+  localStorage.setItem('Xytspch_ghostlist', ghostlist);
   UPD = true;
 
 }
@@ -117,7 +117,7 @@ xhr.send();
 
 var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
-var ghostliste = ghostliste.split(',');
+var ghostlist = ghostlist.split(',');
 
 if (setg.length < 9) {
   //Update settings
@@ -142,7 +142,7 @@ if (cad_isen == 'yes') {
   //var spotify = "*://*.spotify.com/*";
   //console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start", blacklistHost);
-  register(ghostliste, "../utils/ghost.js", "document_start", blacklistHost);
+  register(ghostlist, "../utils/ghost.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);
@@ -189,8 +189,11 @@ function sendMessageToTabs(tabs, dom = false) {
       if (domain && domain.includes(":")) {
         domain = domain.split(":")[0];
       }
-      blacklist_manager(blacklistHost, "is_in", domain).then((result) => {
+      BWlist_manager(blacklistHost, "is_in", domain).then((result) => {
         topop([domain, result], "mDom");
+      });
+      BWlist_manager(ghostlist, "is_in", domain).then((result) => {
+        topop([domain, result], "mGhost");
       });
     }
 
@@ -262,17 +265,33 @@ function handleMessage(request, sender, sendResponse) {
   }
   if (request.type == "get_blacklist") {
     //renvoie blacklistHost en réponse
-    sendResponse({ blacklist: blacklist_manager(blacklistHost, "get", null) });
+    sendResponse({ blacklist: BWlist_manager(blacklistHost, "get", null) });
   }
   if (request.type == "set_ban") {
     //ajoute un domaine à la blacklist
-    blacklist_manager(blacklistHost, "add", request.val);
+    BWlist_manager(blacklistHost, "add", request.val);
     browser.runtime.reload()
   }
   if (request.type == "set_unban") {
     //supprime un domaine de la blacklist
-    blacklist_manager(blacklistHost, "del", request.val);
+    BWlist_manager(blacklistHost, "del", request.val);
     browser.runtime.reload()
+  }
+
+  if (request.type == "get_ghostlist") {
+    //renvoie ghostlist en réponse
+    sendResponse({ ghostlist: BWlist_manager(ghostlist, "get", null, "Xytspch_ghostlist") });
+  }
+  if (request.type == "set_ghost") {
+    //ajoute un domaine à la ghostlist
+    BWlist_manager(ghostlist, "add", request.val, "Xytspch_ghostlist");
+    browser.runtime.reload()
+  }
+  if (request.type == "set_unghost") {
+    //supprime un domaine de la ghostlist
+    BWlist_manager(ghostlist, "del", request.val, "Xytspch_ghostlist");
+    browser.runtime.reload()
+
   }
 }
 

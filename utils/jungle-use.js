@@ -279,6 +279,13 @@ Jungle.prototype.SemiToneTranspose = function (x) {
   // Suite géométrique des demi-tons / Geometric series of semitones
   let a = 1.0594630943592953
   return (Math.pow(a, x) - 1) * 2
+
+  /* 
+  the geometric function that transforms user input into usable values
+  by the library used for this pitch-only feature, has a result that tends towards infinity 
+  for positive input, and -2 for negative input.
+  */
+
 }
 
 

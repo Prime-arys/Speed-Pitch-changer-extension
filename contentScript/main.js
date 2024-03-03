@@ -257,6 +257,7 @@ function ace_next() {
         spc_audio_element.playbackRate = ${ytSpeed.playbackRate};
         spc_audio_element.playbackRate_origin = ${ytSpeed.playbackRate};
         spc_audio_element.defaultPlaybackRate = ${ytSpeed.playbackRate};
+        spc_audio_element.defaultPlaybackRate_origin = ${ytSpeed.playbackRate};
         spc_audio_element.mozPreservesPitch = ${ytSpeed.preservesPitch};
         spc_audio_element.preservesPitch = ${ytSpeed.preservesPitch};
       });
@@ -272,6 +273,7 @@ function ace_next() {
         SpeedPitchChanger_despaEll_2[i].playbackRate = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].playbackRate_origin = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].defaultPlaybackRate = ${ytSpeed.playbackRate};
+        SpeedPitchChanger_despaEll_2[i].defaultPlaybackRate_origin = ${ytSpeed.playbackRate};
         SpeedPitchChanger_despaEll_2[i].preservesPitch = ${ytSpeed.preservesPitch};
         SpeedPitchChanger_despaEll_2[i].mozPreservesPitch = ${ytSpeed.preservesPitch};
 			}
@@ -282,6 +284,7 @@ function ace_next() {
   if (mdc2) {
     window.eval(ace2);
   }
+
 
 }
 

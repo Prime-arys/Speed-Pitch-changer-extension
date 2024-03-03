@@ -81,7 +81,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playbackRate_origin', {
 
 Object.defineProperty(HTMLMediaElement.prototype, 'defaultPlaybackRate_origin', {
     set: function(newRate) {
-        this.playbackRate = [newRate, "spcdespa"];
+        this.defaultPlaybackRate = [newRate, "spcdespa"];
 
     }
 });

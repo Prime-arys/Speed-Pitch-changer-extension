@@ -36,20 +36,20 @@ export async function register(hosts,myfile,run,blacklist) {
   
 }
   
-export async function blacklist_manager(blacklist, action, domain) {
+export async function BWlist_manager(blacklist, action, domain, listHost = "Xytspch_blacklist") {
     //console.log("Blacklist manager");
     domain = "*://"+domain+"/*";
     if (action == "add") {
         //console.log("Adding domain to blacklist");
         blacklist.push(domain);
-        localStorage.setItem("Xytspch_blacklist", blacklist);
+        localStorage.setItem(listHost, blacklist);
     }
     else if (action == "del") {
         //console.log("Removing domain from blacklist");
       var index = blacklist.indexOf(domain);
       if (index > -1) {
           blacklist.splice(index, 1);
-          localStorage.setItem("Xytspch_blacklist", blacklist);
+          localStorage.setItem(listHost, blacklist);
         }
         else {
           console.log("Domain not found in blacklist");

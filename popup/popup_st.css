@@ -138,8 +138,11 @@ button:hover {
   flex-direction: row;
   flex: auto;
   margin: auto;
-  margin-top: 12px;
   justify-content: center;
+}
+
+.m12t {
+  margin-top: 12px;
 }
 
 .struct_cm{

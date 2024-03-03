@@ -123,20 +123,35 @@ async function main() {
         };
         if (request.msg === "mDom") {
           actual_domain = request.val;
-          var dmn = document.getElementById("act_domain");
+          let dmn = document.getElementById("act_domain");
+          let txt_ghost = document.getElementById("txt_ghost");
           //console.log("Act domain: " + actual_domain);
           dmn.textContent = actual_domain[0];
-          dmn.title = actual_domain[1];
+          //dmn.title = actual_domain[1];
           const unavliable_domain = ["addons.mozilla.org", "developer.mozilla.org", "this-firefox", "", null, undefined];
           if (unavliable_domain.includes(actual_domain[0])) {
             btban.style.display = "none";
+            btghost.style.display = "none";
             dmn.title = "This domain can't be treated by this extension";
+            txt_ghost.style.display = "none";
           }
           if(actual_domain[1] == false){
             btban.checked = true;
           }
           else{
             btban.checked = false;
+          }
+
+        }
+
+        if (request.msg === "mGhost") {
+          actual_domain = request.val;
+          if (actual_domain[1] == true) {
+            btghost.checked = true;
+          }
+          else {
+            btghost.checked = false;
+
           }
 
         }
@@ -187,6 +202,7 @@ async function main() {
     const spDw = document.getElementById("sDw");
     const spDef = document.getElementById("sDef");
     const btban = document.getElementById("btn_ban");
+    const btghost = document.getElementById("btn_ghost");
     const spRight = document.getElementById("pR");
     const spLeft = document.getElementById("pL");
   
@@ -199,6 +215,17 @@ async function main() {
     } else {
       
       message('set_ban', actual_domain[0]);
+      //console.log(btban.checked);
+    }
+  }
+
+  btghost.onchange = function () {
+    if (btghost.checked) {
+      message('set_ghost', actual_domain[0]);
+      //console.log(btban.checked);
+    } else {
+      
+      message('set_unghost', actual_domain[0]);
       //console.log(btban.checked);
     }
   }
