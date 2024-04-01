@@ -59,7 +59,7 @@ async function main() {
   var fsup = parseInt(ca_kc[1])
   var fsdw = parseInt(ca_kc[2])
   var fset = parseInt(ca_kc[3])
-  var ffkc = [fres, fsup, fsdw, fset, ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8]];
+  var ffkc = [fres, fsup, fsdw, fset, ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
 
   dres.addEventListener("mouseover", function () { dres.style.background = "#EFDBC8" })
   dres.addEventListener("mouseout", function () { dres.style.background = "#D9DAE8" })
@@ -169,7 +169,7 @@ async function main() {
       var ca_kc = cad_sett.split(",");
       msgforyou("", true);
 
-      var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8]];
+      var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       //set_cstt(updK);
       message('set_cstt', updK);
       window.location.reload()
@@ -187,6 +187,9 @@ async function main() {
   if (ca_kc[5] == 1) {
     document.getElementById("on_off_bt").checked = true;
   }
+  if (ca_kc[9] == 1) {
+    document.getElementById("on_off_ignoretxt").checked = true;
+  }
 
   var Checkbox = document.querySelector('input[value="isenable_sp"]');
   Checkbox.onchange = async function () {
@@ -194,12 +197,12 @@ async function main() {
     var ca_kc = cad_sett.split(",");
 
     if (Checkbox.checked) {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
 
     } else {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
 
@@ -214,18 +217,40 @@ async function main() {
 
 
     if (Checkbox2.checked) {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6], ca_kc[7], ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
 
     } else {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7], ca_kc[8]];
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
 
     }
 
   }
+
+
+  var Checkbox3 = document.querySelector('input[value="isenable_ignoretxt"]');
+  Checkbox3.onchange = async function () {
+    var cad_sett = (await message('get_cstt')).cstt; //return cstt
+    var ca_kc = cad_sett.split(",");
+
+
+    if (Checkbox3.checked) {
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 1];
+      message('set_cstt', tmp_rkc);
+      console.log(Checkbox3.checked);
+
+    } else {
+      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 0];
+      message('set_cstt', tmp_rkc);
+      console.log(Checkbox3.checked);
+
+    }
+
+  }
+
 
   aply.onclick = function aplu() {
     browser.runtime.reload()

@@ -2,7 +2,7 @@
 
 //INITIAL
 
-let rkc = [0, 0, 0, 0, 0, 0, 0, 0, 0] // settings
+let rkc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // settings
 var ytSpeed = false;
 const Elem = "video,audio,source";
 
@@ -35,8 +35,23 @@ function meth_upd_m(el, n) {
 }
 
 function semitone2magic(val) {
-  let from_semitone = Math.pow(2, val / 12);
-  return from_semitone.toFixed(11);
+  let from_semitone = Math.pow(2, val / 12); // is this correct?
+  return from_semitone.toFixed(16);
+
+  /*
+  // more accurate ? (but slower)
+  let from_semitone = 1;
+  for (let i = 0; i < math.abs(val); i++) {
+    if (val > 0) {
+      from_semitone *= 1.05946309436;
+    } else {
+      from_semitone /= 1.05946309436;
+    }
+  
+  }
+  return from_semitone;
+  */
+
 }
 
 function ifsemitone(val) {
@@ -177,29 +192,18 @@ function vpres() {
 
 
 
-function pressKey(keyCode) {
-  let eventObj = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
 
-  if (eventObj.initEvent) {
-    eventObj.initEvent("keydown", true, true);
-  }
-
-  eventObj.keyCode = keyCode;
-  eventObj.shiftKey = true;
-
-  if (document.dispatchEvent) {
-    document.dispatchEvent(eventObj);
-  }
-  else {
-    document.fireEvent("onkeydown", eventObj);
-  }
-}
 
 document.onkeydown = function (evt) {
   if (rkc[5] == 1) {
     let keyboardEvent = document.createEvent("KeyboardEvent");
     let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
     //console.log(evt.keyCode)
+
+    // check if the user is typing in a text field
+    if ((document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") && rkc[9] == 1) {
+      return;
+    }
 
     switch (evt.keyCode) {
       case parseInt(rkc[0]): notifyBackgroundPage("xpres"); break;

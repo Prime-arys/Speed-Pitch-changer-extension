@@ -16,7 +16,7 @@ const manifestData = browser.runtime.getManifest();
 const version = manifestData.version;
 
 //console.log("BG Load")
-var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1];
+var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1, 1];
 
 if (cad_sett == null) {
   cad_sett = default_sett;
@@ -119,7 +119,7 @@ var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
 var ghostlist = ghostlist.split(',');
 
-if (setg.length < 9) {
+if (setg.length < 10) {
   //Update settings
   let tmp_rkc = [];
   default_sett.forEach(function (value, index) {
