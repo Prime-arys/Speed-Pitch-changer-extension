@@ -201,8 +201,19 @@ document.onkeydown = function (evt) {
     //console.log(evt.keyCode)
 
     // check if the user is typing in a text field
-    if ((document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA") && rkc[9] == 1) {
-      return;
+    //console.log(evt);
+    if (rkc[9] == 1) {
+      switch (evt.target.tagName) {
+        case "INPUT":
+          return;
+        case "TEXTAREA":
+          return;
+        case "DIV":
+          if ((evt.target.contentEditable == "true" || evt.target.contentEditable == "plaintext-only") && evt.target.isContentEditable == true) {
+            return;
+          }
+      }
+      
     }
 
     switch (evt.keyCode) {
