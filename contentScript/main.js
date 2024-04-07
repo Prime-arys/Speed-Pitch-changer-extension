@@ -2,7 +2,8 @@
 
 //INITIAL
 
-let rkc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // settings
+//let rkc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // settings
+let settings;
 var ytSpeed = false;
 const Elem = "video,audio,source";
 
@@ -24,14 +25,14 @@ if (typeof mdc2 == 'undefined') {
 function meth_upd_p(el, n) {
   //console.log("METH ",el,n)
   if (n == 1) return el *= 1.05946309436;
-  else if (n == 2) return el *= parseFloat(rkc[7]);
-  else if (n == 3) return el += parseFloat(rkc[8]);
+  else if (n == 2) return el *= parseFloat(settings.get('radio_speed_custom_multiply_divide'));
+  else if (n == 3) return el += parseFloat(settings.get('radio_speed_custom_plus_minus'));
 }
 
 function meth_upd_m(el, n) {
   if (n == 1) return el /= 1.05946309436;
-  else if (n == 2) return el /= parseFloat(rkc[7]);
-  else if (n == 3) return el -= parseFloat(rkc[8]);
+  else if (n == 2) return el /= parseFloat(settings.get('radio_speed_custom_multiply_divide'));
+  else if (n == 3) return el -= parseFloat(settings.get('radio_speed_custom_plus_minus'));
 }
 
 function semitone2magic(val) {
@@ -61,10 +62,10 @@ function ifsemitone(val) {
   else {
     return val;
   }
-  }
+}
 
 function main() {
-  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: (rkc[4] === '1'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/,c.playbackRate_origin = this.playbackRate, c.defaultPlaybackRate_origin = this.playbackRate, c.mozPreservesPitch = this.preservesPitch, c.preservesPitch = this.preservesPitch/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, rkc[6]), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed, t[value] to set as semitone:", this.playbackRate); a && (this.playbackRate = ifsemitone(a), ytSpeed.updateVideos()) } }, ytSpeed.init());
+  var ytSpeed; void 0 === ytSpeed && (ytSpeed = { playbackRate: 1, preservesPitch: settings.get('switch_preserve_pitch'), init: function () { new MutationObserver(function (a) { ytSpeed.updateVideos() }).observe(document.querySelector("body"), { attributes: !0, childList: !0, characterData: !0, subtree: !0 }), ytSpeed.updateVideos() }, updateVideos: function () { for (var a = document.querySelectorAll(Elem), b = 0; b < a.length; ++b) { var c = a[b]; c.playbackRate = this.playbackRate, c.defaultPlaybackRate = this.playbackRate/*ensure*/, c.playbackRate_origin = this.playbackRate, c.defaultPlaybackRate_origin = this.playbackRate, c.mozPreservesPitch = this.preservesPitch, c.preservesPitch = this.preservesPitch/*add ff101+ compatibility*/ } }, speedUp: function () { this.playbackRate = meth_upd_p(this.playbackRate, settings.get('radio_speed_preset')), ytSpeed.updateVideos() }, speedDown: function () { this.playbackRate = meth_upd_m(this.playbackRate, settings.get('radio_speed_preset')), ytSpeed.updateVideos() }, reset: function () { this.playbackRate = 1, ytSpeed.updateVideos() }, prompt: function () { var a = prompt("New playback speed, t[value] to set as semitone:", this.playbackRate); a && (this.playbackRate = ifsemitone(a), ytSpeed.updateVideos()) } }, ytSpeed.init());
   return ytSpeed;
 }
 
@@ -72,7 +73,12 @@ function handleResponse(message) {
   if (typeof message !== 'undefined') {
     //let setg = message.dm1.split(','); //get the settings from BG
     //rkc = setg;
-    rkc = message.dm1.split(','); //get the settings from BG
+    //rkc = message.dm1.split(','); //get the settings from BG
+    settings = message.dm1;
+    settings.get = function (key) {
+      return this[key];
+    }
+    console.log(settings);
     ytSpeed = main(); //active main fx
 
   }
@@ -195,14 +201,14 @@ function vpres() {
 
 
 document.onkeydown = function (evt) {
-  if (rkc[5] == 1) {
+  if (settings.get('switch_shortcuts')) {
     let keyboardEvent = document.createEvent("KeyboardEvent");
     let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
     //console.log(evt.keyCode)
 
     // check if the user is typing in a text field
     //console.log(evt);
-    if (rkc[9] == 1) {
+    if (settings.get('switch_ignore_text_field')) {
       switch (evt.target.tagName) {
         case "INPUT":
           return;
@@ -213,14 +219,14 @@ document.onkeydown = function (evt) {
             return;
           }
       }
-      
+
     }
 
     switch (evt.keyCode) {
-      case parseInt(rkc[0]): notifyBackgroundPage("xpres"); break;
-      case parseInt(rkc[1]): notifyBackgroundPage("xpup"); break;
-      case parseInt(rkc[2]): notifyBackgroundPage("xpdw"); break;
-      case parseInt(rkc[3]): xpdef(); break;
+      case parseInt(settings.get('commands_reset')): notifyBackgroundPage("xpres"); break;
+      case parseInt(settings.get('commands_speedUP')): notifyBackgroundPage("xpup"); break;
+      case parseInt(settings.get('commands_speedDOWN')): notifyBackgroundPage("xpdw"); break;
+      case parseInt(settings.get('commands_speedSET')): xpdef(); break;
 
     }
   }

@@ -1,12 +1,13 @@
 import ipc_kco from '../utils/char_kcode.js';
-import { onError, message } from "../utils/utils_BG.js";
+import { onError, message, Settings } from "../utils/utils_BG.js";
 
 var hidden = false;
 var master = false;
 var cad_sett;
 var ddd = 0;
 var fkc = 0;
-var xxch = 0;
+var commandk = null
+var settings = new Settings();
 //console.log("Chargement de la page");
 
 
@@ -46,12 +47,11 @@ async function main() {
   const rad_st = document.getElementsByName("btn_meth");
   const rad_2val = document.getElementById("rad2val");
   const rad_3val = document.getElementById("rad3val");
-  var tKC = 0;
 
-  dres.textContent = ipc_kco[cad_sett.split(",")[0]];
-  dsup.textContent = ipc_kco[cad_sett.split(",")[1]];
-  dsdw.textContent = ipc_kco[cad_sett.split(",")[2]];
-  dset.textContent = ipc_kco[cad_sett.split(",")[3]];
+  dres.textContent = ipc_kco[settings.get('commands_reset')];
+  dsup.textContent = ipc_kco[settings.get('commands_speedUP')];
+  dsdw.textContent = ipc_kco[settings.get('commands_speedDOWN')];
+  dset.textContent = ipc_kco[settings.get('commands_speedSET')];
 
 
   var ca_kc = cad_sett.split(",")
@@ -72,17 +72,17 @@ async function main() {
 
   rad_2val.addEventListener("change", function () { rule_set(); });
   rad_3val.addEventListener("change", function () { rule_set(); });
-  rad_2val.value = ca_kc[7];
-  rad_3val.value = ca_kc[8];
+  rad_2val.value = settings.get('radio_speed_custom_plus_minus');
+  rad_3val.value = settings.get('radio_speed_custom_multiply_divide');
 
-  dres.onclick = function cm_dres() { getKC(0); xxch = 0; }
-  dsup.onclick = function cm_dsup() { getKC(1); xxch = 1; }
-  dsdw.onclick = function cm_dsdw() { getKC(2); xxch = 2; }
-  dset.onclick = function cm_dset() { getKC(3); xxch = 3; }
+  dres.onclick = function cm_dres() { getKC(); commandk = ['commands_reset', 'commands_code_reset']; }
+  dsup.onclick = function cm_dsup() { getKC(); commandk = ['commands_speedUP', 'commands_code_speedUP']; }
+  dsdw.onclick = function cm_dsdw() { getKC(); commandk = ['commands_speedDOWN', 'commands_code_speedDOWN']; }
+  dset.onclick = function cm_dset() { getKC(); commandk = ['commands_speedSET', 'commands_code_speedSET']; }
 
   rad_st.forEach(function (item) {
     item.onclick = function () { rule_set(); }
-    if (item.value == ca_kc[6]) item.checked = true, rule_set();
+    if (item.value == settings.get('radio_speed_preset')) item.checked = true, rule_set();
     else item.checked = false;
   });
 
@@ -95,19 +95,19 @@ async function main() {
     if (rad_st[0].checked) {
       rad_2val.disabled = true;
       rad_3val.disabled = true;
-      ca_kc[6] = 1;
+      settings.set('radio_speed_preset', 1);
       /*ca_kc[7] = 1.1;*/
     }
     else if (rad_st[1].checked) {
       rad_3val.disabled = true;
       rad_2val.disabled = false;
-      ca_kc[6] = 2;
+      settings.set('radio_speed_preset', 2);
       if (rad_2val.value <= 1.0) {
-        ca_kc[7] = 1.001;
+        settings.set('radio_speed_custom_multiply_divide', 1.001);
         msgforyou("The value must be greater than 1.0", false);
       }
       else {
-        ca_kc[7] = rad_2val.value;
+        settings.set('radio_speed_custom_multiply_divide', rad_2val.value);
         msgforyou("", true);
       }
 
@@ -115,35 +115,48 @@ async function main() {
     else if (rad_st[2].checked) {
       rad_2val.disabled = true;
       rad_3val.disabled = false;
-      ca_kc[6] = 3;
+      settings.set('radio_speed_preset', 3);
       if (rad_3val.value <= 0) {
-        ca_kc[8] = 0.001;
+        settings.set('radio_speed_custom_plus_minus', 0.001);
         msgforyou("The value must be greater than 0", false);
       }
       else {
-        ca_kc[8] = rad_3val.value;
+        settings.set('radio_speed_custom_plus_minus', rad_3val.value);
         msgforyou("", true);
       }
     }
-    message('set_cstt', ca_kc.join(","));
+    //message('set_cstt', ca_kc.join(","));
+    settings.save();
   };
 
 
   document.onkeydown = function (evt) {
-    var keyboardEvent = document.createEvent("KeyboardEvent");
-    var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
-    tKC = evt.keyCode;
+    let keyboardEvent = document.createEvent("KeyboardEvent");
+    let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    let tKC = evt.keyCode;
+    let tC = evt.code;
+
     //console.log(tKC)
     //console.log(cad_sett)
     if (ddd == 0) {
-      if (tKC == fres) { document.getElementById("res").style.background = "#ECCDAC"; };
-      if (tKC == fsup) { document.getElementById("sup").style.background = "#ECCDAC"; };
-      if (tKC == fsdw) { document.getElementById("sdw").style.background = "#ECCDAC"; };
-      if (tKC == fset) { document.getElementById("set").style.background = "#ECCDAC"; };
+      if (tKC == settings.get('commands_reset')) { document.getElementById("res").style.background = "#ECCDAC"; };
+      if (tKC == settings.get('commands_speedUP')) { document.getElementById("sup").style.background = "#ECCDAC"; };
+      if (tKC == settings.get('commands_speedDOWN')) { document.getElementById("sdw").style.background = "#ECCDAC"; };
+      if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#ECCDAC"; };
+
+      /* if (tC == settings.get('commands_code_reset')) { document.getElementById("res").style.background = "#ECCDAC"; };
+      if (tC == settings.get('commands_code_speedUP')) { document.getElementById("sup").style.background = "#ECCDAC"; };
+      if (tC == settings.get('commands_code_speedDOWN')) { document.getElementById("sdw").style.background = "#ECCDAC"; };
+      if (tC == settings.get('commands_code_speedSET')) { document.getElementById("set").style.background = "#ECCDAC"; }; */
+
+
     }
     if (ddd == 1) {
-      fkc = tKC;
-      ffkc[xxch] = fkc;
+      if (commandk !== null) {
+        settings.set(commandk[0], tKC);
+        settings.set(commandk[1], tC);
+        console.log(commandk[0], tKC, commandk[1], tC);
+      }
 
     }
 
@@ -151,16 +164,22 @@ async function main() {
   };
 
   document.onkeyup = async function (evt) {
-    var keyboardEvent = document.createEvent("KeyboardEvent");
-    var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
-    tKC = evt.keyCode;
+    let keyboardEvent = document.createEvent("KeyboardEvent");
+    let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+    let tKC = evt.keyCode;
+    let tC = evt.code;
     //console.log(tKC)
     //console.log(cad_sett)
     if (ddd == 0) {
-      if (tKC == fres) { document.getElementById("res").style.background = "#D9DAE8"; };
-      if (tKC == fsup) { document.getElementById("sup").style.background = "#D9DAE8"; };
-      if (tKC == fsdw) { document.getElementById("sdw").style.background = "#D9DAE8"; };
-      if (tKC == fset) { document.getElementById("set").style.background = "#D9DAE8"; };
+      if (tKC == settings.get('commands_reset')) { document.getElementById("res").style.background = "#D9DAE8"; };
+      if (tKC == settings.get('commands_speedUP')) { document.getElementById("sup").style.background = "#D9DAE8"; };
+      if (tKC == settings.get('commands_speedDOWN')) { document.getElementById("sdw").style.background = "#D9DAE8"; };
+      if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#D9DAE8"; };
+
+      /* if (tC == settings.get('commands_code_reset')) { document.getElementById("res").style.background = "#D9DAE8"; };
+      if (tC == settings.get('commands_code_speedUP')) { document.getElementById("sup").style.background = "#D9DAE8"; };
+      if (tC == settings.get('commands_code_speedDOWN')) { document.getElementById("sdw").style.background = "#D9DAE8"; };
+      if (tC == settings.get('commands_code_speedSET')) { document.getElementById("set").style.background = "#D9DAE8"; }; */
     }
     if (ddd == 1) {
       //console.log(ffkc)
@@ -169,9 +188,10 @@ async function main() {
       var ca_kc = cad_sett.split(",");
       msgforyou("", true);
 
-      var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
+      //var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       //set_cstt(updK);
-      message('set_cstt', updK);
+      //message('set_cstt', updK);
+      settings.save();
       window.location.reload()
 
 
@@ -181,19 +201,15 @@ async function main() {
   };
 
 
-  if (ca_kc[4] == 1) {
-    document.getElementById("on_off_sp").checked = true;
-  }
-  if (ca_kc[5] == 1) {
-    document.getElementById("on_off_bt").checked = true;
-  }
-  if (ca_kc[9] == 1) {
-    document.getElementById("on_off_ignoretxt").checked = true;
-  }
+ 
+  document.getElementById("on_off_sp").checked = settings.get('switch_preserve_pitch'); // true or false
+  document.getElementById("on_off_bt").checked = settings.get('switch_shortcuts');
+  document.getElementById("on_off_ignoretxt").checked = settings.get('switch_ignore_text_field');
+
 
   var Checkbox = document.querySelector('input[value="isenable_sp"]');
   Checkbox.onchange = async function () {
-    var cad_sett = (await message('get_cstt')).cstt; //return cstt
+    /* var cad_sett = (await message('get_cstt')).cstt; //return cstt
     var ca_kc = cad_sett.split(",");
 
     if (Checkbox.checked) {
@@ -206,13 +222,14 @@ async function main() {
       message('set_cstt', tmp_rkc);
       console.log(Checkbox.checked);
 
-    }
+    } */
+    settings.set('switch_preserve_pitch', Checkbox.checked);
 
   }
 
   var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
   Checkbox2.onchange = async function () {
-    var cad_sett = (await message('get_cstt')).cstt; //return cstt
+   /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
     var ca_kc = cad_sett.split(",");
 
 
@@ -226,14 +243,15 @@ async function main() {
       message('set_cstt', tmp_rkc);
       console.log(Checkbox2.checked);
 
-    }
+    } */
+    settings.set('switch_shortcuts', Checkbox2.checked);
 
   }
 
 
   var Checkbox3 = document.querySelector('input[value="isenable_ignoretxt"]');
   Checkbox3.onchange = async function () {
-    var cad_sett = (await message('get_cstt')).cstt; //return cstt
+   /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
     var ca_kc = cad_sett.split(",");
 
 
@@ -247,19 +265,21 @@ async function main() {
       message('set_cstt', tmp_rkc);
       console.log(Checkbox3.checked);
 
-    }
+    } */
+    settings.set('switch_ignore_text_field', Checkbox3.checked);
 
   }
 
 
   aply.onclick = function aplu() {
+    settings.save();
     browser.runtime.reload()
   }
 }
 
 
 
-function getKC(xh) {
+function getKC() {
   ddd = 1
   msgforyou("Press a key", false);
 }

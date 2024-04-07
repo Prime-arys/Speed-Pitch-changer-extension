@@ -1,4 +1,4 @@
-import { onError, message, register, BWlist_manager } from "../utils/utils_BG.js";
+import { onError, message, register, BWlist_manager, Settings } from "../utils/utils_BG.js";
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
@@ -10,18 +10,40 @@ let local_module_version = localStorage.getItem('Xytspch_version');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 var UPD = false;
 var plat = navigator.userAgent.toLowerCase();
+var settings;
 
 //get the version of the addon on manifest.json
 const manifestData = browser.runtime.getManifest();
 const version = manifestData.version;
 
 //console.log("BG Load")
-var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1, 1];
+/* var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1, 1];
 
 if (cad_sett == null) {
   cad_sett = default_sett;
   localStorage.setItem('Xytspch_sett', cad_sett);
   UPD = true;
+} */
+
+
+if (cad_sett == null) {
+  let settings = new Settings();
+  UPD = true;
+}
+
+if (cad_sett != null) {
+  //check if old format (<= 1.4.2)
+  if (cad_sett[0] !== "{") {
+    //old format
+    let old_settings = cad_sett.split(",");
+    let settings = new Settings(old_settings);
+    UPD = true;
+  }
+  else {
+    //new format
+    settings = new Settings();
+  }
+  
 }
 
 if (local_module_version == null) {
@@ -115,10 +137,10 @@ xhr.send();
 
 
 
-var setg = cad_sett.split(',');
+//var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
 var ghostlist = ghostlist.split(',');
-
+/*
 if (setg.length < 10) {
   //Update settings
   let tmp_rkc = [];
@@ -135,7 +157,9 @@ if (setg.length < 10) {
   cad_sett = tmp_rkc;
   console.log("updated !")
   browser.runtime.reload()
-}
+} */
+
+
 
 if (cad_isen == 'yes') {
   //var soundcloud = "*://soundcloud.com/*";
@@ -214,7 +238,7 @@ function ms(dom = false) {
 function handleMessage(request, sender, sendResponse) {
   //FOR MAIN
   if (request.title == "dm1") {
-    sendResponse({ dm1: cad_sett });
+    sendResponse({ dm1: settings });
   }
   if (request.title == "xpup") {
     let executing = browser.tabs.executeScript({ code: "xpup();", allFrames: true, matchAboutBlank: true });
@@ -263,6 +287,7 @@ function handleMessage(request, sender, sendResponse) {
     cad_isen = request.val;
     localStorage.setItem('Xytspch_isen', cad_isen);
   }
+
   if (request.type == "get_blacklist") {
     //renvoie blacklistHost en réponse
     sendResponse({ blacklist: BWlist_manager(blacklistHost, "get", null) });
