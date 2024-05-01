@@ -11,36 +11,40 @@
 <body>
     <h3 class="title">Settings</h3>
 
-    <h4 class="CMs">Shortcut (customize) :</h4>
-    <div class="cm">
-        <img src="../icons/clean_svg/res.svg" />
-        <button id="res">#</button> &nbsp;: reset
-    </div>
-    <div class="cm">
-        <img src="../icons/clean_svg/up.svg" />
-        <button id="sup">#</button> &nbsp;: increase speed
-    </div>
-    <div class="cm">
-        <img src="../icons/clean_svg/dw.svg" />
-        <button id="sdw">#</button> &nbsp;: decrease speed
-    </div>
-    <div class="cm">
-        <img src="../icons/clean_svg/def.svg" />
-        <button id="set">#</button> &nbsp;: set a value
-    </div>
-    <div class="swm">
-        <label class="switch">
-            <div class="cm">
-                <label class="swx">
-                    <input type="checkbox" id="on_off_bt" name="onfsw" value="isenable_bt">
-                    <span class="slider round"></span>
-                </label>
-                <p> : keyboard shortcut</p>
-            </div>
-        </label>
+    <h4 id="tg_kbs" class="CMs toggle toggle_force">Keyboard shortcuts <p>▲</p> :</h4>
+
+    <div id="collapse_kbs" class="swm">
+        <div class="cm">
+            <img src="../icons/clean_svg/res.svg" />
+            <button id="res">#</button> &nbsp;: reset
+        </div>
+        <div class="cm">
+            <img src="../icons/clean_svg/up.svg" />
+            <button id="sup">#</button> &nbsp;: increase speed
+        </div>
+        <div class="cm">
+            <img src="../icons/clean_svg/dw.svg" />
+            <button id="sdw">#</button> &nbsp;: decrease speed
+        </div>
+        <div class="cm">
+            <img src="../icons/clean_svg/def.svg" />
+            <button id="set">#</button> &nbsp;: set a value
+        </div>
+        <div class="swm">
+            <label class="switch">
+                <div class="cm">
+                    <label class="swx">
+                        <input type="checkbox" id="on_off_bt" name="onfsw" value="isenable_bt">
+                        <span class="slider round"></span>
+                    </label>
+                    <p> : keyboard shortcut</p>
+                </div>
+            </label>
+        </div>
     </div>
     <hr class="separator">
-    <h4 id="tg_pm" class="CMs toggle">Behavior ( <img src="../icons/clean_svg/up.svg"/> <img src="../icons/clean_svg/dw.svg"/> ) <p>▼</p> :</h4>
+    <h4 id="tg_pm" class="CMs toggle">Behavior ( <img src="../icons/clean_svg/up.svg" /> <img
+            src="../icons/clean_svg/dw.svg" /> ) <p>▼</p> :</h4>
     <div id="collapse_pm" class="swm collapse">
         <label class="switch">
             <div class="cm">
@@ -53,26 +57,48 @@
         </label>
 
         <div>
-                <div class="cm">
-                    <input type="radio" name="btn_meth" id="rad1" value="1" checked>
-                    <label for="rad1">default</label>
-                </div>
+            <div class="cm">
+                <input type="radio" name="btn_meth" id="rad1" value="1" checked>
+                <label for="rad1">default</label>
+            </div>
 
-                <div class="cm">
-                    <input type="radio" name="btn_meth" id="rad2" value="2">
-                    <label for="rad2">x ÷ <input type="number" id="rad2val" step="0.01" min="1.00"
-                            value="1.1" /></label>
-                </div>
+            <div class="cm">
+                <input type="radio" name="btn_meth" id="rad2" value="2">
+                <label for="rad2">x ÷ <input type="number" id="rad2val" step="0.01" min="1.00" value="1.1" /></label>
+            </div>
 
-                <div class="cm">
-                    <input type="radio" name="btn_meth" id="rad3" value="3">
-                    <label for="rad3">+ - <input type="number" id="rad3val" step="0.01" min="0" value="1.1" /></label>
-                </div>
+            <div class="cm">
+                <input type="radio" name="btn_meth" id="rad3" value="3">
+                <label for="rad3">+ - <input type="number" id="rad3val" step="0.01" min="0" value="1.1" /></label>
+            </div>
             </fieldset>
         </div>
-
     </div>
     <hr class="separator">
+    <h4 id="tg_bd" class="CMs toggle">Behavior ( <img src="../icons/clean_svg/left.svg" /> <img
+            src="../icons/clean_svg/right.svg" /> ) <p>▼</p> :</h4>
+    <div id="collapse_bd" class="swm collapse">
+        <div>
+            <div class="cm">
+                <input type="radio" name="btn_meth2" id="rad1b" value="1" checked>
+                <label for="rad1b">default</label>
+            </div>
+
+            <div class="cm">
+                <input type="radio" name="btn_meth2" id="rad2b" value="2">
+                <label for="rad2b">x ÷ <input type="number" id="rad2bval" step="0.01" min="1.00" value="1.1" /></label>
+            </div>
+
+            <div class="cm">
+                <input type="radio" name="btn_meth2" id="rad3b" value="3">
+                <label for="rad3b">+ - <input type="number" id="rad3bval" step="0.01" min="0" value="1.1" /></label>
+            </div>
+            </fieldset>
+        </div>
+    </div>
+    <hr class="separator">
+
+
     <h4 class="CMs">Other :</h4>
     <label class="switch">
         <div class="cm">

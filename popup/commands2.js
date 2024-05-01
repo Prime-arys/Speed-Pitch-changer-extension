@@ -11,6 +11,56 @@ var settings = new Settings();
 //console.log("Chargement de la page");
 
 
+const tg_kbs = document.getElementById("tg_kbs");
+const tg_kbs_innerHTML = tg_kbs.innerHTML;
+const tg_pm = document.getElementById("tg_pm");
+const tg_pm_innerHTML = tg_pm.innerHTML;
+const tg_bd = document.getElementById("tg_bd");
+const tg_bd_innerHTML = tg_bd.innerHTML;
+const collapse_kbs = document.getElementById("collapse_kbs");
+const collapse_pm = document.getElementById("collapse_pm");
+const collapse_bd = document.getElementById("collapse_bd");
+
+const list = [tg_pm, tg_bd, tg_kbs];
+const list2 = [collapse_pm, collapse_bd, collapse_kbs];
+
+
+
+
+function force_collapse(list, list2) {
+  list.forEach(tg => {
+    tg.classList.remove("toggle_force");
+    tg.children[tg.children.length - 1]
+      .textContent = "▼";
+  });
+  list2.forEach(collapse => {
+    if (!collapse.classList.contains("collapse")) {
+      collapse.classList.add("collapse");
+    }
+  });
+}
+
+list.forEach(tg => {
+  console.log(tg);
+  tg.addEventListener("click", function () {
+    let index = list.indexOf(tg);
+    if (tg.classList.contains("toggle_force")) {
+      tg.children[tg.children.length - 1].textContent = tg.children[tg.children.length - 1].textContent == "▼" ? "▲" : "▼";
+      tg.classList.remove("toggle_force");
+      list2[index].classList.add("collapse");
+      console.log("toggle_force: ", tg);
+      return;
+    }
+    force_collapse(list, list2);
+    tg.classList.toggle("toggle_force");
+    tg.children[tg.children.length - 1].textContent = tg.children[tg.children.length - 1].textContent == "▼" ? "▲" : "▼";
+    
+    list2[index].classList.toggle("collapse");
+  });
+});
+
+
+
 function logTabs(tabs) {
   for (let tab of tabs) {
     hidden = tab.incognito;
@@ -18,16 +68,17 @@ function logTabs(tabs) {
   master = main();
 }
 
-function msgforyou(m, reset) {
-  let zlm = document.getElementById("CMs");
+function msgforyou(m, reset, zlm) {
+  zlm.innerHTML = m;
   if (reset == false) {
-    zlm.textContent = m;
     /*ajout une classe*/
     zlm.classList.add("surligne");
+    zlm.classList.remove("toggle_force");
   } else {
-    zlm.textContent = "Commands (customize) :";
-    /*supprime la classe*/
-    zlm.classList.remove("surligne");
+    if (zlm.classList.contains("surligne")) {
+      zlm.classList.remove("surligne");
+      zlm.classList.add("toggle_force");
+    }
   }
 
 }
@@ -45,8 +96,11 @@ async function main() {
   const dset = document.getElementById("set");
   const aply = document.getElementById("apl");
   const rad_st = document.getElementsByName("btn_meth");
+  const rad_st2 = document.getElementsByName("btn_meth2");
   const rad_2val = document.getElementById("rad2val");
   const rad_3val = document.getElementById("rad3val");
+  const rad_2bval = document.getElementById("rad2bval");
+  const rad_3bval = document.getElementById("rad3bval");
 
   dres.textContent = ipc_kco[settings.get('commands_reset')];
   dsup.textContent = ipc_kco[settings.get('commands_speedUP')];
@@ -72,8 +126,12 @@ async function main() {
 
   rad_2val.addEventListener("change", function () { rule_set(); });
   rad_3val.addEventListener("change", function () { rule_set(); });
+  rad_2bval.addEventListener("change", function () { rule_set(); });
+  rad_3bval.addEventListener("change", function () { rule_set(); });
   rad_2val.value = settings.get('radio_speed_custom_plus_minus');
   rad_3val.value = settings.get('radio_speed_custom_multiply_divide');
+  rad_2bval.value = settings.get('radio_pitch_custom_multiply_divide');
+  rad_3bval.value = settings.get('radio_pitch_custom_plus_minus');
 
   dres.onclick = function cm_dres() { getKC(); commandk = ['commands_reset', 'commands_code_reset']; }
   dsup.onclick = function cm_dsup() { getKC(); commandk = ['commands_speedUP', 'commands_code_speedUP']; }
@@ -83,6 +141,12 @@ async function main() {
   rad_st.forEach(function (item) {
     item.onclick = function () { rule_set(); }
     if (item.value == settings.get('radio_speed_preset')) item.checked = true, rule_set();
+    else item.checked = false;
+  });
+
+  rad_st2.forEach(function (item) {
+    item.onclick = function () { rule_set(); }
+    if (item.value == settings.get('radio_pitch_preset')) item.checked = true, rule_set();
     else item.checked = false;
   });
 
@@ -99,16 +163,16 @@ async function main() {
       /*ca_kc[7] = 1.1;*/
     }
     else if (rad_st[1].checked) {
-      rad_3val.disabled = true;
       rad_2val.disabled = false;
+      rad_3val.disabled = true;
       settings.set('radio_speed_preset', 2);
       if (rad_2val.value <= 1.0) {
-        settings.set('radio_speed_custom_multiply_divide', 1.001);
-        msgforyou("The value must be greater than 1.0", false);
+        settings.set('radio_speed_custom_plus_minus', 1.001);
+        msgforyou("The value must be greater than 1.0", false, tg_pm);
       }
       else {
-        settings.set('radio_speed_custom_multiply_divide', rad_2val.value);
-        msgforyou("", true);
+        settings.set('radio_speed_custom_plus_minus', rad_2val.value);
+        msgforyou(tg_pm_innerHTML, true, tg_pm);
       }
 
     }
@@ -117,12 +181,47 @@ async function main() {
       rad_3val.disabled = false;
       settings.set('radio_speed_preset', 3);
       if (rad_3val.value <= 0) {
-        settings.set('radio_speed_custom_plus_minus', 0.001);
-        msgforyou("The value must be greater than 0", false);
+        settings.set('radio_speed_custom_multiply_divide', 0.001);
+        msgforyou("The value must be greater than 0", false, tg_pm);
       }
       else {
-        settings.set('radio_speed_custom_plus_minus', rad_3val.value);
-        msgforyou("", true);
+        settings.set('radio_speed_custom_multiply_divide', rad_3val.value);
+        msgforyou(tg_pm_innerHTML, true, tg_pm);
+      }
+    }
+
+
+    if (rad_st2[0].checked) {
+      rad_2bval.disabled = true;
+      rad_3bval.disabled = true;
+      settings.set('radio_pitch_preset', 1);
+      /*ca_kc[7] = 1.1;*/
+    }
+    else if (rad_st2[1].checked) {
+      rad_2bval.disabled = false;
+      rad_3bval.disabled = true;
+      settings.set('radio_pitch_preset', 2);
+      if (rad_2bval.value <= 1.0) {
+        settings.set('radio_pitch_custom_multiply_divide', 1.001);
+        msgforyou("The value must be greater than 1.0", false, tg_bd);
+      }
+      else {
+        settings.set('radio_pitch_custom_multiply_divide', rad_2bval.value);
+        msgforyou(tg_bd_innerHTML, true, tg_bd);
+      }
+
+    }
+    else if (rad_st2[2].checked) {
+      rad_2bval.disabled = true;
+      rad_3bval.disabled = false;
+      settings.set('radio_pitch_preset', 3);
+      if (rad_3bval.value <= 0) {
+        settings.set('radio_pitch_custom_plus_minus', 0.001);
+        msgforyou("The value must be greater than 0", false, tg_bd);
+      }
+      else {
+        settings.set('radio_pitch_custom_plus_minus', rad_3bval.value);
+        msgforyou(tg_bd_innerHTML, true, tg_bd);
       }
     }
     //message('set_cstt', ca_kc.join(","));
@@ -186,7 +285,7 @@ async function main() {
       ddd = 0
       var cad_sett = (await message('get_cstt')).cstt; //return cstt
       var ca_kc = cad_sett.split(",");
-      msgforyou("", true);
+      msgforyou(tg_kbs_innerHTML, true, tg_kbs);
 
       //var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
       //set_cstt(updK);
@@ -281,7 +380,7 @@ async function main() {
 
 function getKC() {
   ddd = 1
-  msgforyou("Press a key", false);
+  msgforyou("Press a key", false, tg_kbs);
 }
 
 function pressKey(keyCode) {
@@ -303,10 +402,3 @@ function pressKey(keyCode) {
 }
 
 
-
-const tg_pm = document.getElementById("tg_pm");
-tg_pm.addEventListener("click", function () {
-  document.getElementById("collapse_pm").classList.toggle("collapse");
-  tg_pm.classList.toggle("toggle_force");
-  tg_pm.children[2].textContent = tg_pm.children[2].textContent == "▼" ? "▲" : "▼";
-});
