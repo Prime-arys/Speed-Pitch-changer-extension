@@ -13,3 +13,4 @@ function notifyBackgroundPage(e,xfg) {
     sending.then(handleResponse, handleError);
 }
   
+const Random = Math.floor(Math.random() * 2**42);

@@ -70,7 +70,7 @@ Object.defineProperty(HTMLMediaElement.prototype,'defaultPlaybackRate',{
 });
 
 
-Object.defineProperty(HTMLMediaElement.prototype, 'playbackRate_origin', {
+Object.defineProperty(HTMLMediaElement.prototype, 'playbackRate_origin_${Random}', {
     set: function(newRate) {
         // appel de la méthode originale avec les deux paramètres
         //console.log("playbackRate_origin", this, newRate);
@@ -79,7 +79,7 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playbackRate_origin', {
     }
 });
 
-Object.defineProperty(HTMLMediaElement.prototype, 'defaultPlaybackRate_origin', {
+Object.defineProperty(HTMLMediaElement.prototype, 'defaultPlaybackRate_origin_${Random}', {
     set: function(newRate) {
         this.defaultPlaybackRate = [newRate, "spcdespa"];
 
