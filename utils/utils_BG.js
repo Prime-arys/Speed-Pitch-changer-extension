@@ -91,7 +91,6 @@ export class Settings {
     this.radio_speed_custom_multiply_divide = null;
     this.radio_pitch_preset = null;
     this.radio_pitch_custom_plus_minus = null;
-    this.radio_pitch_custom_multiply_divide = null;
     this.rkc = rkc; // rkc is an array of 10 elements (old settings format)
     this.init();
   }
@@ -152,7 +151,6 @@ export class Settings {
     this.radio_speed_custom_multiply_divide = 1.1;
     this.radio_pitch_preset = 1;
     this.radio_pitch_custom_plus_minus = 1.1;
-    this.radio_pitch_custom_multiply_divide = 1.1;
     this.rkc = false;
   }
 

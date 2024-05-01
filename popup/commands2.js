@@ -100,7 +100,6 @@ async function main() {
   const rad_2val = document.getElementById("rad2val");
   const rad_3val = document.getElementById("rad3val");
   const rad_2bval = document.getElementById("rad2bval");
-  const rad_3bval = document.getElementById("rad3bval");
 
   dres.textContent = ipc_kco[settings.get('commands_reset')];
   dsup.textContent = ipc_kco[settings.get('commands_speedUP')];
@@ -127,11 +126,9 @@ async function main() {
   rad_2val.addEventListener("change", function () { rule_set(); });
   rad_3val.addEventListener("change", function () { rule_set(); });
   rad_2bval.addEventListener("change", function () { rule_set(); });
-  rad_3bval.addEventListener("change", function () { rule_set(); });
   rad_2val.value = settings.get('radio_speed_custom_plus_minus');
   rad_3val.value = settings.get('radio_speed_custom_multiply_divide');
-  rad_2bval.value = settings.get('radio_pitch_custom_multiply_divide');
-  rad_3bval.value = settings.get('radio_pitch_custom_plus_minus');
+  rad_2bval.value = settings.get('radio_pitch_custom_plus_minus');
 
   dres.onclick = function cm_dres() { getKC(); commandk = ['commands_reset', 'commands_code_reset']; }
   dsup.onclick = function cm_dsup() { getKC(); commandk = ['commands_speedUP', 'commands_code_speedUP']; }
@@ -193,34 +190,18 @@ async function main() {
 
     if (rad_st2[0].checked) {
       rad_2bval.disabled = true;
-      rad_3bval.disabled = true;
       settings.set('radio_pitch_preset', 1);
       /*ca_kc[7] = 1.1;*/
     }
     else if (rad_st2[1].checked) {
       rad_2bval.disabled = false;
-      rad_3bval.disabled = true;
       settings.set('radio_pitch_preset', 2);
-      if (rad_2bval.value <= 1.0) {
-        settings.set('radio_pitch_custom_multiply_divide', 1.001);
-        msgforyou("The value must be greater than 1.0", false, tg_bd);
-      }
-      else {
-        settings.set('radio_pitch_custom_multiply_divide', rad_2bval.value);
-        msgforyou(tg_bd_innerHTML, true, tg_bd);
-      }
-
-    }
-    else if (rad_st2[2].checked) {
-      rad_2bval.disabled = true;
-      rad_3bval.disabled = false;
-      settings.set('radio_pitch_preset', 3);
-      if (rad_3bval.value <= 0) {
+      if (rad_2bval.value <= 0) {
         settings.set('radio_pitch_custom_plus_minus', 0.001);
         msgforyou("The value must be greater than 0", false, tg_bd);
       }
       else {
-        settings.set('radio_pitch_custom_plus_minus', rad_3bval.value);
+        settings.set('radio_pitch_custom_plus_minus', rad_2bval.value);
         msgforyou(tg_bd_innerHTML, true, tg_bd);
       }
     }

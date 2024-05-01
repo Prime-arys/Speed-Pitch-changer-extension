@@ -35,6 +35,18 @@ function meth_upd_m(el, n) {
   else if (n == 3) return el -= parseFloat(settings.get('radio_speed_custom_plus_minus'));
 }
 
+
+function meth2_upd_p(el, n) {
+  if (n == 1) return el + 1;
+  else if (n == 2) return el += parseFloat(settings.get('radio_pitch_custom_plus_minus'));
+}
+
+function meth2_upd_m(el, n) {
+  if (n == 1) return el - 1;
+  else if (n == 2) return el -= parseFloat(settings.get('radio_pitch_custom_plus_minus'));
+}
+
+
 function semitone2magic(val) {
   let from_semitone = Math.pow(2, val / 12); // is this correct?
   return from_semitone.toFixed(16);
@@ -161,33 +173,73 @@ function inject_jungle_unDOM() {
   jungle_inject = true;
 }
 
+function inject_jungle_unDOM_meth2() {
+  
+  let meth2_upd_p = `
+  function jungle_SpeedPitchChanger_despaEll_meth2_upd_p(el, n) {
+    //console.log("METH udom",el,n)
+    if (n == 1) return el + 1;
+    else if (n == 2) return el += ${parseFloat(settings.get('radio_pitch_custom_plus_minus'))};
+  }
+  `
+
+  let meth2_upd_m = `
+  function jungle_SpeedPitchChanger_despaEll_meth2_upd_m(el, n) {
+    //console.log("METH udom",el,n)
+    if (n == 1) return el - 1;
+    else if (n == 2) return el -= ${parseFloat(settings.get('radio_pitch_custom_plus_minus'))};
+  }
+  `
+  window.eval(meth2_upd_p);
+  window.eval(meth2_upd_m);
+  
+  }
+
 function vpup() {
   if (jungle_inject == false) {
     inject_jungle();
+    inject_jungle_unDOM_meth2();
     window.eval(inject_jungle_unDOM.toString() + "inject_jungle_unDOM();");
     //console.log("INJECT JUNGLE");
   }
   let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
-  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
-  window.eval("jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle + 1, true);")
+  a = meth2_upd_p(a, settings.get('radio_pitch_preset'));
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a, true);
+  window.eval(`
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(
+    jungle_SpeedPitchChanger_despaEll_meth2_upd_p(
+      jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle, ${settings.get('radio_pitch_preset')}
+    ), true
+  );
+  `)
   //var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a + 1, true);
+
 }
 
 function vpdw() {
   if (jungle_inject == false) {
     inject_jungle();
+    inject_jungle_unDOM_meth2();
     window.eval(inject_jungle_unDOM.toString() + "inject_jungle_unDOM();");
     //console.log("INJECT JUNGLE");
   }
   let a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;
-  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
-  window.eval("jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle - 1, true);")
+  a = meth2_upd_m(a, settings.get('radio_pitch_preset'));
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a, true);
+  window.eval(`
+  jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(
+    jungle_SpeedPitchChanger_despaEll_meth2_upd_m(
+      jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle, ${settings.get('radio_pitch_preset')}
+    ), true
+  );
+  `)
   //var a = jungle_SpeedPitchChanger_despaEll_jungle.previousPitchNumber_SpeedPitchChanger_despaEll_jungle;jungle_SpeedPitchChanger_despaEll_jungle.setPitchOffset(a - 1, true);
 }
 
 function vpres() {
   if (jungle_inject == false) {
     inject_jungle();
+    inject_jungle_unDOM_meth2();
     window.eval(inject_jungle_unDOM.toString() + "inject_jungle_unDOM();");
     //console.log("INJECT JUNGLE");
   }
