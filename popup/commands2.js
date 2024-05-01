@@ -201,7 +201,7 @@ async function main() {
   };
 
 
- 
+
   document.getElementById("on_off_sp").checked = settings.get('switch_preserve_pitch'); // true or false
   document.getElementById("on_off_bt").checked = settings.get('switch_shortcuts');
   document.getElementById("on_off_ignoretxt").checked = settings.get('switch_ignore_text_field');
@@ -229,21 +229,21 @@ async function main() {
 
   var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
   Checkbox2.onchange = async function () {
-   /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
-    var ca_kc = cad_sett.split(",");
-
-
-    if (Checkbox2.checked) {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-      message('set_cstt', tmp_rkc);
-      console.log(Checkbox2.checked);
-
-    } else {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-      message('set_cstt', tmp_rkc);
-      console.log(Checkbox2.checked);
-
-    } */
+    /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
+     var ca_kc = cad_sett.split(",");
+ 
+ 
+     if (Checkbox2.checked) {
+       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
+       message('set_cstt', tmp_rkc);
+       console.log(Checkbox2.checked);
+ 
+     } else {
+       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
+       message('set_cstt', tmp_rkc);
+       console.log(Checkbox2.checked);
+ 
+     } */
     settings.set('switch_shortcuts', Checkbox2.checked);
 
   }
@@ -251,21 +251,21 @@ async function main() {
 
   var Checkbox3 = document.querySelector('input[value="isenable_ignoretxt"]');
   Checkbox3.onchange = async function () {
-   /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
-    var ca_kc = cad_sett.split(",");
-
-
-    if (Checkbox3.checked) {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 1];
-      message('set_cstt', tmp_rkc);
-      console.log(Checkbox3.checked);
-
-    } else {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 0];
-      message('set_cstt', tmp_rkc);
-      console.log(Checkbox3.checked);
-
-    } */
+    /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
+     var ca_kc = cad_sett.split(",");
+ 
+ 
+     if (Checkbox3.checked) {
+       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 1];
+       message('set_cstt', tmp_rkc);
+       console.log(Checkbox3.checked);
+ 
+     } else {
+       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 0];
+       message('set_cstt', tmp_rkc);
+       console.log(Checkbox3.checked);
+ 
+     } */
     settings.set('switch_ignore_text_field', Checkbox3.checked);
 
   }
@@ -301,3 +301,12 @@ function pressKey(keyCode) {
     document.fireEvent("onkeydown", eventObj);
   }
 }
+
+
+
+const tg_pm = document.getElementById("tg_pm");
+tg_pm.addEventListener("click", function () {
+  document.getElementById("collapse_pm").classList.toggle("collapse");
+  tg_pm.classList.toggle("toggle_force");
+  tg_pm.children[2].textContent = tg_pm.children[2].textContent == "▼" ? "▲" : "▼";
+});

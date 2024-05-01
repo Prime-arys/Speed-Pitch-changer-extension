@@ -13,6 +13,20 @@ h3{
     margin: 5px;
 }
 
+h4{
+    color: black;
+    font-size: 17px;
+    margin: 5px;
+}
+.title{
+    font-family: 'Digital-7', monospace;
+    font-size: 18px;
+    margin: 4px;
+    text-decoration: underline;
+    text-align: center;
+
+}
+
 
 a {
     margin: 3px;
@@ -84,6 +98,11 @@ button:hover {
     text-align: right;
     /*justify-content: space-between;*/
 
+}
+
+.cm img{
+    margin-right: 0.4em;
+    width: 1.7em;
 }
 
 .lnk{
@@ -167,16 +186,94 @@ input:checked + .slider:before {
 } 
 
 
-#CMs{
+.CMs{
     margin-bottom: 12px;
     margin-top: 12px;
-    text-align: center;
+    /*text-align: center;*/
     justify-content: space-between;
 }
+
+.CMs img{
+    margin-right: 0.4em;
+    width: 20px;
+    height: auto;
+    margin: 0;
+    vertical-align: middle;
+    
+}
+
+
 
 /*surligne le texte */
 .surligne {
     background-color: hsla(60, 100%, 50%, 0.395);
 }
+
+.toggle{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    justify-content: unset;
+    gap: 0.3em;
+}
+
+
+.toggle p{
+    margin: 0;
+    margin-left: 5px;
+    font-size: 16px;
+    font-family: 'Segoe UI';
+    color: hsl(220, 23%, 32%);
+    background-color: hsla(220, 23%, 24%, 0.2);
+    border-radius: 16px;
+    padding: 0px 4px 0px 4px;
+}
+
+.toggle:hover{
+    background-color: #d6d6d6;
+}
+
+.toggle_force{
+  background-color: hsl(60, 4%, 88%);
+}
+
+.collapse{
+    display: none;
+}
+
+/* collapse animation */
+.collapse.in {
+    display: block;
+    -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s;
+}
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.separator{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, #bbb, #555, #bbb);
+}
+
 
 

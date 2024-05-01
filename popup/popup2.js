@@ -1,10 +1,11 @@
-import { onError, message } from "../utils/utils_BG.js";
+import { onError, message, Settings } from "../utils/utils_BG.js";
 
 var hidden = false;
 var cad_isen;
-var cad_sett;
+//var cad_sett;
 var cad_upd;
 var actual_domain;
+var settings = new Settings();
 //console.log("POP Load")
 
 if (navigator.userAgent.indexOf("Android") != -1) {
@@ -20,7 +21,7 @@ if (typeof aver == 'undefined') {
 
 
 async function main() {
-  cad_sett = (await message('get_cstt')).cstt; //return cstt
+  //cad_sett = (await message('get_cstt')).cstt; //return cstt
   cad_isen = (await message('get_isen')).isen; //return isen
   cad_upd = (await message('get_upd')).upd; //return upd
 
@@ -35,7 +36,7 @@ async function main() {
     aver.style.color = "#6f5600";
   }
   
-    var ca_kc = cad_sett.split(",");
+    //var ca_kc = cad_sett.split(",");
 
     function logTabs(tabs) {
         for (let tab of tabs) {
@@ -77,7 +78,7 @@ async function main() {
 
     }
     function ifcmdis() {
-      if (ca_kc[5] == 0) {
+      if (settings.get("switch_shortcuts") == true) {
         acid.textContent = "*";
         acid.title = "Shortcuts are disabled";
         CMi.style.marginRight = "-4px";
@@ -109,7 +110,7 @@ async function main() {
               if (typeof xui !== 'undefined') {
                 let alm = document.getElementById("xui");
                 alm.textContent = request.val; //.val = actual_speed value
-                if (ca_kc[4] != '1') {
+                if (settings.get("switch_preserve_pitch") == false) {
                   desc.textContent = "semitone: " + magic2semitone(request.val).toFixed(2);
                 }
               }
@@ -159,7 +160,7 @@ async function main() {
         }
     );
 
-    if (ca_kc[4]=='1') {
+    if (settings.get("switch_preserve_pitch") == true) {
         if (typeof xui !== 'undefined') {let alm = document.getElementById("desc");alm.textContent = "(preserved pitch mode)";}
       }
 
@@ -206,7 +207,18 @@ async function main() {
     const spRight = document.getElementById("pR");
     const spLeft = document.getElementById("pL");
   
-    const spJuRes = document.getElementById("xui2");
+  const spJuRes = document.getElementById("xui2");
+  
+  //legeng
+  spUp.title = "Speed up";
+  spDw.title = "Speed down";
+  spRes.title = "Reset speed";
+  spDef.title = "Set speed";
+  spRight.title = "Pitch up";
+  spLeft.title = "Pitch down";
+  spJuRes.title = "Reset pitch";
+  btban.title = "Ban this domain";
+  btghost.title = "Add this domain to ghost list";
   
   btban.onchange = function () {
     if (btban.checked) {
