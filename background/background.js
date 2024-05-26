@@ -17,13 +17,6 @@ const manifestData = browser.runtime.getManifest();
 const version = manifestData.version;
 
 //console.log("BG Load")
-/* var default_sett = [106, 107, 109, 110, !1, 1, 1, 1.1, 1.1, 1];
-
-if (cad_sett == null) {
-  cad_sett = default_sett;
-  localStorage.setItem('Xytspch_sett', cad_sett);
-  UPD = true;
-} */
 
 
 if (cad_sett == null) {
@@ -140,24 +133,6 @@ xhr.send();
 //var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',');
 var ghostlist = ghostlist.split(',');
-/*
-if (setg.length < 10) {
-  //Update settings
-  let tmp_rkc = [];
-  default_sett.forEach(function (value, index) {
-    if (typeof setg[index] == 'undefined') {
-      tmp_rkc.push(default_sett[index]);
-    }
-    else {
-      tmp_rkc.push(setg[index]);
-    }
-    //console.log(tmp_rkc);
-  });
-  localStorage.setItem('Xytspch_sett', tmp_rkc);
-  cad_sett = tmp_rkc;
-  console.log("updated !")
-  browser.runtime.reload()
-} */
 
 
 
@@ -170,7 +145,6 @@ if (cad_isen == 'yes') {
   register([defaultHosts], "../utils/ace1.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);
-  //register(["*://www.deezer.com/*"], "../utils/ace1.js", "document_idle", blacklistHost); //deezer
   register([defaultHosts], "../contentScript/main.js", "document_idle", blacklistHost);
 
 

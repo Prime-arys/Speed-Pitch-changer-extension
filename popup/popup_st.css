@@ -139,6 +139,7 @@ button:hover {
   flex: auto;
   margin: auto;
   justify-content: center;
+  align-items: baseline;
 }
 
 .m12t {

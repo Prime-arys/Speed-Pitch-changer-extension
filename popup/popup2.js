@@ -2,7 +2,6 @@ import { onError, message, Settings } from "../utils/utils_BG.js";
 
 var hidden = false;
 var cad_isen;
-//var cad_sett;
 var cad_upd;
 var actual_domain;
 var settings = new Settings();
@@ -21,7 +20,6 @@ if (typeof aver == 'undefined') {
 
 
 async function main() {
-  //cad_sett = (await message('get_cstt')).cstt; //return cstt
   cad_isen = (await message('get_isen')).isen; //return isen
   cad_upd = (await message('get_upd')).upd; //return upd
 
@@ -36,7 +34,6 @@ async function main() {
     aver.style.color = "#6f5600";
   }
   
-    //var ca_kc = cad_sett.split(",");
 
     function logTabs(tabs) {
         for (let tab of tabs) {
@@ -78,7 +75,7 @@ async function main() {
 
     }
     function ifcmdis() {
-      if (settings.get("switch_shortcuts") == true) {
+      if (settings.get("switch_shortcuts") == false) {
         acid.textContent = "*";
         acid.title = "Shortcuts are disabled";
         CMi.style.marginRight = "-4px";

@@ -2,7 +2,6 @@
 
 //INITIAL
 
-//let rkc = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // settings
 let settings;
 var ytSpeed = false;
 const Elem = "video,audio,source";
@@ -83,9 +82,6 @@ function main() {
 
 function handleResponse(message) {
   if (typeof message !== 'undefined') {
-    //let setg = message.dm1.split(','); //get the settings from BG
-    //rkc = setg;
-    //rkc = message.dm1.split(','); //get the settings from BG
     settings = message.dm1;
     settings.get = function (key) {
       return this[key];
@@ -174,7 +170,7 @@ function inject_jungle_unDOM() {
 }
 
 function inject_jungle_unDOM_meth2() {
-  
+
   let meth2_upd_p = `
   function jungle_SpeedPitchChanger_despaEll_meth2_upd_p(el, n) {
     //console.log("METH udom",el,n)
@@ -192,8 +188,8 @@ function inject_jungle_unDOM_meth2() {
   `
   window.eval(meth2_upd_p);
   window.eval(meth2_upd_m);
-  
-  }
+
+}
 
 function vpup() {
   if (jungle_inject == false) {

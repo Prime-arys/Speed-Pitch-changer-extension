@@ -3,9 +3,7 @@ import { onError, message, Settings } from "../utils/utils_BG.js";
 
 var hidden = false;
 var master = false;
-var cad_sett;
 var ddd = 0;
-var fkc = 0;
 var commandk = null
 var settings = new Settings();
 //console.log("Chargement de la page");
@@ -34,28 +32,28 @@ function force_collapse(list, list2) {
       .textContent = "▼";
   });
   list2.forEach(collapse => {
-    if (!collapse.classList.contains("collapse")) {
-      collapse.classList.add("collapse");
+    if (collapse.classList.contains("show")) {
+      collapse.classList.remove("show");
     }
   });
 }
 
 list.forEach(tg => {
-  console.log(tg);
+  //console.log(tg);
   tg.addEventListener("click", function () {
     let index = list.indexOf(tg);
     if (tg.classList.contains("toggle_force")) {
       tg.children[tg.children.length - 1].textContent = tg.children[tg.children.length - 1].textContent == "▼" ? "▲" : "▼";
       tg.classList.remove("toggle_force");
-      list2[index].classList.add("collapse");
-      console.log("toggle_force: ", tg);
+      list2[index].classList.remove("show");
+      //console.log("toggle_force: ", tg);
       return;
     }
-    force_collapse(list, list2);
+    force_collapse(list, list2)
     tg.classList.toggle("toggle_force");
     tg.children[tg.children.length - 1].textContent = tg.children[tg.children.length - 1].textContent == "▼" ? "▲" : "▼";
     
-    list2[index].classList.toggle("collapse");
+    list2[index].classList.toggle("show");
   });
 });
 
@@ -88,8 +86,6 @@ querying.then(logTabs, onError);
 
 async function main() {
 
-  var cad_sett = (await message('get_cstt')).cstt; //return cstt
-
   const dres = document.getElementById("res");
   const dsup = document.getElementById("sup");
   const dsdw = document.getElementById("sdw");
@@ -106,13 +102,6 @@ async function main() {
   dsdw.textContent = ipc_kco[settings.get('commands_speedDOWN')];
   dset.textContent = ipc_kco[settings.get('commands_speedSET')];
 
-
-  var ca_kc = cad_sett.split(",")
-  var fres = parseInt(ca_kc[0])
-  var fsup = parseInt(ca_kc[1])
-  var fsdw = parseInt(ca_kc[2])
-  var fset = parseInt(ca_kc[3])
-  var ffkc = [fres, fsup, fsdw, fset, ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
 
   dres.addEventListener("mouseover", function () { dres.style.background = "#EFDBC8" })
   dres.addEventListener("mouseout", function () { dres.style.background = "#D9DAE8" })
@@ -235,7 +224,7 @@ async function main() {
       if (commandk !== null) {
         settings.set(commandk[0], tKC);
         settings.set(commandk[1], tC);
-        console.log(commandk[0], tKC, commandk[1], tC);
+        //console.log(commandk[0], tKC, commandk[1], tC);
       }
 
     }
@@ -268,9 +257,6 @@ async function main() {
       var ca_kc = cad_sett.split(",");
       msgforyou(tg_kbs_innerHTML, true, tg_kbs);
 
-      //var updK = [ffkc[0], ffkc[1], ffkc[2], ffkc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-      //set_cstt(updK);
-      //message('set_cstt', updK);
       settings.save();
       window.location.reload()
 
@@ -289,41 +275,14 @@ async function main() {
 
   var Checkbox = document.querySelector('input[value="isenable_sp"]');
   Checkbox.onchange = async function () {
-    /* var cad_sett = (await message('get_cstt')).cstt; //return cstt
-    var ca_kc = cad_sett.split(",");
 
-    if (Checkbox.checked) {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], 1, ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-      message('set_cstt', tmp_rkc);
-      console.log(Checkbox.checked);
-
-    } else {
-      let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], !1, ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-      message('set_cstt', tmp_rkc);
-      console.log(Checkbox.checked);
-
-    } */
     settings.set('switch_preserve_pitch', Checkbox.checked);
 
   }
 
   var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
   Checkbox2.onchange = async function () {
-    /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
-     var ca_kc = cad_sett.split(",");
- 
- 
-     if (Checkbox2.checked) {
-       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 1, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-       message('set_cstt', tmp_rkc);
-       console.log(Checkbox2.checked);
- 
-     } else {
-       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], 0, ca_kc[6], ca_kc[7], ca_kc[8], ca_kc[9]];
-       message('set_cstt', tmp_rkc);
-       console.log(Checkbox2.checked);
- 
-     } */
+
     settings.set('switch_shortcuts', Checkbox2.checked);
 
   }
@@ -331,21 +290,7 @@ async function main() {
 
   var Checkbox3 = document.querySelector('input[value="isenable_ignoretxt"]');
   Checkbox3.onchange = async function () {
-    /*  var cad_sett = (await message('get_cstt')).cstt; //return cstt
-     var ca_kc = cad_sett.split(",");
- 
- 
-     if (Checkbox3.checked) {
-       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 1];
-       message('set_cstt', tmp_rkc);
-       console.log(Checkbox3.checked);
- 
-     } else {
-       let tmp_rkc = [ca_kc[0], ca_kc[1], ca_kc[2], ca_kc[3], ca_kc[4], ca_kc[5], ca_kc[6], ca_kc[7], ca_kc[8], 0];
-       message('set_cstt', tmp_rkc);
-       console.log(Checkbox3.checked);
- 
-     } */
+
     settings.set('switch_ignore_text_field', Checkbox3.checked);
 
   }
