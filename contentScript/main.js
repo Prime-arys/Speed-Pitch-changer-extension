@@ -270,13 +270,22 @@ document.onkeydown = function (evt) {
 
     }
 
-    switch (evt.keyCode) {
+    /* switch (evt.keyCode) {
       case parseInt(settings.get('commands_reset')): notifyBackgroundPage("xpres"); break;
       case parseInt(settings.get('commands_speedUP')): notifyBackgroundPage("xpup"); break;
       case parseInt(settings.get('commands_speedDOWN')): notifyBackgroundPage("xpdw"); break;
       case parseInt(settings.get('commands_speedSET')): xpdef(); break;
 
+    } */
+
+    switch (evt.code) {
+      case settings.get('commands_code_reset').code: notifyBackgroundPage("xpres"); break;
+      case settings.get('commands_code_speedUP').code: notifyBackgroundPage("xpup"); break;
+      case settings.get('commands_code_speedDOWN').code: notifyBackgroundPage("xpdw"); break;
+      case settings.get('commands_code_speedSET').code: xpdef(); break;
+
     }
+
   }
 };
 

@@ -1,4 +1,4 @@
-import ipc_kco from '../utils/char_kcode.js';
+import { keyboardMap } from '../utils/char_kcode.js';
 import { onError, message, Settings } from "../utils/utils_BG.js";
 
 var hidden = false;
@@ -97,10 +97,15 @@ async function main() {
   const rad_3val = document.getElementById("rad3val");
   const rad_2bval = document.getElementById("rad2bval");
 
-  dres.textContent = ipc_kco[settings.get('commands_reset')];
-  dsup.textContent = ipc_kco[settings.get('commands_speedUP')];
-  dsdw.textContent = ipc_kco[settings.get('commands_speedDOWN')];
-  dset.textContent = ipc_kco[settings.get('commands_speedSET')];
+/*   dres.textContent = keyboardMap[settings.get('commands_reset')];
+  dsup.textContent = keyboardMap[settings.get('commands_speedUP')];
+  dsdw.textContent = keyboardMap[settings.get('commands_speedDOWN')];
+  dset.textContent = keyboardMap[settings.get('commands_speedSET')]; */
+
+  dres.textContent = settings.get('commands_code_reset').key;
+  dsup.textContent = settings.get('commands_code_speedUP').key;
+  dsdw.textContent = settings.get('commands_code_speedDOWN').key;
+  dset.textContent = settings.get('commands_code_speedSET').key;
 
 
   dres.addEventListener("mouseover", function () { dres.style.background = "#EFDBC8" })
@@ -202,28 +207,37 @@ async function main() {
   document.onkeydown = function (evt) {
     let keyboardEvent = document.createEvent("KeyboardEvent");
     let initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
-    let tKC = evt.keyCode;
+    let tKC = null;
     let tC = evt.code;
+    try {
+      tKC = evt.keyCode;
+    }
+    catch (e) {
+      tKC = null;
+    }
 
     //console.log(tKC)
     //console.log(cad_sett)
     if (ddd == 0) {
-      if (tKC == settings.get('commands_reset')) { document.getElementById("res").style.background = "#ECCDAC"; };
+      /* if (tKC == settings.get('commands_reset')) { document.getElementById("res").style.background = "#ECCDAC"; };
       if (tKC == settings.get('commands_speedUP')) { document.getElementById("sup").style.background = "#ECCDAC"; };
       if (tKC == settings.get('commands_speedDOWN')) { document.getElementById("sdw").style.background = "#ECCDAC"; };
       if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#ECCDAC"; };
-
-      /* if (tC == settings.get('commands_code_reset')) { document.getElementById("res").style.background = "#ECCDAC"; };
-      if (tC == settings.get('commands_code_speedUP')) { document.getElementById("sup").style.background = "#ECCDAC"; };
-      if (tC == settings.get('commands_code_speedDOWN')) { document.getElementById("sdw").style.background = "#ECCDAC"; };
-      if (tC == settings.get('commands_code_speedSET')) { document.getElementById("set").style.background = "#ECCDAC"; }; */
+ */
+      if (tC == settings.get('commands_code_reset').code) { document.getElementById("res").style.background = "#ECCDAC"; };
+      if (tC == settings.get('commands_code_speedUP').code) { document.getElementById("sup").style.background = "#ECCDAC"; };
+      if (tC == settings.get('commands_code_speedDOWN').code) { document.getElementById("sdw").style.background = "#ECCDAC"; };
+      if (tC == settings.get('commands_code_speedSET').code) { document.getElementById("set").style.background = "#ECCDAC"; };
 
 
     }
     if (ddd == 1) {
       if (commandk !== null) {
-        settings.set(commandk[0], tKC);
-        settings.set(commandk[1], tC);
+        //settings.set(commandk[0], tKC);
+        settings.set(commandk[1], { 
+          code: evt.code, 
+          key: tKC !== null ? keyboardMap[tKC] : evt.key.toUpperCase() // will use legacy key name if keyCode is available
+        });
         //console.log(commandk[0], tKC, commandk[1], tC);
       }
 
@@ -240,21 +254,19 @@ async function main() {
     //console.log(tKC)
     //console.log(cad_sett)
     if (ddd == 0) {
-      if (tKC == settings.get('commands_reset')) { document.getElementById("res").style.background = "#D9DAE8"; };
+      /* if (tKC == settings.get('commands_reset')) { document.getElementById("res").style.background = "#D9DAE8"; };
       if (tKC == settings.get('commands_speedUP')) { document.getElementById("sup").style.background = "#D9DAE8"; };
       if (tKC == settings.get('commands_speedDOWN')) { document.getElementById("sdw").style.background = "#D9DAE8"; };
-      if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#D9DAE8"; };
+      if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#D9DAE8"; }; */
 
-      /* if (tC == settings.get('commands_code_reset')) { document.getElementById("res").style.background = "#D9DAE8"; };
-      if (tC == settings.get('commands_code_speedUP')) { document.getElementById("sup").style.background = "#D9DAE8"; };
-      if (tC == settings.get('commands_code_speedDOWN')) { document.getElementById("sdw").style.background = "#D9DAE8"; };
-      if (tC == settings.get('commands_code_speedSET')) { document.getElementById("set").style.background = "#D9DAE8"; }; */
+      if (tC == settings.get('commands_code_reset').code) { document.getElementById("res").style.background = "#D9DAE8"; };
+      if (tC == settings.get('commands_code_speedUP').code) { document.getElementById("sup").style.background = "#D9DAE8"; };
+      if (tC == settings.get('commands_code_speedDOWN').code) { document.getElementById("sdw").style.background = "#D9DAE8"; };
+      if (tC == settings.get('commands_code_speedSET').code) { document.getElementById("set").style.background = "#D9DAE8"; };
     }
     if (ddd == 1) {
       //console.log(ffkc)
       ddd = 0
-      var cad_sett = (await message('get_cstt')).cstt; //return cstt
-      var ca_kc = cad_sett.split(",");
       msgforyou(tg_kbs_innerHTML, true, tg_kbs);
 
       settings.save();

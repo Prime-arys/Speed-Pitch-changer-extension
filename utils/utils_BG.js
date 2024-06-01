@@ -1,4 +1,5 @@
 //Utilities Background
+import { keyCodeToCodeMap, keyboardMap } from "./char_kcode.js";
 
 //Shared
 
@@ -75,10 +76,6 @@ export class Settings {
 
   constructor(rkc = false) {
     this.version = 2;
-    this.commands_reset = null;
-    this.commands_speedUP = null;
-    this.commands_speedDOWN = null;
-    this.commands_speedSET = null;
     this.commands_code_reset = null;
     this.commands_code_speedUP = null;
     this.commands_code_speedDOWN = null;
@@ -135,14 +132,26 @@ export class Settings {
 
   set_default() {
     this.version = 2;
-    this.commands_reset = 106;
+    /* this.commands_reset = 106;
     this.commands_speedUP = 107;
     this.commands_speedDOWN = 109;
-    this.commands_speedSET = 110;
-    this.commands_code_reset = 'NumpadMultiply';
-    this.commands_code_speedUP = 'NumpadAdd';
-    this.commands_code_speedDOWN = 'NumpadSubtract';
-    this.commands_code_speedSET = 'NumpadDecimal';
+    this.commands_speedSET = 110; */
+    this.commands_code_reset = {
+      code: 'NumpadMultiply',
+      key: '*'
+    }
+    this.commands_code_speedUP = {
+      code: 'NumpadAdd',
+      key: '+'
+    }
+    this.commands_code_speedDOWN = {
+      code: 'NumpadSubtract',
+      key: '-'
+    }
+    this.commands_code_speedSET = {
+      code: 'NumpadDecimal',
+      key: '.'
+    }
     this.switch_preserve_pitch = false;
     this.switch_shortcuts = true;
     this.switch_ignore_text_field = true;
@@ -231,13 +240,28 @@ export class Settings {
       }
     }
 
-    this.commands_reset = parseInt(rkc[0]);
+    /* this.commands_reset = parseInt(rkc[0]);
     this.commands_speedUP = parseInt(rkc[1]);
     this.commands_speedDOWN = parseInt(rkc[2]);
-    this.commands_speedSET = parseInt(rkc[3]);
+    this.commands_speedSET = parseInt(rkc[3]); */
+    this.commands_code_reset = rkc[0] === null ? null : {
+      code: keyCodeToCodeMap[parseInt(rkc[0])],
+      key: keyboardMap[rkc[0]] // Temporarily using keyboardMap to get the key name
+    } 
+    this.commands_code_speedUP = rkc[1] === null ? null : {
+      code: keyCodeToCodeMap[parseInt(rkc[1])],
+      key: keyboardMap[rkc[1]]
+    }
+    this.commands_code_speedDOWN = rkc[2] === null ? null : {
+      code: keyCodeToCodeMap[parseInt(rkc[2])],
+      key: keyboardMap[rkc[2]]
+    }
+    this.commands_code_speedSET = rkc[3] === null ? null : {
+      code: keyCodeToCodeMap[parseInt(rkc[3])],
+      key: keyboardMap[rkc[3]]
+    }
     this.switch_preserve_pitch = bool(rkc[4]);
     this.switch_shortcuts = bool(rkc[5]);
-    this.switch_ignore_text_field = bool(rkc[9]);
     this.radio_speed_preset = parseInt(rkc[6]);
     this.radio_speed_custom_plus_minus = parseInt(rkc[8]);
     this.radio_speed_custom_multiply_divide = parseInt(rkc[7]);
