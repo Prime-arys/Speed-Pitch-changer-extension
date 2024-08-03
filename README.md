@@ -29,9 +29,9 @@ Fonctionnalités :
 
 ### Donate
 Buy me some chocolate 🍫 : <br>
- - <img src="https://cryptologos.cc/logos/monero-xmr-logo.svg" width="26px" align="center"> (**XMR**) `8BNYW7dYzPy65J9ksFdVJLSemaHGtwKW4QPTZ6xkSyafcwz2iPyfSPgS5LbqwHK1w9P6VKUWMG1XWDm6cMgQs5dXPdHE5Q1`
+ - <img src="https://cryptologos.cc/logos/monero-xmr-logo.svg" width="26px" align="center"> (**XMR**) `8C33Gfo5a4MW9tkU97iPzdCtbLocYizHDV84gdDqVdDPFtjvw3dbf9vPG6vU1ce6KuXW6stzXwkf5TxfKxTx9NVYDjoFK4X`
 
- - <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" width="26px" align="center"> (**BTC**) `bc1qxw8m0t34d46r4zaned2dzvums46hahpac738f3`
+ - <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" width="26px" align="center"> (**BTC**) `bc1qnpr8zdyxevthqqdk7aapc5c68qyk8rugyfhzs2`
 
 <br>
 
