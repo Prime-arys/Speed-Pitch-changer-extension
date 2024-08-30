@@ -2,10 +2,10 @@
 // Création de la fonction qui remplacera la méthode createElement
 
 "use strict";
-var mdc_ghost = true;
+var mdc_enforce = true;
 /*
-var ghost_ace = `
-console.log("ace ghost");
+var enforce_ace = `
+console.log("ace enforce");
 var originalPlaybackRateProtoype_spcdespa = HTMLMediaElement.prototype.playbackRate;
 var originalDefaultPlaybackRateProtoype_spcdespa = HTMLMediaElement.prototype.defaultPlaybackRate
 HTMLMediaElement.prototype.playbackRate_origin = originalPlaybackRateProtoype_spcdespa;
@@ -37,8 +37,8 @@ console.log(HTMLMediaElement.prototype.defaultPlaybackRate);
 */
 
 
-var ghost_ace = `
-console.log("ace ghost");
+var enforce_ace = `
+console.log("ace enforce");
 
 originalPlaybackRateDescriptor_spcdespa = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'playbackRate');
 originalDefaultPlaybackRateDescriptor_spcdespa = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'defaultPlaybackRate');
@@ -92,4 +92,4 @@ Object.defineProperty(HTMLMediaElement.prototype, 'defaultPlaybackRate_origin_${
 
 
 
-window.eval(ghost_ace);
+window.eval(enforce_ace);

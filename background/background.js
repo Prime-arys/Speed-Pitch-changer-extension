@@ -1,16 +1,36 @@
-import { onError, message, register, BWlist_manager, Settings } from "../utils/utils_BG.js";
+import { onError, message, register, BWlist_manager } from "../utils/utils_BG.js";
+import SettingsBG from "../utils/settings/back.js";
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
-var ghostlist = localStorage.getItem('Xytspch_ghostlist');
+var enforcelist = localStorage.getItem('enforcelist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
-var cad_sett = localStorage.getItem('Xytspch_sett');
+var cad_sett = localStorage.getItem('Xytspch_sett'); // old settings format
 var cad_upd = localStorage.getItem('Xytspch_upd');
 let local_module_version = localStorage.getItem('Xytspch_version');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 var UPD = false;
 var plat = navigator.userAgent.toLowerCase();
-var settings;
+let settingsObj = new SettingsBG();
+
+
+if (settingsObj._empty == true) {
+  settingsObj.set_default();
+  settingsObj.save();
+  UPD = true;
+}
+
+
+if (cad_sett != null) {
+  //check if old format (<= 1.4.2)
+  //old format convertion
+  let old_settings = cad_sett.split(",");
+  settingsObj = new SettingsBG(old_settings); // overwrite settingsObj
+  localStorage.removeItem('Xytspch_sett'); // remove old settings
+  UPD = true;
+  
+}
+
 
 //get the version of the addon on manifest.json
 const manifestData = browser.runtime.getManifest();
@@ -18,26 +38,6 @@ const version = manifestData.version;
 
 //console.log("BG Load")
 
-
-if (cad_sett == null) {
-  let settings = new Settings();
-  UPD = true;
-}
-
-if (cad_sett != null) {
-  //check if old format (<= 1.4.2)
-  if (cad_sett[0] !== "{") {
-    //old format
-    let old_settings = cad_sett.split(",");
-    let settings = new Settings(old_settings);
-    UPD = true;
-  }
-  else {
-    //new format
-    settings = new Settings();
-  }
-  
-}
 
 if (local_module_version == null) {
   localStorage.setItem('Xytspch_version', version);
@@ -60,9 +60,9 @@ if (blacklistHost == null) {
 
 }
 
-if (ghostlist == null) {
-  ghostlist = ["*://addons.mozilla.org/*","*://open.spotify.com/*"];// default domain in the ghostlist
-  localStorage.setItem('Xytspch_ghostlist', ghostlist);
+if (enforcelist == null) {
+  enforcelist = ["*://open.spotify.com/*"];// default domain in the enforcelist
+  localStorage.setItem('enforcelist', enforcelist);
   UPD = true;
 
 }
@@ -131,8 +131,9 @@ xhr.send();
 
 
 //var setg = cad_sett.split(',');
-var blacklistHost = blacklistHost.split(',');
-var ghostlist = ghostlist.split(',');
+var blacklistHost = blacklistHost.split(',') || [];
+var enforcelist = enforcelist.split(',') || [];
+
 
 
 
@@ -141,7 +142,7 @@ if (cad_isen == 'yes') {
   //var spotify = "*://*.spotify.com/*";
   //console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start", blacklistHost);
-  register(ghostlist, "../utils/ghost.js", "document_start", blacklistHost);
+  register(enforcelist, "../utils/enforce.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);
@@ -190,8 +191,8 @@ function sendMessageToTabs(tabs, dom = false) {
       BWlist_manager(blacklistHost, "is_in", domain).then((result) => {
         topop([domain, result], "mDom");
       });
-      BWlist_manager(ghostlist, "is_in", domain).then((result) => {
-        topop([domain, result], "mGhost");
+      BWlist_manager(enforcelist, "is_in", domain).then((result) => {
+        topop([domain, result], "mEnforce");
       });
     }
 
@@ -212,7 +213,7 @@ function ms(dom = false) {
 function handleMessage(request, sender, sendResponse) {
   //FOR MAIN
   if (request.title == "dm1") {
-    sendResponse({ dm1: settings });
+    sendResponse({ dm1: settingsObj.settings });
   }
   if (request.title == "xpup") {
     let executing = browser.tabs.executeScript({ code: "xpup();", allFrames: true, matchAboutBlank: true });
@@ -277,18 +278,18 @@ function handleMessage(request, sender, sendResponse) {
     browser.runtime.reload()
   }
 
-  if (request.type == "get_ghostlist") {
-    //renvoie ghostlist en réponse
-    sendResponse({ ghostlist: BWlist_manager(ghostlist, "get", null, "Xytspch_ghostlist") });
+  if (request.type == "get_enforcelist") {
+    //renvoie enforcelist en réponse
+    sendResponse({ enforcelist: BWlist_manager(enforcelist, "get", null, "Xytspch_enforcelist") });
   }
-  if (request.type == "set_ghost") {
-    //ajoute un domaine à la ghostlist
-    BWlist_manager(ghostlist, "add", request.val, "Xytspch_ghostlist");
+  if (request.type == "set_enforce") {
+    //ajoute un domaine à la enforcelist
+    BWlist_manager(enforcelist, "add", request.val, "Xytspch_enforcelist");
     browser.runtime.reload()
   }
-  if (request.type == "set_unghost") {
-    //supprime un domaine de la ghostlist
-    BWlist_manager(ghostlist, "del", request.val, "Xytspch_ghostlist");
+  if (request.type == "set_unenforce") {
+    //supprime un domaine de la enforcelist
+    BWlist_manager(enforcelist, "del", request.val, "Xytspch_enforcelist");
     browser.runtime.reload()
 
   }

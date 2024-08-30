@@ -1,11 +1,13 @@
 import { keyboardMap } from '../utils/char_kcode.js';
-import { onError, message, Settings } from "../utils/utils_BG.js";
+import { onError, message } from "../utils/utils_BG.js";
+import SettingsBG from '../utils/settings/back.js';
 
 var hidden = false;
 var master = false;
 var ddd = 0;
 var commandk = null
-var settings = new Settings();
+var settings = new SettingsBG();
+//console.log(settings.settings);
 //console.log("Chargement de la page");
 
 
@@ -102,10 +104,10 @@ async function main() {
   dsdw.textContent = keyboardMap[settings.get('commands_speedDOWN')];
   dset.textContent = keyboardMap[settings.get('commands_speedSET')]; */
 
-  dres.textContent = settings.get('commands_code_reset').key;
-  dsup.textContent = settings.get('commands_code_speedUP').key;
-  dsdw.textContent = settings.get('commands_code_speedDOWN').key;
-  dset.textContent = settings.get('commands_code_speedSET').key;
+  dres.textContent = settings.commands?.reset.key;
+  dsup.textContent = settings.commands?.speedUP.key;
+  dsdw.textContent = settings.commands?.speedDOWN.key;
+  dset.textContent = settings.commands?.speedSET.key;
 
 
   dres.addEventListener("mouseover", function () { dres.style.background = "#EFDBC8" })
@@ -120,49 +122,49 @@ async function main() {
   rad_2val.addEventListener("change", function () { rule_set(); });
   rad_3val.addEventListener("change", function () { rule_set(); });
   rad_2bval.addEventListener("change", function () { rule_set(); });
-  rad_2val.value = settings.get('radio_speed_custom_plus_minus');
-  rad_3val.value = settings.get('radio_speed_custom_multiply_divide');
-  rad_2bval.value = settings.get('radio_pitch_custom_plus_minus');
+  rad_2val.value = settings.radio?.speed.custom.plus_minus;
+  rad_3val.value = settings.radio?.speed.custom.multiply_divide;
+  rad_2bval.value = settings.radio?.pitch.custom.plus_minus;
 
-  dres.onclick = function cm_dres() { getKC(); commandk = ['commands_reset', 'commands_code_reset']; }
-  dsup.onclick = function cm_dsup() { getKC(); commandk = ['commands_speedUP', 'commands_code_speedUP']; }
-  dsdw.onclick = function cm_dsdw() { getKC(); commandk = ['commands_speedDOWN', 'commands_code_speedDOWN']; }
-  dset.onclick = function cm_dset() { getKC(); commandk = ['commands_speedSET', 'commands_code_speedSET']; }
+  dres.onclick = function cm_dres() { getKC(); commandk = 'reset'; }
+  dsup.onclick = function cm_dsup() { getKC(); commandk = 'speedUP' }
+  dsdw.onclick = function cm_dsdw() { getKC(); commandk = 'speedDOWN' }
+  dset.onclick = function cm_dset() { getKC(); commandk = 'speedSET' }
 
   rad_st.forEach(function (item) {
     item.onclick = function () { rule_set(); }
-    if (item.value == settings.get('radio_speed_preset')) item.checked = true, rule_set();
+    if (item.value == settings.radio?.speed.preset) item.checked = true, rule_set();
     else item.checked = false;
   });
 
   rad_st2.forEach(function (item) {
     item.onclick = function () { rule_set(); }
-    if (item.value == settings.get('radio_pitch_preset')) item.checked = true, rule_set();
+    if (item.value == settings.radio?.pitch.preset) item.checked = true, rule_set();
     else item.checked = false;
   });
 
 
 
   async function rule_set() {
-    var cad_sett = (await message('get_cstt')).cstt; //return cstt
-    var ca_kc = cad_sett.split(",");
+    //var cad_sett = (await message('get_cstt')).cstt; //return cstt
+
 
     if (rad_st[0].checked) {
       rad_2val.disabled = true;
       rad_3val.disabled = true;
-      settings.set('radio_speed_preset', 1);
+      settings.radio.speed.preset = 1;
       /*ca_kc[7] = 1.1;*/
     }
     else if (rad_st[1].checked) {
       rad_2val.disabled = false;
       rad_3val.disabled = true;
-      settings.set('radio_speed_preset', 2);
+      settings.radio.speed.preset = 2;
       if (rad_2val.value <= 1.0) {
-        settings.set('radio_speed_custom_plus_minus', 1.001);
+        settings.radio.speed.custom.plus_minus = 1.001;
         msgforyou("The value must be greater than 1.0", false, tg_pm);
       }
       else {
-        settings.set('radio_speed_custom_plus_minus', rad_2val.value);
+        settings.radio.speed.custom.plus_minus = rad_2val.value;
         msgforyou(tg_pm_innerHTML, true, tg_pm);
       }
 
@@ -170,13 +172,13 @@ async function main() {
     else if (rad_st[2].checked) {
       rad_2val.disabled = true;
       rad_3val.disabled = false;
-      settings.set('radio_speed_preset', 3);
+      settings.radio.speed.preset = 3;
       if (rad_3val.value <= 0) {
-        settings.set('radio_speed_custom_multiply_divide', 0.001);
+        settings.radio.speed.custom.multiply_divide = 0.001;
         msgforyou("The value must be greater than 0", false, tg_pm);
       }
       else {
-        settings.set('radio_speed_custom_multiply_divide', rad_3val.value);
+        settings.radio.speed.custom.multiply_divide = rad_3val.value;
         msgforyou(tg_pm_innerHTML, true, tg_pm);
       }
     }
@@ -184,18 +186,18 @@ async function main() {
 
     if (rad_st2[0].checked) {
       rad_2bval.disabled = true;
-      settings.set('radio_pitch_preset', 1);
+      settings.radio.pitch.preset = 1;
       /*ca_kc[7] = 1.1;*/
     }
     else if (rad_st2[1].checked) {
       rad_2bval.disabled = false;
-      settings.set('radio_pitch_preset', 2);
+      settings.radio.pitch.preset = 2;
       if (rad_2bval.value <= 0) {
-        settings.set('radio_pitch_custom_plus_minus', 0.001);
+        settings.radio.pitch.custom.plus_minus = 0.001;
         msgforyou("The value must be greater than 0", false, tg_bd);
       }
       else {
-        settings.set('radio_pitch_custom_plus_minus', rad_2bval.value);
+        settings.radio.pitch.custom.plus_minus = rad_2bval.value;
         msgforyou(tg_bd_innerHTML, true, tg_bd);
       }
     }
@@ -224,21 +226,25 @@ async function main() {
       if (tKC == settings.get('commands_speedDOWN')) { document.getElementById("sdw").style.background = "#ECCDAC"; };
       if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#ECCDAC"; };
  */
-      if (tC == settings.get('commands_code_reset').code) { document.getElementById("res").style.background = "#ECCDAC"; };
-      if (tC == settings.get('commands_code_speedUP').code) { document.getElementById("sup").style.background = "#ECCDAC"; };
-      if (tC == settings.get('commands_code_speedDOWN').code) { document.getElementById("sdw").style.background = "#ECCDAC"; };
-      if (tC == settings.get('commands_code_speedSET').code) { document.getElementById("set").style.background = "#ECCDAC"; };
+      if (tC == settings.commands?.reset.code) { document.getElementById("res").style.background = "#ECCDAC"; }
+      if (tC == settings.commands?.speedUP.code) { document.getElementById("sup").style.background = "#ECCDAC"; }
+      if (tC == settings.commands?.speedDOWN.code) { document.getElementById("sdw").style.background = "#ECCDAC"; }
+      if (tC == settings.commands?.speedSET.code) { document.getElementById("set").style.background = "#ECCDAC"; }
 
 
     }
     if (ddd == 1) {
       if (commandk !== null) {
         //settings.set(commandk[0], tKC);
-        settings.set(commandk[1], { 
-          code: evt.code, 
-          key: tKC !== null ? keyboardMap[tKC] : evt.key.toUpperCase() // will use legacy key name if keyCode is available
-        });
-        //console.log(commandk[0], tKC, commandk[1], tC);
+
+        settings.commands.set(
+          commandk,
+          {
+            code: evt.code,
+            key: tKC !== null ? keyboardMap[tKC] : evt.key.toUpperCase()
+          }
+        );
+
       }
 
     }
@@ -259,10 +265,10 @@ async function main() {
       if (tKC == settings.get('commands_speedDOWN')) { document.getElementById("sdw").style.background = "#D9DAE8"; };
       if (tKC == settings.get('commands_speedSET')) { document.getElementById("set").style.background = "#D9DAE8"; }; */
 
-      if (tC == settings.get('commands_code_reset').code) { document.getElementById("res").style.background = "#D9DAE8"; };
-      if (tC == settings.get('commands_code_speedUP').code) { document.getElementById("sup").style.background = "#D9DAE8"; };
-      if (tC == settings.get('commands_code_speedDOWN').code) { document.getElementById("sdw").style.background = "#D9DAE8"; };
-      if (tC == settings.get('commands_code_speedSET').code) { document.getElementById("set").style.background = "#D9DAE8"; };
+      if (tC == settings.commands?.reset.code) { document.getElementById("res").style.background = "#D9DAE8"; }
+      if (tC == settings.commands?.speedUP.code) { document.getElementById("sup").style.background = "#D9DAE8"; }
+      if (tC == settings.commands?.speedDOWN.code) { document.getElementById("sdw").style.background = "#D9DAE8"; }
+      if (tC == settings.commands?.speedSET.code) { document.getElementById("set").style.background = "#D9DAE8"; }
     }
     if (ddd == 1) {
       //console.log(ffkc)
@@ -280,22 +286,22 @@ async function main() {
 
 
 
-  document.getElementById("on_off_sp").checked = settings.get('switch_preserve_pitch'); // true or false
-  document.getElementById("on_off_bt").checked = settings.get('switch_shortcuts');
-  document.getElementById("on_off_ignoretxt").checked = settings.get('switch_ignore_text_field');
+  document.getElementById("on_off_sp").checked = settings.switch?.preserve_pitch; // true or false
+  document.getElementById("on_off_bt").checked = settings.switch?.shortcuts;
+  document.getElementById("on_off_ignoretxt").checked = settings.switch?.ignore_text_field;
 
 
   var Checkbox = document.querySelector('input[value="isenable_sp"]');
   Checkbox.onchange = async function () {
 
-    settings.set('switch_preserve_pitch', Checkbox.checked);
+    settings.switch.preserve_pitch = Checkbox.checked;
 
   }
 
   var Checkbox2 = document.querySelector('input[value="isenable_bt"]');
   Checkbox2.onchange = async function () {
 
-    settings.set('switch_shortcuts', Checkbox2.checked);
+    settings.switch.shortcuts = Checkbox2.checked;
 
   }
 
@@ -303,7 +309,7 @@ async function main() {
   var Checkbox3 = document.querySelector('input[value="isenable_ignoretxt"]');
   Checkbox3.onchange = async function () {
 
-    settings.set('switch_ignore_text_field', Checkbox3.checked);
+    settings.switch.ignore_text_field = Checkbox3.checked;
 
   }
 

@@ -72,7 +72,7 @@ export async function BWlist_manager(blacklist, action, domain, listHost = "Xyts
 
   
 
-export class Settings {
+/* export class Settings {
 
   constructor(rkc = false) {
     this.version = 2;
@@ -132,10 +132,10 @@ export class Settings {
 
   set_default() {
     this.version = 2;
-    /* this.commands_reset = 106;
-    this.commands_speedUP = 107;
-    this.commands_speedDOWN = 109;
-    this.commands_speedSET = 110; */
+    // this.commands_reset = 106;
+    // this.commands_speedUP = 107;
+    // this.commands_speedDOWN = 109;
+    // this.commands_speedSET = 110;
     this.commands_code_reset = {
       code: 'NumpadMultiply',
       key: '*'
@@ -240,10 +240,10 @@ export class Settings {
       }
     }
 
-    /* this.commands_reset = parseInt(rkc[0]);
-    this.commands_speedUP = parseInt(rkc[1]);
-    this.commands_speedDOWN = parseInt(rkc[2]);
-    this.commands_speedSET = parseInt(rkc[3]); */
+    // this.commands_reset = parseInt(rkc[0]);
+    // this.commands_speedUP = parseInt(rkc[1]);
+    // this.commands_speedDOWN = parseInt(rkc[2]);
+    // this.commands_speedSET = parseInt(rkc[3]); 
     this.commands_code_reset = rkc[0] === null ? null : {
       code: keyCodeToCodeMap[parseInt(rkc[0])],
       key: keyboardMap[rkc[0]] // Temporarily using keyboardMap to get the key name
@@ -269,4 +269,4 @@ export class Settings {
   }
 
 
-}
+} */
