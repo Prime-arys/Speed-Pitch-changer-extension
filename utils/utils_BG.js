@@ -36,6 +36,12 @@ export async function register(hosts,myfile,run,blacklist) {
     });
   
 }
+
+export function removeBlanksFromList(list) {
+  return list.filter(function (el) {
+    return el != "";
+  });
+}
   
 export async function BWlist_manager(blacklist, action, domain, listHost = "Xytspch_blacklist") {
     //console.log("Blacklist manager");

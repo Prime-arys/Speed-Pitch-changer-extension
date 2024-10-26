@@ -1,4 +1,4 @@
-import { onError, message, register, BWlist_manager } from "../utils/utils_BG.js";
+import { onError, message, register, BWlist_manager, removeBlanksFromList } from "../utils/utils_BG.js";
 import SettingsBG from "../utils/settings/back.js";
 
 const defaultHosts = "<all_urls>";
@@ -133,6 +133,10 @@ xhr.send();
 //var setg = cad_sett.split(',');
 var blacklistHost = blacklistHost.split(',') || [];
 var enforcelist = enforcelist.split(',') || [];
+
+blacklistHost = removeBlanksFromList(blacklistHost);
+enforcelist = removeBlanksFromList(enforcelist);
+
 
 
 
