@@ -1,16 +1,36 @@
-import { onError, message, register, BWlist_manager, Settings } from "../utils/utils_BG.js";
+import { onError, message, register, BWlist_manager } from "../utils/utils_BG.js";
+import SettingsBG from "../utils/settings/back.js";
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
 var enforcelist = localStorage.getItem('enforcelist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
-var cad_sett = localStorage.getItem('Xytspch_sett');
+var cad_sett = localStorage.getItem('Xytspch_sett'); // old settings format
 var cad_upd = localStorage.getItem('Xytspch_upd');
 let local_module_version = localStorage.getItem('Xytspch_version');
 var executing = browser.tabs.executeScript({ code: "document.location.reload();" });
 var UPD = false;
 var plat = navigator.userAgent.toLowerCase();
-var settings;
+let settingsObj = new SettingsBG();
+
+
+if (settingsObj._empty == true) {
+  settingsObj.set_default();
+  settingsObj.save();
+  UPD = true;
+}
+
+
+if (cad_sett != null) {
+  //check if old format (<= 1.4.2)
+  //old format convertion
+  let old_settings = cad_sett.split(",");
+  settingsObj = new SettingsBG(old_settings); // overwrite settingsObj
+  localStorage.removeItem('Xytspch_sett'); // remove old settings
+  UPD = true;
+  
+}
+
 
 //get the version of the addon on manifest.json
 const manifestData = browser.runtime.getManifest();
@@ -18,26 +38,6 @@ const version = manifestData.version;
 
 //console.log("BG Load")
 
-
-if (cad_sett == null) {
-  let settings = new Settings();
-  UPD = true;
-}
-
-if (cad_sett != null) {
-  //check if old format (<= 1.4.2)
-  if (cad_sett[0] !== "{") {
-    //old format
-    let old_settings = cad_sett.split(",");
-    let settings = new Settings(old_settings);
-    UPD = true;
-  }
-  else {
-    //new format
-    settings = new Settings();
-  }
-  
-}
 
 if (local_module_version == null) {
   localStorage.setItem('Xytspch_version', version);
@@ -209,90 +209,128 @@ function ms(dom = false) {
 };
 
 
-
 function handleMessage(request, sender, sendResponse) {
-  //FOR MAIN
-  if (request.title == "dm1") {
-    sendResponse({ dm1: settings });
-  }
-  if (request.title == "xpup") {
-    let executing = browser.tabs.executeScript({ code: "xpup();", allFrames: true, matchAboutBlank: true });
-  }
-  if (request.title == "xpdw") {
-    let executing = browser.tabs.executeScript({ code: "xpdw();", allFrames: true, matchAboutBlank: true });
-  }
-  if (request.title == "xpres") {
-    let executing = browser.tabs.executeScript({ code: "xpres();", allFrames: true, matchAboutBlank: true });
-  }
-  if (request.title == "xpdef") {
-    let fdef = "zpdef(" + request.data + ");";
-    let executing = browser.tabs.executeScript({ code: fdef, allFrames: true, matchAboutBlank: true });
-  }
-
-  //FOR POP
-
-  if (request.type == 'act_speed_val') {
-    ms();
-  }
-  if (request.type == 'get_domain') {
-    //console.log("get_domain ms");
-    ms(true);
-  }
-
-  if (request.type == "get_cstt") {
-    //renvoie cad_sett en réponse
-    cad_sett = localStorage.getItem('Xytspch_sett');
-    sendResponse({ cstt: cad_sett });
-  }
-  if (request.type == "get_isen") {
-    //renvoie cad_isen en réponse
-    cad_isen = localStorage.getItem('Xytspch_isen');
-    sendResponse({ isen: cad_isen });
-  }
-  if (request.type == "get_upd") {
-    //renvoie cad_upd en réponse
-    cad_upd = localStorage.getItem('Xytspch_upd');
-    sendResponse({ upd: cad_upd });
-  }
-  if (request.type == "set_cstt") {
-    cad_sett = request.val;
-    localStorage.setItem('Xytspch_sett', cad_sett);
-  }
-  if (request.type == "set_isen") {
-    cad_isen = request.val;
-    localStorage.setItem('Xytspch_isen', cad_isen);
+  
+  
+  function handleContent() {
+    switch (request.title) {
+      case "dm1":
+        sendResponse({ dm1: settingsObj.settings });
+        break;
+      
+      case "xpup":
+        browser.tabs.executeScript({ code: "xpup();", allFrames: true, matchAboutBlank: true });
+        break;
+      
+      case "xpdw":
+        browser.tabs.executeScript({ code: "xpdw();", allFrames: true, matchAboutBlank: true });
+        break;
+      
+      case "xpres":
+        browser.tabs.executeScript({ code: "xpres();", allFrames: true, matchAboutBlank: true });
+        break;
+      
+      case "xpdef":
+        let fdef = "zpdef(" + request.data + ");";
+        browser.tabs.executeScript({ code: fdef, allFrames: true, matchAboutBlank: true });
+        break;
+      
+      default:
+        console.error(`${request.title} not recognized", "background.js : handleMessage() => handleContent()`);
+        break;
+    }
   }
 
-  if (request.type == "get_blacklist") {
-    //renvoie blacklistHost en réponse
-    sendResponse({ blacklist: BWlist_manager(blacklistHost, "get", null) });
-  }
-  if (request.type == "set_ban") {
-    //ajoute un domaine à la blacklist
-    BWlist_manager(blacklistHost, "add", request.val);
-    browser.runtime.reload()
-  }
-  if (request.type == "set_unban") {
-    //supprime un domaine de la blacklist
-    BWlist_manager(blacklistHost, "del", request.val);
-    browser.runtime.reload()
+
+  // TODO: Refactor request.type to request.title
+  function handlePopup() {
+    
+    switch (request.title) {
+      case "act_speed_val":
+        ms();
+        break;
+      
+      case "get_domain":
+        ms(true);
+        break;
+      
+      case "get_cstt":
+        cad_sett = localStorage.getItem('Xytspch_sett');
+        sendResponse({ cstt: cad_sett });
+        break;
+      
+      case "get_isen":
+        cad_isen = localStorage.getItem('Xytspch_isen');
+        sendResponse({ isen: cad_isen });
+        break;
+      
+      case "get_upd":
+        cad_upd = localStorage.getItem('Xytspch_upd');
+        sendResponse({ upd: cad_upd });
+        break;
+      
+      case "set_cstt":
+        cad_sett = request.data;
+        localStorage.setItem('Xytspch_sett', cad_sett);
+        break;
+      
+      case "set_isen":
+        cad_isen = request.data;
+        localStorage.setItem('Xytspch_isen', cad_isen);
+        break;
+      
+      case "get_blacklist":
+        sendResponse({ blacklist: BWlist_manager(blacklistHost, "get", null) });
+        break;
+      
+      case "set_ban":
+        BWlist_manager(blacklistHost, "add", request.data);
+        browser.runtime.reload();
+        break;
+      
+      case "set_unban":
+        BWlist_manager(blacklistHost, "del", request.data);
+        browser.runtime.reload();
+        break;
+      
+      case "get_enforcelist":
+        sendResponse({ enforcelist: BWlist_manager(enforcelist, "get", null, "enforcelist") });
+        break;
+      
+      case "set_enforce":
+        BWlist_manager(enforcelist, "add", request.data, "enforcelist");
+        browser.runtime.reload();
+        break;
+      
+      case "set_unenforce":
+        BWlist_manager(enforcelist, "del", request.data, "enforcelist");
+        browser.runtime.reload();
+        break;
+      
+      default:
+        console.error(`${request.title} not recognized", "background.js : handleMessage() => handlePopup()`);
+        break;
+
+    }
+
   }
 
-  if (request.type == "get_enforcelist") {
-    //renvoie enforcelist en réponse
-    sendResponse({ enforcelist: BWlist_manager(enforcelist, "get", null, "enforcelist") });
-  }
-  if (request.type == "set_enforce") {
-    //ajoute un domaine à la enforcelist
-    BWlist_manager(enforcelist, "add", request.val, "enforcelist");
-    browser.runtime.reload()
-  }
-  if (request.type == "set_unenforce") {
-    //supprime un domaine de la enforcelist
-    BWlist_manager(enforcelist, "del", request.val, "enforcelist");
-    browser.runtime.reload()
+  switch (request.target) {
+
+    case "background":
+      handlePopup();
+      break;
+    
+    case "content":
+      handleContent();
+      break;
+
+    default:
+      console.error(`${request.origin} not recognized", "background.js : handleMessage()`);
+      break;
 
   }
+
 }
 
 browser.runtime.onMessage.addListener(handleMessage);

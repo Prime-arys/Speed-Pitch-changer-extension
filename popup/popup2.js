@@ -1,10 +1,11 @@
-import { onError, message, Settings } from "../utils/utils_BG.js";
+import { onError, message } from "../utils/utils_BG.js";
+import SettingsBG from "../utils/settings/back.js";
 
 var hidden = false;
 var cad_isen;
 var cad_upd;
 var actual_domain;
-var settings = new Settings();
+var settings = new SettingsBG();
 //console.log("POP Load")
 
 if (navigator.userAgent.indexOf("Android") != -1) {
@@ -75,7 +76,7 @@ async function main() {
 
     }
     function ifcmdis() {
-      if (settings.get("switch_shortcuts") == false) {
+      if (settings.switch?.shortcuts == false) {
         acid.textContent = "*";
         acid.title = "Shortcuts are disabled";
         CMi.style.marginRight = "-4px";
@@ -107,7 +108,7 @@ async function main() {
               if (typeof xui !== 'undefined') {
                 let alm = document.getElementById("xui");
                 alm.textContent = request.val; //.val = actual_speed value
-                if (settings.get("switch_preserve_pitch") == false) {
+                if (settings.switch?.preserve_pitch == false) {
                   desc.textContent = "semitone: " + magic2semitone(request.val).toFixed(2);
                 }
               }
@@ -157,7 +158,7 @@ async function main() {
         }
     );
 
-    if (settings.get("switch_preserve_pitch") == true) {
+    if (settings.switch?.preserve_pitch == true) {
         if (typeof xui !== 'undefined') {let alm = document.getElementById("desc");alm.textContent = "(preserved pitch mode)";}
       }
 

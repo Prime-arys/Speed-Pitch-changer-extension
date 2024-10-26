@@ -8,7 +8,8 @@ function handleError(error) {
 function notifyBackgroundPage(e,xfg) {
     var sending = browser.runtime.sendMessage({
       title: e,
-      data: xfg
+      data: xfg,
+      target: "content"
     });
     sending.then(handleResponse, handleError);
 }
