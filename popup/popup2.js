@@ -122,16 +122,16 @@ async function main() {
         if (request.msg === "mDom") {
           actual_domain = request.val;
           let dmn = document.getElementById("act_domain");
-          let txt_ghost = document.getElementById("txt_ghost");
+          let txt_enforce = document.getElementById("txt_enforce");
           //console.log("Act domain: " + actual_domain);
           dmn.textContent = actual_domain[0];
           //dmn.title = actual_domain[1];
           const unavliable_domain = ["addons.mozilla.org", "developer.mozilla.org", "this-firefox", "", null, undefined];
           if (unavliable_domain.includes(actual_domain[0])) {
             btban.style.display = "none";
-            btghost.style.display = "none";
+            btenforce.style.display = "none";
             dmn.title = "This domain can't be treated by this extension";
-            txt_ghost.style.display = "none";
+            txt_enforce.style.display = "none";
           }
           if(actual_domain[1] == false){
             btban.checked = true;
@@ -142,13 +142,13 @@ async function main() {
 
         }
 
-        if (request.msg === "mGhost") {
+        if (request.msg === "mEnforce") {
           actual_domain = request.val;
           if (actual_domain[1] == true) {
-            btghost.checked = true;
+            btenforce.checked = true;
           }
           else {
-            btghost.checked = false;
+            btenforce.checked = false;
 
           }
 
@@ -200,7 +200,7 @@ async function main() {
     const spDw = document.getElementById("sDw");
     const spDef = document.getElementById("sDef");
     const btban = document.getElementById("btn_ban");
-    const btghost = document.getElementById("btn_ghost");
+    const btenforce = document.getElementById("btn_enforce");
     const spRight = document.getElementById("pR");
     const spLeft = document.getElementById("pL");
   
@@ -215,7 +215,7 @@ async function main() {
   spLeft.title = "Pitch down";
   spJuRes.title = "Reset pitch";
   btban.title = "Ban this domain";
-  btghost.title = "Add this domain to ghost list";
+  btenforce.title = "Add this domain to enforce list";
   
   btban.onchange = function () {
     if (btban.checked) {
@@ -228,13 +228,13 @@ async function main() {
     }
   }
 
-  btghost.onchange = function () {
-    if (btghost.checked) {
-      message('set_ghost', actual_domain[0]);
+  btenforce.onchange = function () {
+    if (btenforce.checked) {
+      message('set_enforce', actual_domain[0]);
       //console.log(btban.checked);
     } else {
       
-      message('set_unghost', actual_domain[0]);
+      message('set_unenforce', actual_domain[0]);
       //console.log(btban.checked);
     }
   }

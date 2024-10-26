@@ -2,7 +2,7 @@ import { onError, message, register, BWlist_manager, Settings } from "../utils/u
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
-var ghostlist = localStorage.getItem('Xytspch_ghostlist');
+var enforcelist = localStorage.getItem('enforcelist');
 var cad_isen = localStorage.getItem('Xytspch_isen');
 var cad_sett = localStorage.getItem('Xytspch_sett');
 var cad_upd = localStorage.getItem('Xytspch_upd');
@@ -60,9 +60,9 @@ if (blacklistHost == null) {
 
 }
 
-if (ghostlist == null) {
-  ghostlist = ["*://addons.mozilla.org/*","*://open.spotify.com/*"];// default domain in the ghostlist
-  localStorage.setItem('Xytspch_ghostlist', ghostlist);
+if (enforcelist == null) {
+  enforcelist = ["*://open.spotify.com/*"];// default domain in the enforcelist
+  localStorage.setItem('enforcelist', enforcelist);
   UPD = true;
 
 }
@@ -131,8 +131,9 @@ xhr.send();
 
 
 //var setg = cad_sett.split(',');
-var blacklistHost = blacklistHost.split(',');
-var ghostlist = ghostlist.split(',');
+var blacklistHost = blacklistHost.split(',') || [];
+var enforcelist = enforcelist.split(',') || [];
+
 
 
 
@@ -141,7 +142,7 @@ if (cad_isen == 'yes') {
   //var spotify = "*://*.spotify.com/*";
   //console.log(blacklistHost);
   register([defaultHosts], "../utils/utils_CO.js", "document_start", blacklistHost);
-  register(ghostlist, "../utils/ghost.js", "document_start", blacklistHost);
+  register(enforcelist, "../utils/enforce.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace1.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/ace2.js", "document_start", blacklistHost);
   register([defaultHosts], "../utils/jungle-use.js", "document_start", blacklistHost);
@@ -190,8 +191,8 @@ function sendMessageToTabs(tabs, dom = false) {
       BWlist_manager(blacklistHost, "is_in", domain).then((result) => {
         topop([domain, result], "mDom");
       });
-      BWlist_manager(ghostlist, "is_in", domain).then((result) => {
-        topop([domain, result], "mGhost");
+      BWlist_manager(enforcelist, "is_in", domain).then((result) => {
+        topop([domain, result], "mEnforce");
       });
     }
 
@@ -277,18 +278,18 @@ function handleMessage(request, sender, sendResponse) {
     browser.runtime.reload()
   }
 
-  if (request.type == "get_ghostlist") {
-    //renvoie ghostlist en réponse
-    sendResponse({ ghostlist: BWlist_manager(ghostlist, "get", null, "Xytspch_ghostlist") });
+  if (request.type == "get_enforcelist") {
+    //renvoie enforcelist en réponse
+    sendResponse({ enforcelist: BWlist_manager(enforcelist, "get", null, "enforcelist") });
   }
-  if (request.type == "set_ghost") {
-    //ajoute un domaine à la ghostlist
-    BWlist_manager(ghostlist, "add", request.val, "Xytspch_ghostlist");
+  if (request.type == "set_enforce") {
+    //ajoute un domaine à la enforcelist
+    BWlist_manager(enforcelist, "add", request.val, "enforcelist");
     browser.runtime.reload()
   }
-  if (request.type == "set_unghost") {
-    //supprime un domaine de la ghostlist
-    BWlist_manager(ghostlist, "del", request.val, "Xytspch_ghostlist");
+  if (request.type == "set_unenforce") {
+    //supprime un domaine de la enforcelist
+    BWlist_manager(enforcelist, "del", request.val, "enforcelist");
     browser.runtime.reload()
 
   }
