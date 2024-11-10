@@ -114,6 +114,7 @@ export default class SettingsBG extends Settings {
 
     save() {
         localStorage.setItem('settings', this.settings.toJSON());
+        return true;
     }
 
     load() {
@@ -127,7 +128,7 @@ export default class SettingsBG extends Settings {
         } catch (e) {
             console.error(e);
         }
-        return null;
+        return false;
     }
 
     reset() {

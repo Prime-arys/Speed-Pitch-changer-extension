@@ -1,5 +1,4 @@
 //Utilities Background
-import { keyCodeToCodeMap, keyboardMap } from "./char_kcode.js";
 
 //Shared
 

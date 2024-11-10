@@ -1,14 +1,11 @@
 import { keyboardMap } from '../utils/char_kcode.js';
 import { onError, message } from "../utils/utils_BG.js";
-import SettingsBG from '../utils/settings/back.js';
+import JObject from '../utils/settings/jobject.js';
 
 var hidden = false;
 var master = false;
 var ddd = 0;
-var commandk = null
-var settings = new SettingsBG();
-//console.log(settings.settings);
-//console.log("Chargement de la page");
+var commandk = null;
 
 
 const tg_kbs = document.getElementById("tg_kbs");
@@ -88,6 +85,10 @@ querying.then(logTabs, onError);
 
 async function main() {
 
+  const settings_bg = await message('get_settings');
+
+  var settings = new JObject(settings_bg?.settings); 
+
   const dres = document.getElementById("res");
   const dsup = document.getElementById("sup");
   const dsdw = document.getElementById("sdw");
@@ -133,19 +134,19 @@ async function main() {
 
   rad_st.forEach(function (item) {
     item.onclick = function () { rule_set(); }
-    if (item.value == settings.radio?.speed.preset) item.checked = true, rule_set();
+    if (item.value == settings.radio?.speed.preset) item.checked = true, rule_set(false);
     else item.checked = false;
   });
 
   rad_st2.forEach(function (item) {
     item.onclick = function () { rule_set(); }
-    if (item.value == settings.radio?.pitch.preset) item.checked = true, rule_set();
+    if (item.value == settings.radio?.pitch.preset) item.checked = true, rule_set(false);
     else item.checked = false;
   });
 
 
 
-  async function rule_set() {
+  async function rule_set(save = true) {
     //var cad_sett = (await message('get_cstt')).cstt; //return cstt
 
 
@@ -202,7 +203,9 @@ async function main() {
       }
     }
     //message('set_cstt', ca_kc.join(","));
-    settings.save();
+    if (save) {
+      await message('save_settings', settings);
+    }
   };
 
 
@@ -275,7 +278,8 @@ async function main() {
       ddd = 0
       msgforyou(tg_kbs_innerHTML, true, tg_kbs);
 
-      settings.save();
+      //console.log("commands", settings);
+      await message('save_settings', settings);
       window.location.reload()
 
 
@@ -314,8 +318,8 @@ async function main() {
   }
 
 
-  aply.onclick = function aplu() {
-    settings.save();
+  aply.onclick = async function applySettings() {
+    await message('save_settings', settings);
     browser.runtime.reload()
   }
 }

@@ -1,5 +1,6 @@
 import { onError, message, register, BWlist_manager, removeBlanksFromList } from "../utils/utils_BG.js";
 import SettingsBG from "../utils/settings/back.js";
+import JObject from "../utils/settings/jobject.js";
 
 const defaultHosts = "<all_urls>";
 var blacklistHost = localStorage.getItem('Xytspch_blacklist');
@@ -102,7 +103,7 @@ xhr.onreadystatechange = function () {
           browser.browserAction.setBadgeTextColor({ color: "#fbf0f3" });
           browser.browserAction.setBadgeBackgroundColor({ color: "#5a5f55" });
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
       }
 
@@ -258,9 +259,16 @@ function handleMessage(request, sender, sendResponse) {
         ms(true);
         break;
       
-      case "get_cstt":
-        cad_sett = localStorage.getItem('Xytspch_sett');
-        sendResponse({ cstt: cad_sett });
+      case "get_settings":
+        //let local_settings = localStorage.getItem('settings');
+        sendResponse({ settings: settingsObj.settings });
+        break;
+      
+      case "save_settings":
+        //console.log(request.data);
+        settingsObj.settings = new JObject(request.data); // convert back to JObject, the transfer seems to convert it to a plain object
+        settingsObj.save();
+        sendResponse({ result: true });
         break;
       
       case "get_isen":
@@ -271,11 +279,6 @@ function handleMessage(request, sender, sendResponse) {
       case "get_upd":
         cad_upd = localStorage.getItem('Xytspch_upd');
         sendResponse({ upd: cad_upd });
-        break;
-      
-      case "set_cstt":
-        cad_sett = request.data;
-        localStorage.setItem('Xytspch_sett', cad_sett);
         break;
       
       case "set_isen":
