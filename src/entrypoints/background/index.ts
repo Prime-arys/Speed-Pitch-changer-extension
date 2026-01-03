@@ -7,6 +7,7 @@ import { scriptsRegister } from "@/services/ScriptsRegister";
 
 export default defineBackground(async () => {
     console.log("Hello background!", { id: browser.runtime.id });
+    browser.tabs.reload();
 
     const config = await ConfigStorage.loadStatic();
     const commands = await CommandsStorage.loadStatic();
