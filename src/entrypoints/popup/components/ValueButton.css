@@ -1,0 +1,20 @@
+.value-button {
+    margin-right: 1.3em;
+    margin-left: 1.3em;
+    margin-top: -3.8px;
+    padding: 0.2em 0.8em;
+    border-radius: 16px;
+    font-size: 15px;
+    font-family: 'Open Sans', 'Segoe UI Light', Arial;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: medium solid #525170;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+    cursor: pointer;
+}
+
+.value-button:hover {
+    border-color: #8c6436;
+}

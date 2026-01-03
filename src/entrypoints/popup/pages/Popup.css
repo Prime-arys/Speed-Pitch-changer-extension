@@ -1,0 +1,155 @@
+.popup-container {
+    text-align: center;
+    font-family: 'Open Sans', 'Segoe UI Light', Arial;
+    background-color: #F5F4F2;
+    overflow: hidden;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Typography */
+.popup-container p {
+    margin: 1px;
+    color: #454a54;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.popup-title {
+    color: #F5F4F2;
+    font-family: 'Digital-7', monospace;
+    font-size: 18px;
+    margin: 0;
+    text-decoration: underline;
+    padding: 6px;
+    background-color: #525170;
+}
+
+/* Control Section */
+.control-section {
+    margin: 4px;
+    margin-top: 16px;
+}
+
+.control-section label {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* Settings Link */
+.settings-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 6px;
+    margin-bottom: 13px;
+    color: black;
+    font-family: 'Liberation', sans-serif;
+    font-size: 14.5px;
+}
+
+.settings-link a {
+    text-decoration: none;
+    color: #664DCC;
+}
+
+.settings-link a:hover {
+    color: rgba(216, 138, 46, 0.9);
+}
+
+.settings-info {
+    white-space: pre-line;
+    font-size: 13px;
+    margin-top: -6px;
+    margin-bottom: 6px;
+    color: #454a54;
+}
+
+/* Button Row */
+.button-row {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.speed-controls,
+.pitch-controls {
+    margin-top: 12px;
+}
+
+.pitch-controls {
+    align-items: center;
+}
+
+/* Speed Display */
+.speed-display {
+    margin-top: 4px;
+}
+
+.speed-value {
+    font-weight: 600;
+}
+
+.speed-description {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Domain Controls */
+.domain-controls {
+    margin-top: 12px;
+    gap: 8px;
+    align-items: center;
+}
+
+.active-domain {
+    margin-right: 8px;
+}
+
+/* Enforce Controls */
+.enforce-controls {
+    gap: 4px;
+    align-items: center;
+}
+
+.enforce-label {
+    margin-left: 4px;
+}
+
+/* Version Info */
+.version-info {
+    margin-top: 12px;
+    padding-bottom: 12px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.bonus-space {
+    padding: 0 12px 0 12px; /* top right bottom left */
+}
+
+
+input[type="checkbox"] {
+    cursor: pointer;
+    margin: 4px;
+    width: 16px;
+    height: 16px;
+}
+
+input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.9; 
+}
+
+/* Responsive */
+@media screen and (max-device-width: 16in) {
+    .popup-container p,
+    .popup-container button {
+        font-size: 1.1rem;
+    }
+}
+
+
