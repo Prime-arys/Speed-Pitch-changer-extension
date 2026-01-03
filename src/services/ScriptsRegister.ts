@@ -14,8 +14,11 @@ class ScriptsRegister {
         runAt: "document_start" | "document_end" | "document_idle",
         world: "ISOLATED" | "MAIN" = "ISOLATED",
         config: ConfigData,
-        options?: { specificDomainsOnly?: boolean },
+        options?: { specificDomainsOnly?: boolean }
     ): Promise<void> {
+        if (options?.specificDomainsOnly && config.specificList!.length === 0) {
+            return; // Cancel registration if no specific domains are set
+        }
         await browser.scripting.registerContentScripts([
             {
                 id: `${scriptName}-script`,
@@ -23,9 +26,10 @@ class ScriptsRegister {
                 matches: options?.specificDomainsOnly
                     ? config.specificList!.map((domain) => `*://${domain}/*`)
                     : ["<all_urls>"],
-                excludeMatches: config.blacklist || [],
+                excludeMatches:
+                    config.blacklist!.map((domain) => `*://${domain}/*`) || [],
                 runAt: runAt,
-                allFrames: true,                
+                allFrames: true,
                 world: world,
             },
         ]);
