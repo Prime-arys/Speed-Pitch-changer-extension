@@ -1,5 +1,6 @@
 import { sendMessage, onMessage } from "@/utils/messaging";
-import { SpeedController } from "@/entrypoints/main/SpeedController";
+import { SpeedController } from "./SpeedController";
+import { PitchController } from "./PitchController";
 import { setupShortcutsBindings } from "./shortcutsBindings";
 
 export default defineUnlistedScript(async () => {
@@ -11,6 +12,10 @@ export default defineUnlistedScript(async () => {
     // Initialize speed controller
     const speedController = new SpeedController(settings);
     speedController.init();
+
+    // Initialize pitch controller
+    const pitchController = new PitchController();
+    pitchController.init();
 
     function promtCall(): void {
         speedController.promptSpeed();
@@ -50,39 +55,23 @@ export default defineUnlistedScript(async () => {
         return speedController.getPlaybackRate();
     });
 
-    // bind keyboard shortcuts to the controller
-    /* window.addEventListener("keydown", (event) => {
-        if (event.repeat) return;
 
-        const activeElement = document.activeElement;
-        if (
-            activeElement &&
-            (activeElement.tagName === "INPUT" ||
-                activeElement.tagName === "TEXTAREA" ||
-                (activeElement as HTMLElement).isContentEditable)
-        ) {
-            return;
-        }
 
-        switch (event.code) {
-            case settings.commands.speedUp:
-                speedController.speedUp();
-                event.preventDefault();
-                break;
-            case settings.commands.speedDown:
-                speedController.speedDown();
-                event.preventDefault();
-                break;
-            case settings.commands.reset:
-                speedController.reset();
-                event.preventDefault();
-                break;
-            case settings.commands.speedSet:
-                speedController.promptSpeed();
-                event.preventDefault();
-                break;
-        }
-    }); */
+    onMessage("pitchUp", async () => {
+        await pitchController.pitchUp();
+    });
+
+    onMessage("pitchDown", async () => {
+        await pitchController.pitchDown();
+    });
+
+    onMessage("resetPitch", async () => {
+        await pitchController.resetPitch();
+    });
+
+    onMessage("getPitch", async () => {
+        return pitchController.getPitch();
+    });
 
     setupShortcutsBindings(settings, promtCall);
 });

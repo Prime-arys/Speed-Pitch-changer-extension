@@ -15,6 +15,10 @@ export interface ProtocolMap {
   promptSpeed(): Promise<void>;
   promptSpeedPropagation(playbackRate: number): Promise<void>;
   getPlaybackRate(): Promise<number>;
+  pitchUp(): Promise<void>;
+  pitchDown(): Promise<void>;
+  resetPitch(): Promise<void>;
+  getPitch(): Promise<number>;
 
   // From Content Script or Popup (sended intents)
   sendPlaybackRateUpdate(playbackRate: number): Promise<void>;
@@ -22,9 +26,13 @@ export interface ProtocolMap {
   callSpeedDown(): Promise<void>;
   callResetSpeed(): Promise<void>;
   callPromptSpeed(): Promise<void>;
+  callPitchUp(): Promise<void>;
+  callPitchDown(): Promise<void>;
+  callResetPitch(): Promise<void>;
 
   // From Popup to Background to Content Script (retrieved intents)
   retrieveCurrentPlaybackRate(): Promise<number | undefined>;
+  retrieveCurrentPitch(): Promise<number | undefined>;
 }
 
 export const { sendMessage, onMessage } = defineExtensionMessaging<ProtocolMap>();

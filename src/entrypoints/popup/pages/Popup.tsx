@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router";
 import "./Popup.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -91,7 +91,17 @@ function Popup(): React.JSX.Element {
         enabled: !!activeDomain.data && isEnabled,
     });
 
-    const [pitch, setPitch] = useState(0); // TODO
+    const pitch = useQuery<number | undefined>({
+        queryKey: ["pitch"],
+        queryFn: async () => {
+            if (!activeDomain.data) return undefined
+            const response = await sendMessage("retrieveCurrentPitch");
+            return response;
+        },
+        refetchOnMount: true,
+        refetchOnWindowFocus: true,
+        enabled: !!activeDomain.data && isEnabled,
+    });
 
     return (
         <div className="popup-container">
@@ -174,12 +184,33 @@ function Popup(): React.JSX.Element {
                     id="pitch-decrease"
                     src={flatIcon}
                     alt="Decrease Pitch"
+                    onClick={
+                        async () => {
+                            await sendMessage("callPitchDown");
+                            queryClient.invalidateQueries({ queryKey: ["pitch"] });
+                        }
+                    }
                 />
-                <ValueButton id="pitch-value" value={pitch} />
+                <ValueButton 
+                id="pitch-value" 
+                value={pitch.data?.toString() || "0"} 
+                onClick={
+                    async () => {
+                        await sendMessage("callResetPitch")
+                        queryClient.invalidateQueries({ queryKey: ["pitch"] });
+                    }
+                }
+                />
                 <IconButton
                     id="pitch-increase"
                     src={sharpIcon}
                     alt="Increase Pitch"
+                    onClick={
+                        async () => {
+                            await sendMessage("callPitchUp");
+                            queryClient.invalidateQueries({ queryKey: ["pitch"] });
+                        }
+                    }
                 />
             </div>
 

@@ -101,11 +101,40 @@ export default defineBackground(async () => {
         }
     });
 
+    onMessage("callPitchUp", async () => {
+        const tab = await getCurrentTab();
+        if (tab?.id) {
+            sendMessage("pitchUp", undefined, { tabId: tab.id });
+        }
+    });
+
+    onMessage("callPitchDown", async () => {
+        const tab = await getCurrentTab();
+        if (tab?.id) {
+            sendMessage("pitchDown", undefined, { tabId: tab.id });
+        }
+    });
+
+    onMessage("callResetPitch", async () => {
+        const tab = await getCurrentTab();
+        if (tab?.id) {
+            sendMessage("resetPitch", undefined, { tabId: tab.id });
+        }
+    });
+
     /// Retrieving info From Content Script to Background to popup
     onMessage("retrieveCurrentPlaybackRate", async () => {
         const tab = await getCurrentTab();
         if (tab?.id) {
             return sendMessage("getPlaybackRate", undefined, { tabId: tab.id });
+        }
+        return undefined;
+    });
+
+    onMessage("retrieveCurrentPitch", async () => {
+        const tab = await getCurrentTab();
+        if (tab?.id) {
+            return sendMessage("getPitch", undefined, { tabId: tab.id });
         }
         return undefined;
     });
