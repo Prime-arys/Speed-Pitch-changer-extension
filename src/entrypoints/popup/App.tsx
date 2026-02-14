@@ -1,4 +1,3 @@
-import "./App.css";
 import React from "react";
 import { HashRouter, Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
