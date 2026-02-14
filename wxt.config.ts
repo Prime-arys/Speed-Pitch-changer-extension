@@ -1,5 +1,6 @@
 import { defineConfig } from "wxt";
 // import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -10,14 +11,22 @@ export default defineConfig({
             babel: {
                 plugins: ["babel-plugin-react-compiler"],
             },
-        }
+        },
     },
+
+    vite: () => ({
+        plugins: [tailwindcss()],
+    }),
+
     srcDir: "src",
     manifest: {
         // ...
         web_accessible_resources: [
             {
-                resources: ["main-world-injected.js", "signalsmith-stretch-worklet.js"],
+                resources: [
+                    "main-world-injected.js",
+                    "signalsmith-stretch-worklet.js",
+                ],
                 matches: ["<all_urls>"],
             },
         ],
