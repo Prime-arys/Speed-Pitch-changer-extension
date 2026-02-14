@@ -1,10 +1,9 @@
 .popup-container {
     text-align: center;
-    font-family: 'Open Sans', 'Segoe UI Light', Arial;
+    font-family: 'Open Sans', 'Segoe UI Light', Arial, sans-serif;
     background-color: #F5F4F2;
     overflow: hidden;
     width: 100%;
-    min-height: 100vh;
     box-sizing: border-box;
 }
 
