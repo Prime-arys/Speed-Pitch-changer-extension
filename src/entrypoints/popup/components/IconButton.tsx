@@ -1,5 +1,4 @@
 import React from "react";
-import "./IconButton.css";
 
 interface IconButtonProps {
     src: string;
@@ -9,11 +8,17 @@ interface IconButtonProps {
     className?: string;
 }
 
-function IconButton({ src, alt, onClick, id, className }: IconButtonProps): React.JSX.Element {
+function IconButton({
+    src,
+    alt,
+    onClick,
+    id,
+    className,
+}: IconButtonProps): React.JSX.Element {
     return (
         <img
             id={id}
-            className={`icon-button ${className || ""}`}
+            className={`bg-transparent mx-1 mb-1.5 p-0.5 cursor-pointer border-none hover:opacity-80 ${className || ""}`}
             src={src}
             alt={alt}
             onClick={onClick}
