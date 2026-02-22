@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router";
-import "./Popup.css";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
 import { ConfigData } from "@/models/ConfigData";
@@ -21,7 +20,6 @@ import sharpIcon from "@/assets/buttons/sharp.svg";
 async function updateConfig(newConfig: ConfigData): Promise<void> {
     const configStorage = ConfigStorage.initStorageObject(newConfig);
     await configStorage.save();
-    return;
 }
 
 function isDomainProcessed(domain: string, config: ConfigData): boolean {
@@ -33,7 +31,7 @@ function isDomainProcessed(domain: string, config: ConfigData): boolean {
 
 function isDomainProcessOptionalHooks(
     domain: string,
-    config: ConfigData
+    config: ConfigData,
 ): boolean {
     if (domain === "" || config.specificList.includes(domain)) {
         return true;
@@ -64,7 +62,7 @@ function Popup(): React.JSX.Element {
     const updateConfigMutation = useMutation({
         mutationFn: async (newConfig: Partial<ConfigData>) => {
             // Update the config via your storage/messaging system
-            
+
             const updatedConfig = { ...configQuery.data!, ...newConfig };
             await updateConfig(updatedConfig as ConfigData);
             return updatedConfig;
@@ -77,12 +75,11 @@ function Popup(): React.JSX.Element {
 
     const isEnabled = configQuery.data?.enabled ?? false;
 
-
     // Controllers Query
     const speed = useQuery<number | undefined>({
         queryKey: ["speed"],
         queryFn: async () => {
-            if (!activeDomain.data) return undefined
+            if (!activeDomain.data) return undefined;
             const response = await sendMessage("retrieveCurrentPlaybackRate");
             return response;
         },
@@ -94,7 +91,7 @@ function Popup(): React.JSX.Element {
     const pitch = useQuery<number | undefined>({
         queryKey: ["pitch"],
         queryFn: async () => {
-            if (!activeDomain.data) return undefined
+            if (!activeDomain.data) return undefined;
             const response = await sendMessage("retrieveCurrentPitch");
             return response;
         },
@@ -104,10 +101,12 @@ function Popup(): React.JSX.Element {
     });
 
     return (
-        <div className="popup-container">
-            <h4 className="popup-title">S/P Changer</h4>
+        <div className="text-center overflow-hidden w-full box-border">
+            <h4 className="text-secondary font-title text-lg underline m-0 p-1.5 bg-primary">
+                S/P Changer
+            </h4>
 
-            <div className="control-section">
+            <div className="m-1 mt-4">
                 <ToggleSwitch
                     id="enable-toggle"
                     checked={isEnabled}
@@ -115,120 +114,102 @@ function Popup(): React.JSX.Element {
                         updateConfigMutation.mutate({ enabled: checked });
                     }}
                 />
-                <h6 className="settings-link">
+                <h6 className="flex justify-center m-1.5 mb-3.5 text-link no-underline text-lg font-bold font-title hover:text-link-hover">
                     <Link to="/settings">Settings</Link>
                 </h6>
-                <p className="settings-info"></p>
+                <p className="whitespace-pre-line text-base -mt-1.5 mb-1.5"></p>
             </div>
 
             {/* Speed Controls */}
-            <div className="button-row speed-controls bonus-space">
+            <div className="flex m-auto justify-center align-baseline mt-3 px-3">
                 <IconButton
                     id="speed-decrease"
                     src={minusIcon}
                     alt="Decrease Speed"
-                    onClick={
-                        async () => {
-                            await sendMessage("callSpeedDown");
-                            queryClient.invalidateQueries({ queryKey: ["speed"] });
-                        }
-                    }
+                    onClick={async () => {
+                        await sendMessage("callSpeedDown");
+                        queryClient.invalidateQueries({ queryKey: ["speed"] });
+                    }}
                 />
                 <IconButton
                     id="speed-reset"
                     src={resetIcon}
                     alt="Reset Speed"
-                    onClick={
-                        async () => {
-                            await sendMessage("callResetSpeed");
-                            queryClient.invalidateQueries({ queryKey: ["speed"] });
-                        }
-                    }
+                    onClick={async () => {
+                        await sendMessage("callResetSpeed");
+                        queryClient.invalidateQueries({ queryKey: ["speed"] });
+                    }}
                 />
                 <IconButton
                     id="speed-increase"
                     src={plusIcon}
                     alt="Increase Speed"
-                    onClick={
-                        async () => {
-                            await sendMessage("callSpeedUp");
-                            queryClient.invalidateQueries({ queryKey: ["speed"] });
-                        }
-                    }
+                    onClick={async () => {
+                        await sendMessage("callSpeedUp");
+                        queryClient.invalidateQueries({ queryKey: ["speed"] });
+                    }}
                 />
                 <IconButton
                     id="speed-preset"
                     src={promptIcon}
                     alt="Speed Preset"
-                    onClick={
-                        async () => {
-                            await sendMessage("callPromptSpeed");
-                            queryClient.invalidateQueries({ queryKey: ["speed"] });
-                        }
-                    }
+                    onClick={async () => {
+                        await sendMessage("callPromptSpeed");
+                        queryClient.invalidateQueries({ queryKey: ["speed"] });
+                    }}
                 />
             </div>
 
-            <p className="speed-display">
-                x <span className="speed-value">{speed.data ?? "N/A"}</span>
+            <p className="mt-1">
+                <span className="font-semibold">x {speed.data ?? "N/A"}</span>
             </p>
-            <p className="speed-description">
-                {
-                    "semitone : " + rateToSemitone(speed.data ?? 1).toFixed(2)
-                }
+            <p className="text-lg">
+                {"semitone : " + rateToSemitone(speed.data ?? 1).toFixed(2)}
             </p>
 
             {/* Pitch Controls */}
-            <div className="button-row pitch-controls bonus-space">
+            <div className="flex m-auto items-center justify-center align-baseline mt-3 px-3">
                 <IconButton
                     id="pitch-decrease"
                     src={flatIcon}
                     alt="Decrease Pitch"
-                    onClick={
-                        async () => {
-                            await sendMessage("callPitchDown");
-                            queryClient.invalidateQueries({ queryKey: ["pitch"] });
-                        }
-                    }
-                />
-                <ValueButton 
-                id="pitch-value" 
-                value={pitch.data?.toString() || "0"} 
-                onClick={
-                    async () => {
-                        await sendMessage("callResetPitch")
+                    onClick={async () => {
+                        await sendMessage("callPitchDown");
                         queryClient.invalidateQueries({ queryKey: ["pitch"] });
-                    }
-                }
+                    }}
+                />
+                <ValueButton
+                    id="pitch-value"
+                    value={pitch.data?.toString() || "0"}
+                    onClick={async () => {
+                        await sendMessage("callResetPitch");
+                        queryClient.invalidateQueries({ queryKey: ["pitch"] });
+                    }}
                 />
                 <IconButton
                     id="pitch-increase"
                     src={sharpIcon}
                     alt="Increase Pitch"
-                    onClick={
-                        async () => {
-                            await sendMessage("callPitchUp");
-                            queryClient.invalidateQueries({ queryKey: ["pitch"] });
-                        }
-                    }
+                    onClick={async () => {
+                        await sendMessage("callPitchUp");
+                        queryClient.invalidateQueries({ queryKey: ["pitch"] });
+                    }}
                 />
             </div>
 
             {/* Domain Controls */}
-            <div className="button-row domain-controls bonus-space">
-                <p className="active-domain">
-                    {activeDomain.data || "(unreachable)"}
-                </p>
+            <div className="flex m-auto items-center justify-center align-baseline mt-3 gap-2 px-3">
+                <p className="mr-2">{activeDomain.data || "(unreachable)"}</p>
                 <input
                     type="checkbox"
                     id="domain-toggle"
                     checked={isDomainProcessed(
                         activeDomain.data || "",
-                        configQuery.data!
+                        configQuery.data!,
                     )}
                     disabled={!activeDomain.data}
                     style={{
-                        visibility: activeDomain.data ? "visible" : "collapse",
+                        display: activeDomain.data ? "inline-block" : "none",
                     }}
                     onChange={(e) => {
                         const domain = activeDomain.data || "";
@@ -237,7 +218,7 @@ function Popup(): React.JSX.Element {
                         if (e.target.checked) {
                             // remove from blacklist
                             const newBlacklist = config.blacklist.filter(
-                                (d) => d !== domain
+                                (d) => d !== domain,
                             );
                             updateConfigMutation.mutate({
                                 blacklist: newBlacklist,
@@ -254,17 +235,17 @@ function Popup(): React.JSX.Element {
             </div>
 
             {/* Enforce Mode */}
-            <div className="button-row enforce-controls">
+            <div className="flex m-auto items-center justify-center align-baseline gap-1 mt-1 px-3">
                 <input
                     type="checkbox"
                     id="enforce-toggle"
                     checked={isDomainProcessOptionalHooks(
                         activeDomain.data || "",
-                        configQuery.data!
+                        configQuery.data!,
                     )}
                     disabled={!activeDomain.data}
                     style={{
-                        visibility: activeDomain.data ? "visible" : "collapse",
+                        display: activeDomain.data ? "inline-block" : "none",
                     }}
                     onChange={(e) => {
                         const domain = activeDomain.data || "";
@@ -282,7 +263,7 @@ function Popup(): React.JSX.Element {
                         } else {
                             // remove from specificList
                             const newSpecificList = config.specificList.filter(
-                                (d) => d !== domain
+                                (d) => d !== domain,
                             );
                             updateConfigMutation.mutate({
                                 specificList: newSpecificList,
@@ -290,10 +271,18 @@ function Popup(): React.JSX.Element {
                         }
                     }}
                 />
-                <p className="enforce-label"> : enforce mode</p>
+                <p
+                    className="ml-1"
+                    style={{
+                        display: activeDomain.data ? "inline-block" : "none",
+                    }}
+                >
+                    {" "}
+                    : enforce mode
+                </p>
             </div>
 
-            <p className="version-info">{`v${browser.runtime.getManifest().version}`}</p>
+            <p className="my-2 text-base">{`v${browser.runtime.getManifest().version}`}</p>
         </div>
     );
 }
