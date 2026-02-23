@@ -1,5 +1,3 @@
-import { CommandsData } from "@/models/CommandsData";
-import { ConfigData } from "@/models/ConfigData";
 import { CommandsStorage } from "@/services/CommandsStorage";
 import { ConfigStorage } from "@/services/ConfigStorage";
 import { onMessage } from "@/utils/messaging";
@@ -9,8 +7,11 @@ export default defineBackground(async () => {
     console.log("Hello background!", { id: browser.runtime.id });
     browser.tabs.reload();
 
-    const config = await ConfigStorage.loadStatic();
-    const commands = await CommandsStorage.loadStatic();
+    const configStorage = new ConfigStorage();
+    const commandsStorage = new CommandsStorage();
+
+    const config = await configStorage.load();
+    const commands = await commandsStorage.load();
 
     console.log("Config loaded:", config);
     console.log("Commands loaded:", commands);
@@ -52,10 +53,10 @@ export default defineBackground(async () => {
 
     /// Sending info From Background to Content Script or popup
     onMessage("getConfig", async () => {
-        return config as ConfigData;
+        return config;
     });
     onMessage("getCommands", async () => {
-        return commands as CommandsData;
+        return commands;
     });
     onMessage("getCurrentDomain", async () => {
         const tab = await getCurrentTab();

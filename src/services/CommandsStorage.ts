@@ -1,102 +1,56 @@
-import {
-    CommandsData,
-    Commands,
-    Switch,
-    Radio,
-    SpeedPitch,
-    CustomSpeedPitch,
-} from "@/models/CommandsData";
-import { extensionStorageCommands } from "@/utils/extensionStorage";
+import { storage } from "#imports";
+import { CommandsData } from "@/models/CommandsData";
 
-export class CommandsStorage extends CommandsData {
+export class CommandsStorage {
+    private dataStorage: globalThis.WxtStorageItem<CommandsData, Record<string, never>>;
+
     constructor() {
-        super();
+        this.dataStorage = storage.defineItem<CommandsData>("local:commands", {
+            version: 1,
+            init: () => defaultCommandsStorage,
+            
+        });
     }
 
-    async load(): Promise<undefined> {
-        const data = await extensionStorageCommands.getItem("commands");
-        if (data) {
-            this.init(data);
-        } else {
-            this.init(defaultCommandsStorage);
-            this.save();
-        }
+    async save(data: CommandsData): Promise<void> {
+        await this.dataStorage.setValue(data);
     }
 
-    static async loadStatic(): Promise<CommandsStorage> {
-        const data = await extensionStorageCommands.getItem("commands");
-        if (data) {
-            const commandsStorage = new CommandsStorage();
-            commandsStorage.init(data);
-            return commandsStorage;
-        } else {
-            const commandsStorage = new CommandsStorage();
-            commandsStorage.init(defaultCommandsStorage);
-            await commandsStorage.save();
-            return commandsStorage;
-        }
+    async load(): Promise<CommandsData> {
+        return this.dataStorage.getValue();
     }
 
-    async save(): Promise<undefined> {
-        await extensionStorageCommands.setItem("commands", this.toJSON());
-    }
-
-    async reset(): Promise<undefined> {
-        this.init(defaultCommandsStorage);
-        this.save();
-    }
-
-    async upgradeCheck(): Promise<boolean> {
-        const data = await extensionStorageCommands.getItem("commands");
-        if (data && data.version !== defaultCommandsStorage.version) {
-            return true;
-        }
-        return false;
-    }
-
-    async upgrade(): Promise<undefined> {
-        const data = await extensionStorageCommands.getItem("commands");
-        if (data && data.version !== defaultCommandsStorage.version) {
-            Object.assign(data, defaultCommandsStorage);
-            this.init(data);
-            this.save();
-        }
-    }
-
-    static initStorageObject(commandsData: CommandsData): CommandsStorage {
-        const commandsStorage = new CommandsStorage();
-        commandsStorage.init(commandsData);
-        return commandsStorage;
+    async reset(): Promise<void> {
+        await this.dataStorage.setValue(defaultCommandsStorage);
     }
 }
 
-export const defaultCommandsStorage: CommandsData = new CommandsData({
-    version: 2,
-    commands: new Commands({
-        reset: "NumpadMultiply",
-        speedUp: "NumpadAdd",
-        speedDown: "NumpadSubtract",
-        speedSet: "NumpadDecimal",
-    }),
-    switch: new Switch({
+export const defaultCommandsStorage: CommandsData = {
+    commands: {
+        reset: "NumpadMultiply" as KeyboardEvent["code"],
+        speedUp: "NumpadAdd" as KeyboardEvent["code"],
+        speedDown: "NumpadSubtract" as KeyboardEvent["code"],
+        speedSet: "NumpadDecimal" as KeyboardEvent["code"],
+    },
+    switch: {
         preserve_pitch: false,
         shortcuts: true,
         ignore_text_field: true,
-    }),
-    radio: new Radio({
-        speed: new SpeedPitch({
+    },
+    radio: {
+        speed: {
             preset: 1,
-            custom: new CustomSpeedPitch({
+            custom: {
                 plus_minus: 0.1,
                 multiply_divide: 1.2,
-            }),
-        }),
-        pitch: new SpeedPitch({
+            },
+        },
+        pitch: {
             preset: 1,
-            custom: new CustomSpeedPitch({
+            custom: {
                 plus_minus: 0.1,
                 multiply_divide: 1.2,
-            }),
-        }),
-    }),
-});
+            },
+        },
+    },
+};

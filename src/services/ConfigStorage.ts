@@ -1,72 +1,31 @@
+import { storage } from "#imports";
 import { ConfigData } from "@/models/ConfigData";
-import { extensionStorageConfig } from "@/utils/extensionStorage";
 
-export class ConfigStorage extends ConfigData {
+export class ConfigStorage {
+    private dataStorage: globalThis.WxtStorageItem<ConfigData, Record<string, never>>;
+
     constructor() {
-        super();
+        this.dataStorage = storage.defineItem<ConfigData>("local:config", {
+            version: 1,
+            init: () => defaultConfigStorage,
+        });
     }
 
-    async load(): Promise<undefined> {
-        const data = await extensionStorageConfig.getItem("config");
-        if (data) {
-            this.init(data);
-        } else {
-            this.init(defaultConfigStorage);
-            this.save();
-        }
+    async save(data: ConfigData): Promise<void> {
+        await this.dataStorage.setValue(data);
     }
 
-    static async loadStatic(): Promise<ConfigStorage> {
-        const data = await extensionStorageConfig.getItem("config");
-        if (data) {
-            const configStorage = new ConfigStorage();
-            configStorage.init(data);
-            return configStorage;
-        } else {
-            const configStorage = new ConfigStorage();
-            configStorage.init(defaultConfigStorage);
-            await configStorage.save();
-            return configStorage;
-        }
+    async load(): Promise<ConfigData> {
+        return this.dataStorage.getValue();
     }
 
-    async save(): Promise<undefined> {
-        await extensionStorageConfig.setItem("config", this.toJSON());
-    }
-
-    async reset(): Promise<undefined> {
-        this.init(defaultConfigStorage);
-        this.save();
-    }
-
-    async upgradeCheck(): Promise<boolean> {
-        const data = await extensionStorageConfig.getItem("config");
-        if (data && data.version !== defaultConfigStorage.version) {
-            return true;
-        }
-        return false;
-    }
-
-    async upgrade(): Promise<undefined> {
-        const data = await extensionStorageConfig.getItem("config");
-        if (data && data.version !== defaultConfigStorage.version) {
-            Object.assign(data, defaultConfigStorage);
-            this.init(data);
-            this.save();
-        }
-    }
-
-    static initStorageObject(configData: ConfigData): ConfigStorage {
-        const configStorage = new ConfigStorage();
-        configStorage.init(configData);
-        return configStorage;
+    async reset(): Promise<void> {
+        await this.dataStorage.setValue(defaultConfigStorage);
     }
 }
 
-
-export const defaultConfigStorage: ConfigData = new ConfigData({
-    version: 2,
+export const defaultConfigStorage: ConfigData = {
     enabled: true,
     blacklist: [],
     specificList: ["open.spotify.com"],
-});
+};

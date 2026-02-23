@@ -18,8 +18,8 @@ import flatIcon from "@/assets/buttons/flat.svg";
 import sharpIcon from "@/assets/buttons/sharp.svg";
 
 async function updateConfig(newConfig: ConfigData): Promise<void> {
-    const configStorage = ConfigStorage.initStorageObject(newConfig);
-    await configStorage.save();
+    const configStorage = new ConfigStorage();
+    await configStorage.save(newConfig);
 }
 
 function isDomainProcessed(domain: string, config: ConfigData): boolean {
