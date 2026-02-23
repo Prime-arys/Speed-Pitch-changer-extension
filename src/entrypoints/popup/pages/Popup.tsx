@@ -79,7 +79,12 @@ function Popup(): React.JSX.Element {
     const speed = useQuery<number | undefined>({
         queryKey: ["speed"],
         queryFn: async () => {
-            if (!activeDomain.data) return undefined;
+            if (
+                !activeDomain.data ||
+                !configQuery.data ||
+                !isDomainProcessed(activeDomain.data, configQuery.data)
+            )
+                return undefined;
             const response = await sendMessage("retrieveCurrentPlaybackRate");
             return response;
         },
@@ -91,7 +96,12 @@ function Popup(): React.JSX.Element {
     const pitch = useQuery<number | undefined>({
         queryKey: ["pitch"],
         queryFn: async () => {
-            if (!activeDomain.data) return undefined;
+            if (
+                !activeDomain.data ||
+                !configQuery.data ||
+                !isDomainProcessed(activeDomain.data, configQuery.data)
+            )
+                return undefined;
             const response = await sendMessage("retrieveCurrentPitch");
             return response;
         },
