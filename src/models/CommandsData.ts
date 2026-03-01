@@ -3,14 +3,14 @@ export type CustomSpeedPitch = {
     multiply_divide: number;
 };
 
-export type SpeedPitch = {
-    preset: number;
+export type SpeedPitch<T> = {
+    preset: T;
     custom: CustomSpeedPitch;
 };
 
 export type Radio = {
-    speed: SpeedPitch;
-    pitch: SpeedPitch;
+    speed: SpeedPitch<1 | 2 | 3>;
+    pitch: SpeedPitch<1 | 2>;
 };
 
 export type Switch = {
