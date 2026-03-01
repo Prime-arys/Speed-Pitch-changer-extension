@@ -190,7 +190,13 @@ function Popup(): React.JSX.Element {
                 />
                 <ValueButton
                     id="pitch-value"
-                    value={pitch.data?.toString() || "0"}
+                    value={
+                        pitch.data !== undefined
+                            ? pitch.data
+                                  .toFixed(3)
+                                  .replace(/\.?0+$/, "") // trim trailing zeros / dot
+                            : "0"
+                    }
                     onClick={async () => {
                         await sendMessage("callResetPitch");
                         queryClient.invalidateQueries({ queryKey: ["pitch"] });
