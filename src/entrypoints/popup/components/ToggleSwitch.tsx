@@ -4,15 +4,20 @@ interface ToggleSwitchProps {
     checked: boolean;
     onChange: (checked: boolean) => void;
     id?: string;
+    classAdditional?: string;
 }
 
 function ToggleSwitch({
     checked,
     onChange,
     id,
+    classAdditional = "",
 }: ToggleSwitchProps): React.JSX.Element {
     return (
-        <label className="relative inline-block w-12.5 h-6 py-1" id={id}>
+        <label
+            id={id}
+            className={`relative inline-block w-12.5 h-6 py-1 ${classAdditional}`}
+        >
             <input
                 type="checkbox"
                 className="peer opacity-0 w-0 h-0"
