@@ -14,7 +14,7 @@ export default defineUnlistedScript(async () => {
     speedController.init();
 
     // Initialize pitch controller
-    const pitchController = new PitchController();
+    const pitchController = new PitchController(settings);
     pitchController.init();
 
     function promtCall(): void {

@@ -1,3 +1,4 @@
+import { CommandsData } from "@/models/CommandsData";
 import SignalsmithStretch, { StretchNode } from "signalsmith-stretch";
 
 const ELEM_SELECTOR = "video,audio";
@@ -45,6 +46,12 @@ export class PitchController {
     private isEnabled: boolean = true;
     private pendingElements: Set<HTMLMediaElement> = new Set();
     private isInitialized: boolean = false;
+    private settings: CommandsData | null = null;
+
+
+    constructor(settings: CommandsData) {
+        this.settings = settings;
+    }
 
     /**
      * Initialize the pitch controller and start observing for media elements
@@ -303,7 +310,17 @@ export class PitchController {
      * @param amount - Number of semitones to increase (default: 1)
      */
     async pitchUp(amount: number = 1): Promise<void> {
-        await this.setPitch(this.globalSemitones + amount);
+        switch (this.settings?.radio.pitch.preset) {
+            case 1:
+                await this.setPitch(this.globalSemitones + amount);
+                break;
+            case 2:
+                await this.setPitch(this.globalSemitones + this.settings.radio.pitch.custom.plus_minus);
+                break;
+            default:
+                await this.setPitch(this.globalSemitones + amount);
+                break;
+        }
     }
 
     /**
@@ -311,7 +328,17 @@ export class PitchController {
      * @param amount - Number of semitones to decrease (default: 1)
      */
     async pitchDown(amount: number = 1): Promise<void> {
-        await this.setPitch(this.globalSemitones - amount);
+        switch (this.settings?.radio.pitch.preset) {
+            case 1:
+                await this.setPitch(this.globalSemitones - amount);
+                break;
+            case 2:
+                await this.setPitch(this.globalSemitones - this.settings.radio.pitch.custom.plus_minus);
+                break;
+            default:
+                await this.setPitch(this.globalSemitones - amount);
+                break;
+        }
     }
 
     /**
