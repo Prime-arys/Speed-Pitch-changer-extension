@@ -23,6 +23,8 @@
     --color-text: #454a54;
     --color-link: #664DCC;
     --color-link-hover: rgba(216, 138, 46, 0.9);
+    --color-button: #d9dae8;
+    --color-button-accent: #ECCDAC;
 }
 
 html,
