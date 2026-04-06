@@ -1,4 +1,4 @@
-import { mainWorlMediaElements } from "@/utils/vars";
+import { mainWorldMediaElements } from "@/utils/vars";
 
 export default function audioElementHook() {
     // let firstPlay = true;
@@ -11,7 +11,7 @@ export default function audioElementHook() {
         const audio = new originalAudio(src);
         //console.log("Audio created", audio);
         if (audio instanceof HTMLMediaElement) {
-            mainWorlMediaElements.push(audio);
+            mainWorldMediaElements.push(audio);
         }
         // Copy properties from audio to this
         Object.setPrototypeOf(this, Object.getPrototypeOf(audio));
@@ -22,7 +22,7 @@ export default function audioElementHook() {
         const audio = new originalAudio(src);
         //console.log("Audio created", audio);
         if (audio instanceof HTMLMediaElement) {
-            mainWorlMediaElements.push(audio);
+            mainWorldMediaElements.push(audio);
         }
         return audio;
     } as unknown as typeof Audio; */
@@ -32,8 +32,8 @@ export default function audioElementHook() {
     // Audio.prototype.original_pause = originalAudioPause;
 
     // Audio.prototype.play = function (...args: unknown[]) {
-    //     if (!mainWorlMediaElements.includes(this)) {
-    //         mainWorlMediaElements.push(this);
+    //     if (!mainWorldMediaElements.includes(this)) {
+    //         mainWorldMediaElements.push(this);
     //     }
         
     //     if (firstPlay == true) {
@@ -48,8 +48,8 @@ export default function audioElementHook() {
     // Audio.prototype.pause = function (...args: unknown[]) {
     //     //console.log(this)
     //     //verifier si l'element est deja dans le tableau
-    //     if (!mainWorlMediaElements.includes(this)) {
-    //         mainWorlMediaElements.push(this);
+    //     if (!mainWorldMediaElements.includes(this)) {
+    //         mainWorldMediaElements.push(this);
     //     }
 
     //     if (firstPlay == true) {

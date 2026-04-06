@@ -8,7 +8,7 @@ export const onMediaElementAdded = (callback: (element: HTMLMediaElement) => voi
     onAddCallbacks.push(callback);
 };
 
-export const mainWorlMediaElements = new Proxy<HTMLMediaElement[]>([], {
+export const mainWorldMediaElements = new Proxy<HTMLMediaElement[]>([], {
     set(target, prop, value) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         target[prop as any] = value;

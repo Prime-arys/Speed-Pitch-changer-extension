@@ -1,4 +1,4 @@
-import { mainWorlMediaElements } from "@/utils/vars";
+import { mainWorldMediaElements } from "@/utils/vars";
 
 declare global {
     interface Document {
@@ -19,7 +19,7 @@ export default function createElementHook() {
         if (
             element instanceof HTMLMediaElement // video, audio, etc.
         ) {
-            mainWorlMediaElements.push(element);
+            mainWorldMediaElements.push(element);
         }
 
         return element;

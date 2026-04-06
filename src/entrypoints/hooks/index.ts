@@ -1,4 +1,4 @@
-import { mainWorlMediaElements, onMediaElementAdded } from "@/utils/vars";
+import { mainWorldMediaElements, onMediaElementAdded } from "@/utils/vars";
 import audioElementHook from "./audioElement";
 import createElementHook from "./createElement";
 
@@ -73,5 +73,5 @@ export default defineUnlistedScript(() => {
     onMediaElementAdded(processElement);
 
     // Process existing elements
-    mainWorlMediaElements.forEach(processElement);
+    mainWorldMediaElements.forEach(processElement);
 });
