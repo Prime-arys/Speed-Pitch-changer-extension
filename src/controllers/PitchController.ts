@@ -1,5 +1,6 @@
 import { CommandsData } from "@/models/CommandsData";
 import SignalsmithStretch, { StretchNode } from "signalsmith-stretch";
+import { SignalsmithStretchConfigurator } from "./SignalsmithStretchConfigurator";
 
 const ELEM_SELECTOR = "video,audio";
 
@@ -8,23 +9,6 @@ const SOURCE_NODE_KEY = Symbol("pitchControllerSourceNode");
 
 // Set to true to bypass pitch processing and just pass audio through
 const DEBUG_BYPASS = false;
-
-// Get the URL for the signalsmith-stretch worklet from extension resources
-function getWorkletUrl(): string {
-    const workletPath = "/signalsmith-stretch-worklet.js";
-
-    // In browser extension context, we need to use the extension's web-accessible resource
-    if (typeof browser !== "undefined" && browser.runtime?.getURL) {
-        return (browser.runtime.getURL as (path: string) => string)(workletPath);
-    }
-
-    // Fallback - won't work but provides a path for debugging
-    return workletPath;
-}
-
-// Configure the module URL for SignalsmithStretch
-// This must be done before calling the function
-(SignalsmithStretch as unknown as { moduleUrl?: string }).moduleUrl = getWorkletUrl();
 
 interface MediaElementState {
     element: HTMLMediaElement;
@@ -47,6 +31,7 @@ export class PitchController {
     private pendingElements: Set<HTMLMediaElement> = new Set();
     private isInitialized: boolean = false;
     private settings: CommandsData | null = null;
+    private SignalsmithStretch: typeof SignalsmithStretch | null = null;
 
 
     constructor(settings: CommandsData) {
@@ -70,7 +55,20 @@ export class PitchController {
         }
     }
 
+    private async loadStretchModule(): Promise<void> {
+        try {
+            this.SignalsmithStretch = await SignalsmithStretchConfigurator.create();
+        } catch (error) {
+            console.error("[PitchController] Failed to load SignalsmithStretch module, pitch shifting will be unavailable:", error);
+            this.SignalsmithStretch = null;
+        }
+    }
+
     private async initContext(): Promise<void> {
+            if (!this.SignalsmithStretch) {
+                await this.loadStretchModule();
+            }
+
             if (!this.audioContext) {
                 this.audioContext = new AudioContext();
             }
