@@ -1,5 +1,5 @@
 import { CommandsData } from "@/models/CommandsData";
-import { SEMITONE_MULTIPLIER, semitoneToRate } from "../../utils/semitone";
+import { SEMITONE_MULTIPLIER, semitoneToRate } from "@/utils/semitone";
 
 const ELEM_SELECTOR = "video,audio";
 
@@ -21,11 +21,10 @@ export class SpeedController {
     }
 
     init(): void {
-        const bodyElement = document.querySelector("body");
-        if (bodyElement) {
+        if (document) {
             new MutationObserver(() => {
                 this.updateVideos();
-            }).observe(bodyElement, {
+            }).observe(document, {
                 attributes: true,
                 childList: true,
                 characterData: true,

@@ -1,6 +1,6 @@
 import { sendMessage, onMessage } from "@/utils/messaging";
-import { SpeedController } from "./SpeedController";
-import { PitchController } from "./PitchController";
+import { SpeedController } from "@/controllers/SpeedController";
+import { PitchController } from "@/controllers/PitchController";
 import { setupShortcutsBindings } from "./shortcutsBindings";
 
 export default defineUnlistedScript(async () => {

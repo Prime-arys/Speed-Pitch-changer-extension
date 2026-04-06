@@ -11,15 +11,15 @@ const DEBUG_BYPASS = false;
 
 // Get the URL for the signalsmith-stretch worklet from extension resources
 function getWorkletUrl(): string {
+    const workletPath = "/signalsmith-stretch-worklet.js";
+
     // In browser extension context, we need to use the extension's web-accessible resource
     if (typeof browser !== "undefined" && browser.runtime?.getURL) {
-        return (browser.runtime.getURL as (path: string) => string)("signalsmith-stretch-worklet.js");
+        return (browser.runtime.getURL as (path: string) => string)(workletPath);
     }
-    if (typeof chrome !== "undefined" && chrome.runtime?.getURL) {
-        return chrome.runtime.getURL("signalsmith-stretch-worklet.js");
-    }
+
     // Fallback - won't work but provides a path for debugging
-    return "/signalsmith-stretch-worklet.js";
+    return workletPath;
 }
 
 // Configure the module URL for SignalsmithStretch
@@ -56,12 +56,18 @@ export class PitchController {
     /**
      * Initialize the pitch controller and start observing for media elements
      */
-    async init(): Promise<void> {
-        // Observe for new media elements
-        this.observeMediaElements();
-
-        // Process existing elements
-        this.processExistingElements();
+    init(): void {
+        if (document) {
+            new MutationObserver(() => {
+                this.processExistingElements();
+            }).observe(document, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true,
+            });
+            this.processExistingElements();
+        }
     }
 
     private async initContext(): Promise<void> {
@@ -83,22 +89,6 @@ export class PitchController {
 
         };
 
-    /**
-     * Observe DOM for new media elements being added
-     */
-    private observeMediaElements(): void {
-        const bodyElement = document.querySelector("body");
-        if (!bodyElement) return;
-
-        new MutationObserver(() => {
-            this.processExistingElements();
-        }).observe(bodyElement, {
-            attributes: true,
-            childList: true,
-            characterData: true,
-            subtree: true,
-        });
-    }
 
     /**
      * Process all existing media elements in the DOM
