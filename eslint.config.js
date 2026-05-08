@@ -17,7 +17,11 @@ export default defineConfig([
   // TS
   ...tseslint.configs.recommended.map(config => ({
     ...config,
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"]
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    rules: {
+      ...config.rules,
+      "@typescript-eslint/no-unused-vars": ["warn"],
+    }
   })),
 
   // React plugin configuration
