@@ -1,5 +1,12 @@
 import SignalsmithStretch from "signalsmith-stretch";
+import { sendWindowMessage } from "@/utils/messaging-window";
 
+/**
+ * This class is responsible for configuring the SignalsmithStretch worklet
+ * with the correct module URL.
+ * It can be called from both the content script and the main world (through window messaging) 
+ * to ensure the worklet is registered with the correct URL in both contexts.
+ */
 export class SignalsmithStretchConfigurator {
     private static defaultWorkletUrl = "/signalsmith-stretch-worklet.js"; // path for the worklet script
     private workletUrl: string;
@@ -12,9 +19,7 @@ export class SignalsmithStretchConfigurator {
         ).moduleUrl = this.workletUrl;
     }
 
-    private async getWorkletUrl(
-        customCall?: () => Promise<string>,
-    ): Promise<string> {
+    private async getWorkletUrl(): Promise<string> {
         const workletPath = SignalsmithStretchConfigurator.defaultWorkletUrl;
 
         // In browser extension context, we need to use the extension's web-accessible resource
@@ -25,15 +30,17 @@ export class SignalsmithStretchConfigurator {
             );
         }
 
-        if (customCall) {
+        // In non-extension context (main wold), we use WindowMessaging to ask the content script for the correct URL
+        else if (typeof window !== "undefined") {
             try {
-                const customUrl = await customCall();
-                if (customUrl) {
-                    return customUrl;
-                }
+                const url = await sendWindowMessage(
+                    "getExtensionWebAccessibleUrl",
+                );
+                // return the URL + worklet path
+                return new URL(workletPath, url).toString();
             } catch (error) {
                 console.warn(
-                    "Custom worklet URL retrieval failed, falling back to default path.",
+                    "Window messaging URL retrieval failed, falling back to default path.",
                     error,
                 );
             }
@@ -43,13 +50,11 @@ export class SignalsmithStretchConfigurator {
         return workletPath;
     }
 
-    static async create(
-        customCall?: () => Promise<string>,
-    ): Promise<typeof SignalsmithStretch> {
+    static async create(): Promise<typeof SignalsmithStretch> {
         const configurator = new SignalsmithStretchConfigurator(
             SignalsmithStretchConfigurator.defaultWorkletUrl,
         );
-        const workletUrl = await configurator.getWorkletUrl(customCall);
+        const workletUrl = await configurator.getWorkletUrl();
         configurator.workletUrl = workletUrl;
         (
             configurator.SignalsmithStretch as unknown as { moduleUrl?: string }

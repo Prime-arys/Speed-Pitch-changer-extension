@@ -1,11 +1,13 @@
-import { mainWorldMediaElements, onMediaElementAdded } from "@/utils/vars";
+import { mainWorldMediaElements, onMediaElementAdded, mainWorldAudioContexts } from "@/utils/vars";
 import audioElementHook from "./audioElement";
 import createElementHook from "./createElement";
+import audioContextHook from "./audioContext";
 
 export default defineUnlistedScript(() => {
     // console.log("Hello from the main world");
     audioElementHook();
     createElementHook();
+    audioContextHook();
 
     const elementProcessedSet = new WeakSet<HTMLMediaElement>();
 
@@ -74,4 +76,11 @@ export default defineUnlistedScript(() => {
 
     // Process existing elements
     mainWorldMediaElements.forEach(processElement);
+
+    // DEBUG
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).getMainWorldMediaElements = () => mainWorldMediaElements || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).getMainWorldAudioContexts = () => mainWorldAudioContexts || [];
+    
 });

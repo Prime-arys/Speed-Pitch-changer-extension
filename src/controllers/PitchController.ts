@@ -1,11 +1,15 @@
 import { CommandsData } from "@/models/CommandsData";
 import SignalsmithStretch, { StretchNode } from "signalsmith-stretch";
 import { SignalsmithStretchConfigurator } from "./SignalsmithStretchConfigurator";
+import {
+    MEDIA_ELEMENT_SOURCE_NODE_KEY,
+    MEDIA_ELEMENT_SOURCE_OWNER_KEY,
+    MediaElementSourceOwner,
+    SOURCE_NODE_CONNECTIONS_KEY,
+    type SourceNodeConnection,
+} from "@/utils/vars";
 
 const ELEM_SELECTOR = "video,audio";
-
-// Symbol to mark elements that already have a source node
-const SOURCE_NODE_KEY = Symbol("pitchControllerSourceNode");
 
 // Set to true to bypass pitch processing and just pass audio through
 const DEBUG_BYPASS = false;
@@ -15,12 +19,20 @@ interface MediaElementState {
     sourceNode: MediaElementAudioSourceNode;
     stretchNode: StretchNode | null;
     gainNode: GainNode;
+    audioContext: AudioContext;
+    sourceOwner: MediaElementSourceOwner;
     isConnected: boolean;
     currentSemitones: number;
 }
 
 interface MediaElementWithSource extends HTMLMediaElement {
-    [SOURCE_NODE_KEY]?: MediaElementAudioSourceNode;
+    [MEDIA_ELEMENT_SOURCE_NODE_KEY]?: MediaElementAudioSourceNode;
+    [MEDIA_ELEMENT_SOURCE_OWNER_KEY]?: MediaElementSourceOwner;
+}
+
+interface MediaElementSourceNodeWithConnections
+    extends MediaElementAudioSourceNode {
+    [SOURCE_NODE_CONNECTIONS_KEY]?: SourceNodeConnection[];
 }
 
 export class PitchController {
@@ -29,6 +41,7 @@ export class PitchController {
     private globalSemitones: number = 0;
     private isEnabled: boolean = true;
     private pendingElements: Set<HTMLMediaElement> = new Set();
+    private blockedElements: Set<HTMLMediaElement> = new Set();
     private isInitialized: boolean = false;
     private settings: CommandsData | null = null;
     private SignalsmithStretch: typeof SignalsmithStretch | null = null;
@@ -65,27 +78,118 @@ export class PitchController {
     }
 
     private async initContext(): Promise<void> {
-            if (!this.SignalsmithStretch) {
-                await this.loadStretchModule();
+        if (!this.SignalsmithStretch) {
+            await this.loadStretchModule();
+        }
+
+        if (this.audioContext && this.audioContext.state === "suspended") {
+            await this.audioContext.resume();
+        }
+
+        this.isInitialized = true;
+
+        // Process any pending elements
+        for (const element of this.pendingElements) {
+            await this.connectMediaElement(element);
+        }
+        this.pendingElements.clear();
+    }
+
+    private async ensureContextRunning(
+        context: AudioContext
+    ): Promise<boolean> {
+        if (context.state === "suspended") {
+            try {
+                await context.resume();
+            } catch {
+                console.warn("[PitchController] Could not resume AudioContext");
+                return false;
+            }
+        }
+        return context.state !== "closed";
+    }
+
+    private getSourceConnections(
+        sourceNode: MediaElementAudioSourceNode
+    ): SourceNodeConnection[] {
+        const nodeWithConnections =
+            sourceNode as MediaElementSourceNodeWithConnections;
+        return nodeWithConnections[SOURCE_NODE_CONNECTIONS_KEY] ?? [];
+    }
+
+    private disconnectSourceTargets(
+        sourceNode: MediaElementAudioSourceNode,
+        connections: SourceNodeConnection[]
+    ): void {
+        connections.forEach((connection) => {
+            try {
+                if (connection.destination instanceof AudioParam) {
+                    if (typeof connection.output === "number") {
+                        sourceNode.disconnect(
+                            connection.destination,
+                            connection.output
+                        );
+                    } else {
+                        sourceNode.disconnect(connection.destination);
+                    }
+                } else if (typeof connection.output === "number") {
+                    if (typeof connection.input === "number") {
+                        sourceNode.disconnect(
+                            connection.destination,
+                            connection.output,
+                            connection.input
+                        );
+                    } else {
+                        sourceNode.disconnect(
+                            connection.destination,
+                            connection.output
+                        );
+                    }
+                } else {
+                    sourceNode.disconnect(connection.destination);
+                }
+            } catch {
+                // Ignore failures for stale or already-disconnected targets
+            }
+        });
+    }
+
+    private connectNodeToTargets(
+        node: AudioNode,
+        connections: SourceNodeConnection[],
+        fallbackDestination: AudioNode
+    ): void {
+        if (connections.length === 0) {
+            node.connect(fallbackDestination);
+            return;
+        }
+
+        connections.forEach((connection) => {
+            if (connection.destination instanceof AudioParam) {
+                if (typeof connection.output === "number") {
+                    node.connect(connection.destination, connection.output);
+                } else {
+                    node.connect(connection.destination);
+                }
+                return;
             }
 
-            if (!this.audioContext) {
-                this.audioContext = new AudioContext();
+            if (typeof connection.output === "number") {
+                if (typeof connection.input === "number") {
+                    node.connect(
+                        connection.destination,
+                        connection.output,
+                        connection.input
+                    );
+                } else {
+                    node.connect(connection.destination, connection.output);
+                }
+                return;
             }
-            // Resume context if suspended
-            if (this.audioContext.state === "suspended") {
-                await this.audioContext.resume();
-            }
-            
-            this.isInitialized = true;
-            
-            // Process any pending elements
-            for (const element of this.pendingElements) {
-                await this.connectMediaElement(element);
-            }
-            this.pendingElements.clear();
 
-        };
+            node.connect(connection.destination);
+        });
+    }
 
 
     /**
@@ -94,7 +198,11 @@ export class PitchController {
     private processExistingElements(): void {
         const elements = document.querySelectorAll<HTMLMediaElement>(ELEM_SELECTOR);
         elements.forEach((element) => {
-            if (!this.mediaElements.has(element) && !this.pendingElements.has(element)) {
+            if (
+                !this.mediaElements.has(element) &&
+                !this.pendingElements.has(element) &&
+                !this.blockedElements.has(element)
+            ) {
                 this.attachToMediaElement(element);
             }
         });
@@ -105,6 +213,12 @@ export class PitchController {
                 this.detachFromMediaElement(element);
             }
         });
+
+        this.blockedElements.forEach((element) => {
+            if (!document.contains(element)) {
+                this.blockedElements.delete(element);
+            }
+        });
     }
 
     /**
@@ -113,8 +227,14 @@ export class PitchController {
     private async attachToMediaElement(element: HTMLMediaElement): Promise<void> {
         // Check if element already has a source node (can only create one per element)
         const mediaEl = element as MediaElementWithSource;
-        if (mediaEl[SOURCE_NODE_KEY]) {
-            console.log("[PitchController] Element already has source node, skipping:", element);
+        if (
+            mediaEl[MEDIA_ELEMENT_SOURCE_NODE_KEY] &&
+            mediaEl[MEDIA_ELEMENT_SOURCE_OWNER_KEY] === "extension"
+        ) {
+            console.log(
+                "[PitchController] Element already has extension source node, skipping:",
+                element
+            );
             return;
         }
 
@@ -132,40 +252,80 @@ export class PitchController {
      * Connect a media element to the audio processing chain
      */
     private async connectMediaElement(element: HTMLMediaElement): Promise<void> {
-        if (!this.audioContext) return;
-
         // Check if already connected
         if (this.mediaElements.get(element)?.isConnected) {
             return;
         }
 
         const mediaEl = element as MediaElementWithSource;
-        
-        // Check if element already has a source node
-        if (mediaEl[SOURCE_NODE_KEY]) {
-            console.log("[PitchController] Element already has source node:", element);
-            return;
-        }
+        const existingSourceNode = mediaEl[MEDIA_ELEMENT_SOURCE_NODE_KEY] ?? null;
+        const existingOwner = mediaEl[MEDIA_ELEMENT_SOURCE_OWNER_KEY];
 
-        // Ensure AudioContext is running
-        if (this.audioContext.state === "suspended") {
-            try {
-                await this.audioContext.resume();
-            } catch {
-                console.warn("[PitchController] Could not resume AudioContext");
-                return;
-            }
-        }
+        let sourceNode: MediaElementAudioSourceNode | null = existingSourceNode;
+        let sourceOwner: MediaElementSourceOwner =
+            existingOwner ?? (existingSourceNode ? "page" : "extension");
+        let context: AudioContext | null =
+            sourceNode?.context instanceof AudioContext
+                ? (sourceNode.context as AudioContext)
+                : null;
+        let existingConnections: SourceNodeConnection[] = [];
 
         try {
-            // Create source node from media element
-            const sourceNode = this.audioContext.createMediaElementSource(element);
-            
-            // Store reference to prevent duplicate source nodes
-            mediaEl[SOURCE_NODE_KEY] = sourceNode;
+            if (sourceOwner === "page" && sourceNode) {
+                if (!context) {
+                    this.blockedElements.add(element);
+                    console.warn(
+                        "[PitchController] Page source node uses unsupported AudioContext. Skipping:",
+                        element
+                    );
+                    return;
+                }
+
+                if (!(await this.ensureContextRunning(context))) {
+                    return;
+                }
+
+                existingConnections = this.getSourceConnections(sourceNode);
+                if (existingConnections.length > 0) {
+                    this.disconnectSourceTargets(sourceNode, existingConnections);
+                } else {
+                    console.warn(
+                        "[PitchController] No tracked connections for page source node. Disconnecting all and wiring to destination.",
+                        element
+                    );
+                    try {
+                        sourceNode.disconnect();
+                    } catch {
+                        // Ignore disconnect failures
+                    }
+                }
+            } else {
+                if (!this.audioContext) {
+                    this.audioContext = new AudioContext();
+                }
+                context = this.audioContext;
+                if (!(await this.ensureContextRunning(context))) {
+                    return;
+                }
+
+                if (!sourceNode) {
+                    // Create source node from media element
+                    sourceNode = context.createMediaElementSource(element);
+
+                    // Store reference to prevent duplicate source nodes
+                    mediaEl[MEDIA_ELEMENT_SOURCE_NODE_KEY] = sourceNode;
+                    mediaEl[MEDIA_ELEMENT_SOURCE_OWNER_KEY] = "extension";
+                }
+
+                sourceOwner = "extension";
+            }
+
+            if (!sourceNode || !context) {
+                return;
+            }
 
             // Create gain node for volume control
-            const gainNode = this.audioContext.createGain();
+            const gainNode = context.createGain();
             gainNode.gain.value = 1.0;
 
             let stretchNode: StretchNode | null = null;
@@ -174,11 +334,19 @@ export class PitchController {
                 // Bypass mode: source -> gain -> destination
                 console.log("[PitchController] DEBUG: Bypass mode - direct connection");
                 sourceNode.connect(gainNode);
-                gainNode.connect(this.audioContext.destination);
+                if (sourceOwner === "page") {
+                    this.connectNodeToTargets(
+                        gainNode,
+                        existingConnections,
+                        context.destination
+                    );
+                } else {
+                    gainNode.connect(context.destination);
+                }
             } else {
                 // Try to create the stretch node for pitch shifting
                 try {
-                    stretchNode = await SignalsmithStretch(this.audioContext, {
+                    stretchNode = await SignalsmithStretch(context, {
                         numberOfInputs: 1,
                         numberOfOutputs: 1,
                         outputChannelCount: [2],
@@ -187,7 +355,15 @@ export class PitchController {
                     // Connect the audio graph: source -> stretch -> gain -> destination
                     sourceNode.connect(stretchNode);
                     stretchNode.connect(gainNode);
-                    gainNode.connect(this.audioContext.destination);
+                    if (sourceOwner === "page") {
+                        this.connectNodeToTargets(
+                            gainNode,
+                            existingConnections,
+                            context.destination
+                        );
+                    } else {
+                        gainNode.connect(context.destination);
+                    }
 
                     // Start the stretch node for live input processing
                     // For live input, we must call schedule with active: true
@@ -203,7 +379,15 @@ export class PitchController {
                     console.warn("[PitchController] SignalsmithStretch failed, falling back to bypass mode:", stretchError);
                     stretchNode = null;
                     sourceNode.connect(gainNode);
-                    gainNode.connect(this.audioContext.destination);
+                    if (sourceOwner === "page") {
+                        this.connectNodeToTargets(
+                            gainNode,
+                            existingConnections,
+                            context.destination
+                        );
+                    } else {
+                        gainNode.connect(context.destination);
+                    }
                 }
             }
 
@@ -213,6 +397,8 @@ export class PitchController {
                 sourceNode,
                 stretchNode,
                 gainNode,
+                audioContext: context,
+                sourceOwner,
                 isConnected: true,
                 currentSemitones: this.globalSemitones,
             });
@@ -227,7 +413,13 @@ export class PitchController {
             
             // Check if it's because the element already has a source
             if (error instanceof DOMException && error.message.includes("already")) {
-                console.warn("[PitchController] Media element already connected to another AudioContext");
+                const mediaEl = element as MediaElementWithSource;
+                mediaEl[MEDIA_ELEMENT_SOURCE_OWNER_KEY] = "page";
+                this.blockedElements.add(element);
+                console.warn(
+                    "[PitchController] Media element already connected to another AudioContext. Cannot attach pitch processing.",
+                    element
+                );
             } else {
                 console.error("[PitchController] Failed to connect media element:", error);
             }
@@ -254,6 +446,15 @@ export class PitchController {
             }
         }
 
+        const mediaEl = element as MediaElementWithSource;
+        if (
+            mediaEl[MEDIA_ELEMENT_SOURCE_OWNER_KEY] === "extension" &&
+            mediaEl[MEDIA_ELEMENT_SOURCE_NODE_KEY] === state.sourceNode
+        ) {
+            delete mediaEl[MEDIA_ELEMENT_SOURCE_NODE_KEY];
+            delete mediaEl[MEDIA_ELEMENT_SOURCE_OWNER_KEY];
+        }
+
         this.mediaElements.delete(element);
         console.log("[PitchController] Detached media element:", element);
     }
@@ -270,13 +471,16 @@ export class PitchController {
             await this.initContext();
         }
 
-        if (!this.audioContext) return;
-
         const promises = Array.from(this.mediaElements.values())
             .filter((state) => state.isConnected && state.stretchNode)
             .map(async (state) => {
+                if (!(await this.ensureContextRunning(state.audioContext))) {
+                    return;
+                }
+
                 state.currentSemitones = semitones;
                 await state.stretchNode!.schedule({
+                    active: this.isEnabled,
                     semitones,
                 });
             });
@@ -345,6 +549,10 @@ export class PitchController {
         const promises = Array.from(this.mediaElements.values())
             .filter((state) => state.isConnected && state.stretchNode)
             .map(async (state) => {
+                if (!(await this.ensureContextRunning(state.audioContext))) {
+                    return;
+                }
+
                 await state.stretchNode!.schedule({
                     active: enabled,
                     semitones: enabled ? state.currentSemitones : 0,

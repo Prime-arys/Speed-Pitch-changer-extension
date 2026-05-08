@@ -36,6 +36,12 @@ export default defineBackground(async () => {
             "ISOLATED",
             config
         );
+        await scriptsRegister.registerScript(
+            "main-world",
+            "document_idle",
+            "MAIN",
+            config
+        );
     } else if (!navigator.userAgent.toLowerCase().includes("android")) {
         // use specific icon for disabled state (not on android due to limitations)
         browser.browserAction.setIcon({ path: "icon/16d.png" });

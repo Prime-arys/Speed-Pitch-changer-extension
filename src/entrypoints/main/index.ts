@@ -1,6 +1,6 @@
 import { sendMessage, onMessage } from "@/utils/messaging";
+import { sendWindowMessage, onWindowMessage } from "@/utils/messaging-window";
 import { SpeedController } from "@/controllers/SpeedController";
-import { PitchController } from "@/controllers/PitchController";
 import { setupShortcutsBindings } from "./shortcutsBindings";
 
 export default defineUnlistedScript(async () => {
@@ -8,14 +8,11 @@ export default defineUnlistedScript(async () => {
 
     // Get settings from background
     const settings = await sendMessage("getCommands", undefined);
+    //const config = await sendMessage("getConfig", undefined);
 
     // Initialize speed controller
     const speedController = new SpeedController(settings);
     speedController.init();
-
-    // Initialize pitch controller
-    const pitchController = new PitchController(settings);
-    pitchController.init();
 
     function promtCall(): void {
         speedController.promptSpeed();
@@ -57,21 +54,40 @@ export default defineUnlistedScript(async () => {
 
 
 
-    onMessage("pitchUp", async () => {
-        await pitchController.pitchUp();
+    onMessage("pitchUp", async (message) => {
+        await sendWindowMessage("pitchUp", message?.data);
     });
 
-    onMessage("pitchDown", async () => {
-        await pitchController.pitchDown();
+    onMessage("pitchDown", async (message) => {
+        await sendWindowMessage("pitchDown", message?.data);
     });
 
     onMessage("resetPitch", async () => {
-        await pitchController.resetPitch();
+        await sendWindowMessage("resetPitch");
     });
 
     onMessage("getPitch", async () => {
-        return pitchController.getPitch();
+        const currentPitch = await sendWindowMessage("retrieveCurrentPitch");
+        return currentPitch ?? 0;
     });
 
     setupShortcutsBindings(settings, promtCall);
+
+
+
+    // Content script / main world communication
+
+    // ? may not expose to main world
+    // onWindowMessage("getConfig", async () => {
+    //     return config;
+    // });
+
+    onWindowMessage("getCommands", async () => {
+        return settings;
+    });
+
+    onWindowMessage("getExtensionWebAccessibleUrl", async () => {
+        return browser.runtime.getURL("");
+    });
+
 });
