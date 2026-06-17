@@ -41,7 +41,7 @@ export default defineBackground(async () => {
         browser.browserAction.setIcon({ path: "icon/16d.png" });
     }
 
-    async function getCurrentTab(): Promise<Browser.tabs.Tab> {
+    async function getCurrentTab(): Promise<Browser.tabs.Tab | undefined> {
         const tabs = await browser.tabs.query({
             active: true,
             currentWindow: true,

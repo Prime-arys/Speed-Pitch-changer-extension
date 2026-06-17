@@ -1,5 +1,5 @@
 import { storage } from "#imports";
-import { ConfigData } from "@/models/ConfigData";
+import type { ConfigData } from "@/models/ConfigData";
 
 export class ConfigStorage {
     private dataStorage: globalThis.WxtStorageItem<ConfigData, Record<string, never>>;

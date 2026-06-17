@@ -1,4 +1,4 @@
-import { CommandsData } from "@/models/CommandsData";
+import type { CommandsData } from "@/models/CommandsData";
 import { SEMITONE_MULTIPLIER, semitoneToRate } from "@/utils/semitone";
 
 const ELEM_SELECTOR = "video,audio";

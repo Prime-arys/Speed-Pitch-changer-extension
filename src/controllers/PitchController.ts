@@ -1,5 +1,5 @@
-import { CommandsData } from "@/models/CommandsData";
-import SignalsmithStretch, { StretchNode } from "signalsmith-stretch";
+import type { CommandsData } from "@/models/CommandsData";
+import SignalsmithStretch, { type StretchNode } from "signalsmith-stretch";
 import { SignalsmithStretchConfigurator } from "./SignalsmithStretchConfigurator";
 
 const ELEM_SELECTOR = "video,audio";

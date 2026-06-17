@@ -1,4 +1,4 @@
-import { ConfigData } from "@/models/ConfigData";
+import type { ConfigData } from "@/models/ConfigData";
 
 type ScriptsType = "main" | "hooks" | "hooks-optionnal";
 

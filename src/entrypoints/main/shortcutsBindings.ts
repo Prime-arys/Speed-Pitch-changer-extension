@@ -1,4 +1,4 @@
-import { CommandsData } from "@/models/CommandsData";
+import type { CommandsData } from "@/models/CommandsData";
 import { sendMessage } from "@/utils/messaging";
 
 export function setupShortcutsBindings(

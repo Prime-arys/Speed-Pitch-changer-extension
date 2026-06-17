@@ -37,5 +37,11 @@ export default defineConfig({
             "activeTab",
             "<all_urls>",
         ],
+        browser_specific_settings: {
+            gecko: {
+                data_collection_permissions: {},
+                id: "SpeedPitch_changer@despaa.id",
+            },
+        },
     },
 });

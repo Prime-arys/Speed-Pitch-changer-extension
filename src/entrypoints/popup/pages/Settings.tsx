@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
-import { CommandsData, Switch, CustomSpeedPitch, Radio } from "@/models/CommandsData";
+import type { CommandsData, Switch, CustomSpeedPitch, Radio } from "@/models/CommandsData";
 import { CommandsStorage } from "@/services/CommandsStorage";
 import { TextButton } from "../components";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
-import { ConfigData } from "@/models/ConfigData";
+import type { ConfigData } from "@/models/ConfigData";
 import { ConfigStorage } from "@/services/ConfigStorage";
 import { rateToSemitone } from "@/utils/semitone";
 
