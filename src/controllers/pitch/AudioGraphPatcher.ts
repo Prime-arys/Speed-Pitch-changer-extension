@@ -43,6 +43,8 @@ export class AudioGraphPatcher {
         HTMLMediaElement,
         { sourceNode: MediaElementAudioSourceNode; ctx: BaseAudioContext }
     >();
+    private ownContexts = new WeakSet<BaseAudioContext>();
+    private pageOwnsSources = false;
 
     constructor() {
         this.install();
@@ -65,6 +67,22 @@ export class AudioGraphPatcher {
 
     hasSource(element: HTMLMediaElement): boolean {
         return this.sources.has(element);
+    }
+
+    /**
+     * True once the page has created its own MediaElementAudioSourceNode. Such
+     * pages route their elements to the destination themselves (handled by
+     * interception), so the fallback must not also source elements — it would
+     * race the page for pooled or just-switched elements and bind them to the
+     * wrong context.
+     */
+    pageOwnsMediaSources(): boolean {
+        return this.pageOwnsSources;
+    }
+
+    /** Register a context we created, so its source calls aren't read as the page's. */
+    markOwnContext(ctx: BaseAudioContext): void {
+        this.ownContexts.add(ctx);
     }
 
     onConnectToDestination(listener: ConnectListener): void {
@@ -133,8 +151,17 @@ export class AudioGraphPatcher {
                 this: AudioContext,
                 element: HTMLMediaElement
             ) {
+                if (!patcher.ownContexts.has(this)) {
+                    patcher.pageOwnsSources = true;
+                }
                 const existing = patcher.sources.get(element);
-                if (existing) return existing.sourceNode;
+                // Only safe to reuse within the same context; a foreign node
+                // can't be connected into another context's graph. Otherwise
+                // let the native call throw the standard "already connected"
+                // error rather than handing back a cross-context node.
+                if (existing && existing.ctx === this) {
+                    return existing.sourceNode;
+                }
                 const node = rawCreateMES.call(this, element);
                 patcher.sources.set(element, { sourceNode: node, ctx: this });
                 return node;
