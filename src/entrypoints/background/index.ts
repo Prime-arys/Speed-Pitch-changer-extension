@@ -30,6 +30,14 @@ export default defineBackground(async () => {
             "MAIN",
             config
         );
+        // Pitch processing runs in the MAIN world and patches the page's own
+        // AudioContext, so it must be installed before the page builds its graph.
+        await scriptsRegister.registerScript(
+            "main-world",
+            "document_start",
+            "MAIN",
+            config
+        );
         await scriptsRegister.registerScript(
             "main",
             "document_idle",

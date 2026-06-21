@@ -1,11 +1,12 @@
 import { ConfigData } from "@/models/ConfigData";
 
-type ScriptsType = "main" | "hooks" | "hooks-optionnal";
+type ScriptsType = "main" | "hooks" | "hooks-optionnal" | "main-world";
 
 const SCRIPTS: Record<ScriptsType, string[]> = {
-    main: ["main"],
-    hooks: ["hooks"],
-    "hooks-optionnal": ["hooks-optionnal"],
+    main: ["main"], // Content script (Isolated)
+    hooks: ["hooks"], // Main world 
+    "hooks-optionnal": ["hooks-optionnal"], // Main world
+    "main-world": ["main-world"], // Main world
 };
 
 class ScriptsRegister {

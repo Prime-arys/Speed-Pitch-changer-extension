@@ -34,9 +34,12 @@ export class SpeedController {
         }
     }
 
+    getDOMMediaElements(): NodeListOf<HTMLMediaElement> {
+        return document.querySelectorAll<HTMLMediaElement>(ELEM_SELECTOR);
+    }
+
     updateVideos(): void {
-        const elements =
-            document.querySelectorAll<HTMLMediaElement>(ELEM_SELECTOR);
+        const elements = this.getDOMMediaElements();
         elements.forEach((element) => {
             const mediaElement = element as HTMLMediaElement & {
                 mozPreservesPitch?: boolean;
