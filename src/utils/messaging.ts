@@ -16,9 +16,7 @@ export interface ProtocolMap {
     callSpeedDown(): Promise<void>;
     callResetSpeed(): Promise<void>;
     callPromptSpeed(): Promise<void>;
-    callPitchUp(): Promise<void>;
-    callPitchDown(): Promise<void>;
-    callResetPitch(): Promise<void>;
+    callSetPitch(semitones: number): Promise<void>;
 
     // (popup)
     retrieveCurrentPlaybackRate(): Promise<number | undefined>;
@@ -34,9 +32,7 @@ export interface ProtocolMap {
     promptSpeed(): Promise<void>;
     promptSpeedPropagation(playbackRate: number): Promise<void>;
     getPlaybackRate(): Promise<number>;
-    pitchUp(): Promise<void>;
-    pitchDown(): Promise<void>;
-    resetPitch(): Promise<void>;
+    setPitch(semitones: number): Promise<void>;
     getPitch(): Promise<number>;
 }
 

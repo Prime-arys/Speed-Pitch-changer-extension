@@ -8,7 +8,6 @@ export class CommandsStorage {
         this.dataStorage = storage.defineItem<CommandsData>("local:commands", {
             version: 1,
             init: () => defaultCommandsStorage,
-            
         });
     }
 
@@ -52,5 +51,10 @@ export const defaultCommandsStorage: CommandsData = {
                 multiply_divide: 1.2,
             },
         },
+    },
+    pitch: {
+        engine: "signalsmith-stretch",
+        range: 12,
+        showInput: false,
     },
 };

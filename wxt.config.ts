@@ -23,8 +23,9 @@ export default defineConfig({
         web_accessible_resources: [
             {
                 resources: [
-                    "main-world-injected.js",
-                    "signalsmith-stretch-worklet.js",
+                    "main-world.js",
+                    "soundtouch-processor.js",
+                    "signalsmith-stretch-worklet.js"
                 ],
                 matches: ["<all_urls>"],
             },

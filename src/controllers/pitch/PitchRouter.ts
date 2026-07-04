@@ -1,10 +1,9 @@
-import type { StretchNode } from "signalsmith-stretch";
 import { AudioGraphPatcher } from "./AudioGraphPatcher";
-import { StretchNodeRegistry } from "./StretchNodeRegistry";
+import { PitchNodeRegistry } from "./PitchNodeRegistry";
 
 /**
  * A recorded connection from some node to its context's `destination`.
- * `wet` tracks whether it is currently routed through the stretch node.
+ * `wet` tracks whether it is currently routed through the pitch node.
  */
 interface DestConnection {
     node: AudioNode;
@@ -15,8 +14,8 @@ interface DestConnection {
 
 /**
  * Tracks every `node -> destination` connection and keeps each one routed to
- * match the engaged state: wet (`node -> stretch -> destination`) when pitch is
- * engaged, dry (`node -> destination`) otherwise.
+ * match the engaged state: wet (`node -> pitch node -> destination`) when
+ * pitch is engaged, dry (`node -> destination`) otherwise.
  */
 export class PitchRouter {
     private connections = new Set<DestConnection>();
@@ -24,7 +23,7 @@ export class PitchRouter {
 
     constructor(
         private patcher: AudioGraphPatcher,
-        private registry: StretchNodeRegistry,
+        private registry: PitchNodeRegistry,
         private isEngaged: () => boolean
     ) {}
 
@@ -77,7 +76,7 @@ export class PitchRouter {
             conn.wet = true; // optimistic; prevents duplicate rerouting
             this.registry
                 .ensure(conn.ctx)
-                .then((stretch) => this.routeWet(conn, stretch))
+                .then((handle) => this.routeWet(conn, handle.node))
                 .catch(() => {
                     conn.wet = false;
                 });
@@ -87,9 +86,9 @@ export class PitchRouter {
         }
     }
 
-    private routeWet(conn: DestConnection, stretch: StretchNode): void {
+    private routeWet(conn: DestConnection, pitchNode: AudioNode): void {
         try {
-            this.patcher.connect(conn.node, stretch);
+            this.patcher.connect(conn.node, pitchNode);
         } catch {
             conn.wet = false;
             return;
@@ -103,15 +102,15 @@ export class PitchRouter {
     }
 
     private routeDry(conn: DestConnection): void {
-        const stretch = this.registry.get(conn.ctx);
+        const pitchNode = this.registry.get(conn.ctx);
         try {
             this.patcher.connect(conn.node, conn.dest);
         } catch {
             /* ignore */
         }
-        if (stretch) {
+        if (pitchNode) {
             try {
-                this.patcher.disconnect(conn.node, stretch);
+                this.patcher.disconnect(conn.node, pitchNode);
             } catch {
                 /* ignore */
             }

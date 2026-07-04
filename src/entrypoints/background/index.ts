@@ -110,24 +110,11 @@ export default defineBackground(async () => {
         }
     });
 
-    onMessage("callPitchUp", async () => {
+    onMessage("callSetPitch", async (message) => {
         const tab = await getCurrentTab();
         if (tab?.id) {
-            sendMessage("pitchUp", undefined, { tabId: tab.id });
-        }
-    });
-
-    onMessage("callPitchDown", async () => {
-        const tab = await getCurrentTab();
-        if (tab?.id) {
-            sendMessage("pitchDown", undefined, { tabId: tab.id });
-        }
-    });
-
-    onMessage("callResetPitch", async () => {
-        const tab = await getCurrentTab();
-        if (tab?.id) {
-            sendMessage("resetPitch", undefined, { tabId: tab.id });
+            // Awaited so the popup can refetch the pitch right after.
+            await sendMessage("setPitch", message.data, { tabId: tab.id });
         }
     });
 

@@ -2,8 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
-import { CommandsData, Switch, CustomSpeedPitch, Radio } from "@/models/CommandsData";
-import { CommandsStorage } from "@/services/CommandsStorage";
+import {
+    CommandsData,
+    Switch,
+    CustomSpeedPitch,
+    Radio,
+    PitchEngine,
+    PitchRange,
+} from "@/models/CommandsData";
+import {
+    CommandsStorage,
+    defaultCommandsStorage,
+} from "@/services/CommandsStorage";
 import { TextButton } from "../components";
 
 // Sub-components
@@ -223,6 +233,19 @@ function Settings(): React.JSX.Element {
         setDraft(newDraft);
     };
 
+    const updatePitchProcessing = (
+        change: Partial<CommandsData["pitch"]>,
+    ) => {
+        const newDraft = structuredClone(draft);
+        newDraft.pitch = {
+            ...(newDraft.pitch ?? defaultCommandsStorage.pitch),
+            ...change,
+        };
+        setDraft(newDraft);
+    };
+
+    const pitchProcessing = draft.pitch ?? defaultCommandsStorage.pitch;
+
     return (
         <div className="text-center bg-secondary w-full box-border">
             <h4 className="text-secondary font-title text-lg m-0 underline py-1.5 bg-primary">
@@ -351,6 +374,54 @@ function Settings(): React.JSX.Element {
                         ),
                 }}
             >
+                {/* Worklet engine used for pitch shifting */}
+                <div className="flex items-center gap-1.5 mx-2 my-1.5 text-base font-body-secondary text-left">
+                    <label htmlFor="pitch-engine">engine :</label>
+                    <select
+                        id="pitch-engine"
+                        className="px-1 py-0.5 text-sm bg-white border border-gray-300 rounded cursor-pointer"
+                        value={pitchProcessing.engine}
+                        onChange={(e) =>
+                            updatePitchProcessing({
+                                engine: e.target.value as PitchEngine,
+                            })
+                        }
+                    >
+                        <option value="signalsmith-stretch">
+                            Signalsmith Stretch
+                        </option>
+                        <option value="soundtouch">SoundTouch</option>
+                    </select>
+                </div>
+
+                {/* Exact-value input field visibility in the popup */}
+                <SwitchRow
+                    id="pitch-input-toggle"
+                    label="pitch input field"
+                    checked={pitchProcessing.showInput ?? false}
+                    onChange={(checked) =>
+                        updatePitchProcessing({ showInput: checked })
+                    }
+                />
+
+                {/* Semitone range exposed by the popup controls */}
+                <div className="flex items-center gap-1.5 mx-2 my-1.5 text-base font-body-secondary text-left">
+                    <label htmlFor="pitch-range">range :</label>
+                    <select
+                        id="pitch-range"
+                        className="px-1 py-0.5 text-sm bg-white border border-gray-300 rounded cursor-pointer"
+                        value={pitchProcessing.range}
+                        onChange={(e) =>
+                            updatePitchProcessing({
+                                range: Number(e.target.value) as PitchRange,
+                            })
+                        }
+                    >
+                        <option value={12}>-12 … +12 semitones</option>
+                        <option value={24}>-24 … +24 semitones</option>
+                    </select>
+                </div>
+
                 <RadioGroup
                     name="pitch-method"
                     selectedValue={draft.radio.pitch.preset}

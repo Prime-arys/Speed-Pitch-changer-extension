@@ -5,10 +5,10 @@ type ConnectListener = (
 ) => void;
 type DisconnectListener = (node: AudioNode) => void;
 
-// Marks AudioNodes the patch must ignore (our own stretch nodes), so rerouting
-// never feeds a stretch node back into itself.
+// Marks AudioNodes the patch must ignore (our own pitch nodes), so rerouting
+// never feeds a pitch node back into itself.
 interface OwnedNode extends AudioNode {
-    __spcStretch?: boolean;
+    __spcPitchNode?: boolean;
 }
 
 /**
@@ -17,7 +17,7 @@ interface OwnedNode extends AudioNode {
  *
  *  - `AudioNode.prototype.connect`: after the real connection is made, any
  *    connection to `ctx.destination` is reported to listeners (which splice in
- *    a stretch node). The dry connection happening first means a failed worklet
+ *    a pitch node). The dry connection happening first means a failed worklet
  *    load degrades to unprocessed audio rather than silence.
  *  - `AudioNode.prototype.disconnect`: reported so stale records can be pruned.
  *  - `AudioContext.prototype.createMediaElementSource`: tracked so the fallback
@@ -62,7 +62,7 @@ export class AudioGraphPatcher {
     }
 
     markOwn(node: AudioNode): void {
-        (node as OwnedNode).__spcStretch = true;
+        (node as OwnedNode).__spcPitchNode = true;
     }
 
     hasSource(element: HTMLMediaElement): boolean {
@@ -118,7 +118,7 @@ export class AudioGraphPatcher {
             let reroutable = false;
             try {
                 reroutable =
-                    !(this as OwnedNode).__spcStretch &&
+                    !(this as OwnedNode).__spcPitchNode &&
                     dest instanceof AudioNode &&
                     dest === this.context.destination;
             } catch {

@@ -7,12 +7,6 @@ export default defineUnlistedScript(() => {
     const pitchController = new PitchController();
     pitchController.init();
 
-    onWindowMessage("pitchUp", ({ data }) => pitchController.pitchUp(data ?? 1));
-    onWindowMessage("pitchDown", ({ data }) =>
-        pitchController.pitchDown(data ?? 1)
-    );
-    onWindowMessage("resetPitch", () => pitchController.resetPitch());
-    onWindowMessage("retrieveCurrentPitch", async () =>
-        pitchController.getPitch()
-    );
+    onWindowMessage("setPitch", ({ data }) => pitchController.setPitch(data ?? 0));
+    onWindowMessage("getPitch", async () => pitchController.getPitch());
 });

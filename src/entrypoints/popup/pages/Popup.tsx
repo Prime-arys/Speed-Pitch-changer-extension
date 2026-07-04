@@ -3,19 +3,18 @@ import { Link } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
 import { ConfigData } from "@/models/ConfigData";
+import { CommandsData } from "@/models/CommandsData";
 import { ConfigStorage } from "@/services/ConfigStorage";
 import { rateToSemitone } from "@/utils/semitone";
 
 // Components
-import { ToggleSwitch, IconButton, ValueButton } from "../components";
+import { ToggleSwitch, IconButton, PitchControl } from "../components";
 
 // Import button icons
 import minusIcon from "@/assets/buttons/minus.svg";
 import resetIcon from "@/assets/buttons/reset.svg";
 import plusIcon from "@/assets/buttons/plus.svg";
 import promptIcon from "@/assets/buttons/prompt.svg";
-import flatIcon from "@/assets/buttons/flat.svg";
-import sharpIcon from "@/assets/buttons/sharp.svg";
 
 async function updateConfig(newConfig: ConfigData): Promise<void> {
     const configStorage = new ConfigStorage();
@@ -55,6 +54,15 @@ function Popup(): React.JSX.Element {
         queryKey: ["currentDomain"],
         queryFn: async () => {
             const response = await sendMessage("getCurrentDomain");
+            return response;
+        },
+    });
+
+    // Commands hold the configured pitch step for the flat/sharp buttons.
+    const commandsQuery = useQuery<CommandsData>({
+        queryKey: ["commandsData"],
+        queryFn: async () => {
+            const response = await sendMessage("getCommands");
             return response;
         },
     });
@@ -109,6 +117,20 @@ function Popup(): React.JSX.Element {
         refetchOnWindowFocus: true,
         enabled: !!activeDomain.data && isEnabled,
     });
+
+    const pitchStep =
+        commandsQuery.data?.radio.pitch.preset === 2
+            ? commandsQuery.data.radio.pitch.custom.plus_minus
+            : 1;
+
+    const pitchRange = commandsQuery.data?.pitch?.range ?? 12;
+    const showPitchInput = commandsQuery.data?.pitch?.showInput ?? false;
+
+    const setPitch = async (semitones: number) => {
+        queryClient.setQueryData(["pitch"], semitones); // optimistic
+        await sendMessage("callSetPitch", semitones);
+        queryClient.invalidateQueries({ queryKey: ["pitch"] });
+    };
 
     return (
         <div className="text-center overflow-hidden w-full box-border">
@@ -178,40 +200,13 @@ function Popup(): React.JSX.Element {
             </p>
 
             {/* Pitch Controls */}
-            <div className="flex m-auto items-center justify-center align-baseline mt-3 px-3">
-                <IconButton
-                    id="pitch-decrease"
-                    src={flatIcon}
-                    alt="Decrease Pitch"
-                    onClick={async () => {
-                        await sendMessage("callPitchDown");
-                        queryClient.invalidateQueries({ queryKey: ["pitch"] });
-                    }}
-                />
-                <ValueButton
-                    id="pitch-value"
-                    value={
-                        pitch.data !== undefined
-                            ? pitch.data
-                                  .toFixed(3)
-                                  .replace(/\.?0+$/, "") // trim trailing zeros / dot
-                            : "0"
-                    }
-                    onClick={async () => {
-                        await sendMessage("callResetPitch");
-                        queryClient.invalidateQueries({ queryKey: ["pitch"] });
-                    }}
-                />
-                <IconButton
-                    id="pitch-increase"
-                    src={sharpIcon}
-                    alt="Increase Pitch"
-                    onClick={async () => {
-                        await sendMessage("callPitchUp");
-                        queryClient.invalidateQueries({ queryKey: ["pitch"] });
-                    }}
-                />
-            </div>
+            <PitchControl
+                value={pitch.data}
+                step={pitchStep}
+                range={pitchRange}
+                showInput={showPitchInput}
+                onSet={setPitch}
+            />
 
             {/* Domain Controls */}
             <div className="flex m-auto items-center justify-center align-baseline mt-3 gap-2 px-3">

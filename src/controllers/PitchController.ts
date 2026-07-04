@@ -1,29 +1,28 @@
 import { AudioGraphPatcher } from "./pitch/AudioGraphPatcher";
-import { StretchNodeRegistry } from "./pitch/StretchNodeRegistry";
+import { PitchNodeRegistry } from "./pitch/PitchNodeRegistry";
 import { PitchRouter } from "./pitch/PitchRouter";
 import { MediaElementSourcer } from "./pitch/MediaElementSourcer";
 
 /**
  * Real-time pitch shifting that runs in the MAIN world. Rather than creating a
  * competing AudioContext (which fights the page over an element's single
- * allowed source node), it patches the page's own graph and splices a stretch
- * node before the destination. This class is just the orchestrator; the work is
- * split across composed collaborators:
+ * allowed source node), it patches the page's own graph and splices a pitch
+ * worklet node (engine chosen in settings) before the destination. This class
+ * is just the orchestrator; the work is split across composed collaborators:
  *
  *  - {@link AudioGraphPatcher}  – patches the Web Audio prototypes, reports
  *    destination connections, tracks element sources.
- *  - {@link StretchNodeRegistry} – owns the worklet module and per-context
- *    stretch nodes.
+ *  - {@link PitchNodeRegistry}  – owns the worklet module and per-context
+ *    pitch nodes.
  *  - {@link PitchRouter}        – keeps each connection routed wet/dry.
  *  - {@link MediaElementSourcer} – sources plain media elements the site never
  *    routes through Web Audio.
  */
 export class PitchController {
     private semitones = 0;
-    private enabled = true;
 
     private readonly patcher: AudioGraphPatcher;
-    private readonly registry: StretchNodeRegistry;
+    private readonly registry: PitchNodeRegistry;
     private readonly router: PitchRouter;
     private readonly sourcer: MediaElementSourcer;
 
@@ -33,7 +32,7 @@ export class PitchController {
         // The patches must be installed at document_start, before the page
         // builds its audio graph, so all wiring happens here in the constructor.
         this.patcher = new AudioGraphPatcher();
-        this.registry = new StretchNodeRegistry(this.patcher);
+        this.registry = new PitchNodeRegistry(this.patcher);
         this.router = new PitchRouter(this.patcher, this.registry, isEngaged);
         this.sourcer = new MediaElementSourcer(this.patcher, isEngaged);
 
@@ -43,9 +42,9 @@ export class PitchController {
         this.patcher.onDisconnect((node) => this.router.untrack(node));
     }
 
-    /** Pitch is "engaged" only when enabled and actually shifting. */
+    /** Pitch is "engaged" only when actually shifting. */
     private get engaged(): boolean {
-        return this.enabled && this.semitones !== 0;
+        return this.semitones !== 0;
     }
 
     /** Start discovering media elements. Patches are already installed. */
@@ -57,12 +56,12 @@ export class PitchController {
      * Set the pitch shift in semitones for every routed element.
      * @param semitones - positive raises pitch, negative lowers it.
      */
-    async setPitch(semitones: number): Promise<void> {
+    setPitch(semitones: number): void {
         const wasEngaged = this.engaged;
         this.semitones = semitones;
 
         if (this.engaged) this.sourcer.attachPlain();
-        await this.registry.applySemitones(semitones);
+        this.registry.applySemitones(semitones);
         if (this.engaged !== wasEngaged) this.router.reconcileAll();
 
         console.log("[PitchController] Set pitch to", semitones, "semitones");
@@ -71,32 +70,5 @@ export class PitchController {
     /** Current pitch shift in semitones (0 by default). */
     getPitch(): number {
         return this.semitones;
-    }
-
-    async pitchUp(amount: number = 1): Promise<void> {
-        await this.setPitch(this.semitones + amount);
-    }
-
-    async pitchDown(amount: number = 1): Promise<void> {
-        await this.setPitch(this.semitones - amount);
-    }
-
-    async resetPitch(): Promise<void> {
-        await this.setPitch(0);
-    }
-
-    /** Enable or disable pitch processing without losing the current value. */
-    async setEnabled(enabled: boolean): Promise<void> {
-        const wasEngaged = this.engaged;
-        this.enabled = enabled;
-
-        if (this.engaged) this.sourcer.attachPlain();
-        if (this.engaged !== wasEngaged) this.router.reconcileAll();
-
-        console.log("[PitchController] Enabled:", enabled);
-    }
-
-    isActive(): boolean {
-        return this.enabled;
     }
 }

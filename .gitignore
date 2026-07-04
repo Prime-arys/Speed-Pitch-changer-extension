@@ -27,3 +27,6 @@ web-ext.config.ts
 
 # Auto generated files (postinstall artifacts)
 public/signalsmith-stretch-worklet.js
+public/soundtouch-processor.js
+
+tests/

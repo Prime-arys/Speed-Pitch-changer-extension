@@ -16,18 +16,14 @@ export default defineUnlistedScript(async () => {
     const speedController = new SpeedController(settings);
     speedController.init();
 
-    // Pitch processing runs in the MAIN world (see entrypoints/main-world) so it
-    // can patch the page's own AudioContext. Resolve the per-keypress semitone
-    // step from settings here, where the settings live.
-    const pitchStep = (): number =>
-        settings?.radio.pitch.preset === 2
-            ? settings.radio.pitch.custom.plus_minus
-            : 1;
-
-    // The SignalsmithStretchConfigurator (running in the MAIN world) asks the
-    // content script for the extension's base URL to resolve the worklet path.
+    // The pitch pipeline (running in the MAIN world) asks the content script
+    // for the extension's base URL to resolve worklet paths, and for the
+    // engine selected in settings.
     onWindowMessage("getExtensionWebAccessibleUrl", async () =>
         browser.runtime.getURL("/")
+    );
+    onWindowMessage("getPitchEngine", async () =>
+        settings?.pitch?.engine ?? "signalsmith-stretch"
     );
 
     function promtCall(): void {
@@ -70,20 +66,14 @@ export default defineUnlistedScript(async () => {
 
 
 
-    onMessage("pitchUp", async () => {
-        await sendWindowMessage("pitchUp", pitchStep());
-    });
-
-    onMessage("pitchDown", async () => {
-        await sendWindowMessage("pitchDown", pitchStep());
-    });
-
-    onMessage("resetPitch", async () => {
-        await sendWindowMessage("resetPitch");
+    // Pitch processing runs in the MAIN world (see entrypoints/main-world),
+    // relayed through window messaging.
+    onMessage("setPitch", async (message) => {
+        await sendWindowMessage("setPitch", message.data);
     });
 
     onMessage("getPitch", async () => {
-        return (await sendWindowMessage("retrieveCurrentPitch")) ?? 0;
+        return (await sendWindowMessage("getPitch")) ?? 0;
     });
 
     setupShortcutsBindings(settings, promtCall);

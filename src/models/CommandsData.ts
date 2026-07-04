@@ -26,8 +26,23 @@ export type Commands = {
     speedSet: KeyboardEvent["code"];
 };
 
+export const PITCH_ENGINES = ["signalsmith-stretch", "soundtouch"] as const;
+export type PitchEngine = (typeof PITCH_ENGINES)[number];
+
+export type PitchRange = 12 | 24;
+
+export type PitchProcessing = {
+    /** Worklet implementation used for pitch shifting. */
+    engine: PitchEngine;
+    /** Semitone limit exposed by the popup controls (±range). */
+    range: PitchRange;
+    /** Show the exact-value pitch input field in the popup. */
+    showInput: boolean;
+};
+
 export type CommandsData = {
     commands: Commands;
     switch: Switch;
     radio: Radio;
+    pitch: PitchProcessing;
 };

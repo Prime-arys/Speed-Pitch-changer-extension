@@ -90,7 +90,7 @@ export class MediaElementSourcer {
         try {
             // The patched createMediaElementSource records the source and the
             // patched connect tracks the destination link, routing it through
-            // the stretch node.
+            // the pitch node.
             const source = ctx.createMediaElementSource(el);
             source.connect(ctx.destination);
         } catch {
