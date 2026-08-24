@@ -1,6 +1,5 @@
 import type { PitchSettings } from "@/effects/PitchEffect";
 import {
-    DEFAULT_PITCH_ENGINE,
     type CommandsData,
     type PitchEngine,
 } from "@/models/CommandsData";
@@ -29,7 +28,7 @@ export class PitchController {
 
     /** Semitones added by one step, per the configured preset. */
     private get step(): number {
-        switch (this.settings.radio?.pitch.preset) {
+        switch (this.settings.radio.pitch.preset) {
             case 2:
                 return this.settings.radio.pitch.custom.plus_minus;
             case 1:
@@ -66,7 +65,7 @@ export class PitchController {
 
     /** The engine picked in the settings (the default one until set). */
     private get engine(): PitchEngine {
-        return this.settings.pitch?.engine ?? DEFAULT_PITCH_ENGINE;
+        return this.settings.pitch.engine;
     }
 
     private get value(): PitchSettings {

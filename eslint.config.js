@@ -10,7 +10,7 @@ import { defineConfig } from "eslint/config";
 
 export default defineConfig([
   // Base configuration for all files
-  { ignores: [".wxt/", ".output/", "public/signalsmith-stretch-worklet.js"] },
+  { ignores: [".wxt/", ".output/", "public/signalsmith-stretch-worklet.js", "public/soundtouch-processor.js"] },
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
 

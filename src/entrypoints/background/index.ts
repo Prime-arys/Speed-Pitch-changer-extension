@@ -4,7 +4,7 @@ import { onMessage } from "@/utils/messaging";
 import { scriptsRegister } from "@/services/ScriptsRegister";
 
 export default defineBackground(async () => {
-    console.log("Hello background!", { id: browser.runtime.id });
+    //console.log("Hello background!", { id: browser.runtime.id });
     browser.tabs.reload();
 
     const configStorage = new ConfigStorage();
@@ -13,8 +13,8 @@ export default defineBackground(async () => {
     const config = await configStorage.load();
     const commands = await commandsStorage.load();
 
-    console.log("Config loaded:", config);
-    console.log("Commands loaded:", commands);
+    //console.log("Config loaded:", config);
+    //console.log("Commands loaded:", commands);
 
     if (config.enabled) {
         await scriptsRegister.registerScript(
@@ -65,7 +65,6 @@ export default defineBackground(async () => {
 
     /// Calling action from popup or content script to Background to Content Script
     onMessage("callSpeedUp", async () => {
-        console.log("callSpeedUp received");
         const tab = await getCurrentTab();
         if (tab?.id) {
             sendMessage("speedUp", undefined, { tabId: tab.id });

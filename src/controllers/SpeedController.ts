@@ -4,6 +4,7 @@ import { sendWindowMessage } from "@/utils/messaging-window";
 import { SEMITONE_MULTIPLIER, semitoneToRate } from "@/utils/semitone";
 
 function parseSemitone(val: string): number {
+    // ? may avoid magic "t"
     if (val[0] === "t") {
         return semitoneToRate(parseFloat(val.slice(1)));
     }
@@ -24,7 +25,7 @@ export class SpeedController {
 
     constructor(settings: CommandsData) {
         this.settings = settings;
-        this.preservesPitch = settings.switch?.preserve_pitch ?? true;
+        this.preservesPitch = settings.switch.preserve_pitch;
     }
 
     /** Send the initial state, so the page starts with the configured options. */
@@ -35,7 +36,7 @@ export class SpeedController {
     speedUp(): void {
         this.playbackRate = this.updateSpeedUp(
             this.playbackRate,
-            this.settings.radio?.speed.preset ?? 1
+            this.settings.radio.speed.preset
         );
         this.push();
     }
@@ -43,7 +44,7 @@ export class SpeedController {
     speedDown(): void {
         this.playbackRate = this.updateSpeedDown(
             this.playbackRate,
-            this.settings.radio?.speed.preset ?? 1
+            this.settings.radio.speed.preset
         );
         this.push();
     }
@@ -55,7 +56,7 @@ export class SpeedController {
 
     promptSpeed(): void {
         const input = prompt(
-            "New playback speed, t[value] to set as semitone:",
+            "New playback speed, t[value] to set as semitone:", // ? may avoid magic "t"
             this.playbackRate.toString()
         );
         if (input) {
@@ -103,19 +104,11 @@ export class SpeedController {
                 return playbackRate * SEMITONE_MULTIPLIER;
             case 2:
                 return (
-                    playbackRate *
-                    parseFloat(
-                        this.settings.radio?.speed.custom.multiply_divide.toString() ||
-                            "1"
-                    )
+                    playbackRate * this.settings.radio.speed.custom.multiply_divide
                 );
             case 3:
                 return (
-                    playbackRate +
-                    parseFloat(
-                        this.settings.radio?.speed.custom.plus_minus.toString() ||
-                            "0"
-                    )
+                    playbackRate + this.settings.radio.speed.custom.plus_minus
                 );
             default:
                 return playbackRate;
@@ -128,19 +121,11 @@ export class SpeedController {
                 return playbackRate / SEMITONE_MULTIPLIER;
             case 2:
                 return (
-                    playbackRate /
-                    parseFloat(
-                        this.settings.radio?.speed.custom.multiply_divide.toString() ||
-                            "1"
-                    )
+                    playbackRate / this.settings.radio.speed.custom.multiply_divide
                 );
             case 3:
                 return (
-                    playbackRate -
-                    parseFloat(
-                        this.settings.radio?.speed.custom.plus_minus.toString() ||
-                            "0"
-                    )
+                    playbackRate - this.settings.radio?.speed.custom.plus_minus
                 );
             default:
                 return playbackRate;

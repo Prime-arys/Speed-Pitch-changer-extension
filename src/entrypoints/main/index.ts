@@ -12,7 +12,7 @@ import { setupShortcutsBindings } from "./shortcutsBindings";
  * `entrypoints/main-world`); the controllers here only send values over.
  */
 export default defineUnlistedScript(async () => {
-    console.log("Hello from isolated world");
+    //console.log("Hello from isolated world");
 
     // Get settings from background
     const settings = await sendMessage("getCommands", undefined);
@@ -23,12 +23,6 @@ export default defineUnlistedScript(async () => {
     const pitchController = new PitchController(settings);
     pitchController.init();
 
-    // The MAIN world has no access to browser.runtime; it asks us to resolve
-    // web-accessible resources (the pitch worklet).
-    onWindowMessage("getExtensionUrl", async ({ data }) =>
-        (browser.runtime.getURL as (path: string) => string)(data)
-    );
-
     function promtCall(): void {
         speedController.promptSpeed();
         sendMessage(
@@ -38,12 +32,14 @@ export default defineUnlistedScript(async () => {
     }
 
     // Listen to messages
-    /* onMessage("getCurrentDomain", async () => {
-        return window.location.hostname;
-    }); */ // ? Might be useless
+
+    // The MAIN world has no access to browser.runtime; it asks us to resolve
+    // web-accessible resources (the pitch worklet).
+    onWindowMessage("getExtensionUrl", async ({ data }) =>
+        (browser.runtime.getURL as (path: string) => string)(data)
+    );
 
     onMessage("speedUp", async () => {
-        console.log("speedUp received");
         speedController.speedUp();
     });
 
