@@ -1,5 +1,8 @@
 import { storage } from "#imports";
-import type { CommandsData } from "@/models/CommandsData";
+import {
+    DEFAULT_PITCH_ENGINE,
+    type CommandsData,
+} from "@/models/CommandsData";
 
 export class CommandsStorage {
     private dataStorage: globalThis.WxtStorageItem<CommandsData, Record<string, never>>;
@@ -52,5 +55,8 @@ export const defaultCommandsStorage: CommandsData = {
                 multiply_divide: 1.2,
             },
         },
+    },
+    pitch: {
+        engine: DEFAULT_PITCH_ENGINE,
     },
 };

@@ -1,5 +1,6 @@
 import { defineWindowMessaging } from "@webext-core/messaging/page";
 import type { MediaSummary } from "@/media/Media";
+import type { PitchSettings } from "@/effects/PitchEffect";
 import type { SpeedSettings } from "@/effects/SpeedEffect";
 
 /**
@@ -16,8 +17,8 @@ export interface WindowProtocolMap {
      */
     setSpeed(settings: SpeedSettings): Promise<void>;
     getSpeed(): Promise<SpeedSettings>;
-    setPitch(semitones: number): Promise<void>;
-    getPitch(): Promise<number>;
+    setPitch(settings: PitchSettings): Promise<void>;
+    getPitch(): Promise<PitchSettings>;
     /** What the registry currently holds, for the popup and for debugging. */
     getDetectedMedia(): Promise<MediaSummary>;
 

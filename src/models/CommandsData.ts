@@ -26,8 +26,21 @@ export type Commands = {
     speedSet: KeyboardEvent["code"];
 };
 
+/** Worklet implementations available for pitch shifting. */
+export const PITCH_ENGINES = ["signalsmith-stretch", "soundtouch"] as const;
+export type PitchEngine = (typeof PITCH_ENGINES)[number];
+
+/** Engine used until the user picks one. */
+export const DEFAULT_PITCH_ENGINE: PitchEngine = "signalsmith-stretch";
+
+export type PitchProcessing = {
+    /** Worklet implementation used for pitch shifting. */
+    engine: PitchEngine;
+};
+
 export type CommandsData = {
     commands: Commands;
     switch: Switch;
     radio: Radio;
+    pitch: PitchProcessing;
 };

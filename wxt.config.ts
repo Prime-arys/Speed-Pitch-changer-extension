@@ -23,8 +23,10 @@ export default defineConfig({
         web_accessible_resources: [
             {
                 resources: [
-                    "main-world-injected.js",
+                    // Worklet scripts, loaded by AudioWorklet.addModule() from
+                    // the MAIN world.
                     "signalsmith-stretch-worklet.js",
+                    "soundtouch-processor.js",
                 ],
                 matches: ["<all_urls>"],
             },

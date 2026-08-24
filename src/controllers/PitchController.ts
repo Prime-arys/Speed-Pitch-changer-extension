@@ -1,4 +1,9 @@
-import type { CommandsData } from "@/models/CommandsData";
+import type { PitchSettings } from "@/effects/PitchEffect";
+import {
+    DEFAULT_PITCH_ENGINE,
+    type CommandsData,
+    type PitchEngine,
+} from "@/models/CommandsData";
 import { sendWindowMessage } from "@/utils/messaging-window";
 
 /**
@@ -59,9 +64,18 @@ export class PitchController {
         return this.semitones;
     }
 
-    /** Hand the current shift to the pitch effect running in the MAIN world. */
+    /** The engine picked in the settings (the default one until set). */
+    private get engine(): PitchEngine {
+        return this.settings.pitch?.engine ?? DEFAULT_PITCH_ENGINE;
+    }
+
+    private get value(): PitchSettings {
+        return { semitones: this.semitones, engine: this.engine };
+    }
+
+    /** Hand the current state to the pitch effect running in the MAIN world. */
     private push(): void {
-        sendWindowMessage("setPitch", this.semitones).catch((error) => {
+        sendWindowMessage("setPitch", this.value).catch((error) => {
             console.error("[PitchController] MAIN world unreachable", error);
         });
     }

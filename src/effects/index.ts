@@ -3,7 +3,7 @@ import { DEFAULT_PITCH, PitchEffect } from "./PitchEffect";
 import { DEFAULT_SPEED, SpeedEffect } from "./SpeedEffect";
 
 export { MediaEffect } from "./MediaEffect";
-export { PitchEffect, DEFAULT_PITCH } from "./PitchEffect";
+export { PitchEffect, DEFAULT_PITCH, type PitchSettings } from "./PitchEffect";
 export { SpeedEffect, DEFAULT_SPEED, type SpeedSettings } from "./SpeedEffect";
 
 /** Every effect the extension can apply to the media of a page. */

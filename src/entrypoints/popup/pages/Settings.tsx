@@ -2,7 +2,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
-import type { CommandsData, Switch, CustomSpeedPitch, Radio } from "@/models/CommandsData";
+import {
+    DEFAULT_PITCH_ENGINE,
+    PITCH_ENGINES,
+    type CommandsData,
+    type CustomSpeedPitch,
+    type PitchEngine,
+    type Radio,
+    type Switch,
+} from "@/models/CommandsData";
 import { CommandsStorage } from "@/services/CommandsStorage";
 import { TextButton } from "../components";
 
@@ -19,6 +27,12 @@ import minusIcon from "@/assets/buttons/minus.svg";
 import promptIcon from "@/assets/buttons/prompt.svg";
 import flatIcon from "@/assets/buttons/flat.svg";
 import sharpIcon from "@/assets/buttons/sharp.svg";
+
+/** Display name of each pitch engine. */
+const PITCH_ENGINE_LABELS: Record<PitchEngine, string> = {
+    "signalsmith-stretch": "Signalsmith Stretch",
+    soundtouch: "SoundTouch",
+};
 
 type CommandKey = keyof CommandsData["commands"];
 type CollapsibleSectionStates = {
@@ -211,6 +225,12 @@ function Settings(): React.JSX.Element {
         setPitchError(null);
     };
 
+    const updatePitchEngine = (engine: PitchEngine) => {
+        const newDraft = structuredClone(draft);
+        newDraft.pitch = { ...newDraft.pitch, engine };
+        setDraft(newDraft);
+    };
+
     const updatePitchCustom = (value: number) => {
         const newDraft = structuredClone(draft);
         if (value <= 0) {
@@ -377,6 +397,25 @@ function Settings(): React.JSX.Element {
                         },
                     ]}
                 />
+
+                {/* Worklet engine doing the pitch shifting */}
+                <div className="flex items-center gap-1.5 mx-2 my-1.5 text-base font-body-secondary text-left">
+                    <label htmlFor="pitch-engine">engine :</label>
+                    <select
+                        id="pitch-engine"
+                        className="px-1 py-0.5 text-sm bg-white border border-gray-300 rounded cursor-pointer"
+                        value={draft.pitch?.engine ?? DEFAULT_PITCH_ENGINE}
+                        onChange={(e) =>
+                            updatePitchEngine(e.target.value as PitchEngine)
+                        }
+                    >
+                        {PITCH_ENGINES.map((engine) => (
+                            <option key={engine} value={engine}>
+                                {PITCH_ENGINE_LABELS[engine]}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </CollapsibleSection>
 
             <hr className="m-0 p-0 border-0 h-px bg-linear-to-r from-gray-400 via-gray-600 to-gray-400" />
