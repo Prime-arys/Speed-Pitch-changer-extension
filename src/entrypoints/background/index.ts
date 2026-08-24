@@ -18,14 +18,14 @@ export default defineBackground(async () => {
 
     if (config.enabled) {
         await scriptsRegister.registerScript(
-            "hooks-optionnal",
+            "hooks-optional",
             "document_start",
             "MAIN",
             config,
             { specificDomainsOnly: true }
         );
         await scriptsRegister.registerScript(
-            "hooks",
+            "main-world",
             "document_start",
             "MAIN",
             config

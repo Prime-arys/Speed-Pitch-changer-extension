@@ -1,21 +1,33 @@
 import { sendMessage, onMessage } from "@/utils/messaging";
+import { onWindowMessage } from "@/utils/messaging-window";
 import { SpeedController } from "@/controllers/SpeedController";
 import { PitchController } from "@/controllers/PitchController";
 import { setupShortcutsBindings } from "./shortcutsBindings";
 
+/**
+ * Isolated world.
+ *
+ * Holds everything that needs the extension APIs: settings, shortcuts, the
+ * background messaging. Media themselves are handled in the MAIN world (see
+ * `entrypoints/main-world`); the controllers here only send values over.
+ */
 export default defineUnlistedScript(async () => {
     console.log("Hello from isolated world");
 
     // Get settings from background
     const settings = await sendMessage("getCommands", undefined);
 
-    // Initialize speed controller
     const speedController = new SpeedController(settings);
     speedController.init();
 
-    // Initialize pitch controller
     const pitchController = new PitchController(settings);
     pitchController.init();
+
+    // The MAIN world has no access to browser.runtime; it asks us to resolve
+    // web-accessible resources (the pitch worklet).
+    onWindowMessage("getExtensionUrl", async ({ data }) =>
+        (browser.runtime.getURL as (path: string) => string)(data)
+    );
 
     function promtCall(): void {
         speedController.promptSpeed();
@@ -55,18 +67,16 @@ export default defineUnlistedScript(async () => {
         return speedController.getPlaybackRate();
     });
 
-
-
     onMessage("pitchUp", async () => {
-        await pitchController.pitchUp();
+        pitchController.pitchUp();
     });
 
     onMessage("pitchDown", async () => {
-        await pitchController.pitchDown();
+        pitchController.pitchDown();
     });
 
     onMessage("resetPitch", async () => {
-        await pitchController.resetPitch();
+        pitchController.resetPitch();
     });
 
     onMessage("getPitch", async () => {

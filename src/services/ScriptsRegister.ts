@@ -1,18 +1,18 @@
 import type { ConfigData } from "@/models/ConfigData";
 
-type ScriptsType = "main" | "hooks" | "hooks-optionnal";
+type ScriptsType = "main" | "main-world" | "hooks-optional";
 
 const SCRIPTS: Record<ScriptsType, string[]> = {
-    main: ["main"],
-    hooks: ["hooks"],
-    "hooks-optionnal": ["hooks-optionnal"],
+    main: ["main"], // isolated world: settings, shortcuts, background messaging
+    "main-world": ["main-world"], // page world: media detection and effects
+    "hooks-optional": ["hooks-optional"], // page world: opt-in playbackRate guard
 };
 
 class ScriptsRegister {
     async registerScript(
         scriptName: ScriptsType,
         runAt: "document_start" | "document_end" | "document_idle",
-        world: "ISOLATED" | "MAIN" = "ISOLATED",
+        world: "ISOLATED" | "MAIN" = "ISOLATED", // 2 worlds: ISOLATED (default) and MAIN (for content scripts that need to run in the page context)
         config: ConfigData,
         options?: { specificDomainsOnly?: boolean }
     ): Promise<void> {

@@ -1,7 +1,7 @@
+import type { SpeedSettings } from "@/effects/SpeedEffect";
 import type { CommandsData } from "@/models/CommandsData";
+import { sendWindowMessage } from "@/utils/messaging-window";
 import { SEMITONE_MULTIPLIER, semitoneToRate } from "@/utils/semitone";
-
-const ELEM_SELECTOR = "video,audio";
 
 function parseSemitone(val: string): number {
     if (val[0] === "t") {
@@ -10,6 +10,13 @@ function parseSemitone(val: string): number {
     return parseFloat(val);
 }
 
+/**
+ * Speed commands, on the isolated side.
+ *
+ * Turns user intent (a shortcut, a popup button, a prompt) into a playback
+ * rate, following the presets in the settings, then hands that rate to the
+ * MAIN world where the media live. It never touches a media element itself.
+ */
 export class SpeedController {
     private playbackRate: number = 1;
     private preservesPitch: boolean;
@@ -20,36 +27,9 @@ export class SpeedController {
         this.preservesPitch = settings.switch?.preserve_pitch ?? true;
     }
 
+    /** Send the initial state, so the page starts with the configured options. */
     init(): void {
-        if (document) {
-            new MutationObserver(() => {
-                this.updateVideos();
-            }).observe(document, {
-                attributes: true,
-                childList: true,
-                characterData: true,
-                subtree: true,
-            });
-            this.updateVideos();
-        }
-    }
-
-    updateVideos(): void {
-        const elements =
-            document.querySelectorAll<HTMLMediaElement>(ELEM_SELECTOR);
-        elements.forEach((element) => {
-            const mediaElement = element as HTMLMediaElement & {
-                mozPreservesPitch?: boolean;
-                [key: string]: unknown;
-            };
-
-            mediaElement.playbackRate = this.playbackRate;
-            mediaElement.defaultPlaybackRate = this.playbackRate;
-            mediaElement[`playbackRate_origin`] = this.playbackRate;
-            mediaElement[`defaultPlaybackRate_origin`] = this.playbackRate;
-            mediaElement.mozPreservesPitch = this.preservesPitch;
-            mediaElement.preservesPitch = this.preservesPitch;
-        });
+        this.push();
     }
 
     speedUp(): void {
@@ -57,7 +37,7 @@ export class SpeedController {
             this.playbackRate,
             this.settings.radio?.speed.preset ?? 1
         );
-        this.updateVideos();
+        this.push();
     }
 
     speedDown(): void {
@@ -65,12 +45,12 @@ export class SpeedController {
             this.playbackRate,
             this.settings.radio?.speed.preset ?? 1
         );
-        this.updateVideos();
+        this.push();
     }
 
     reset(): void {
         this.playbackRate = 1;
-        this.updateVideos();
+        this.push();
     }
 
     promptSpeed(): void {
@@ -80,7 +60,7 @@ export class SpeedController {
         );
         if (input) {
             this.playbackRate = parseSemitone(input);
-            this.updateVideos();
+            this.push();
         }
     }
 
@@ -90,12 +70,31 @@ export class SpeedController {
 
     /**
      * Directly set the playback rate
-     * (will also call updateVideos() to apply the change)
-     * @param rate 
+     * (will also push the change to the media)
+     * @param rate
      */
     setPlaybackRate(rate: number): void {
         this.playbackRate = rate;
-        this.updateVideos();
+        this.push();
+    }
+
+    setPreservesPitch(preservesPitch: boolean): void {
+        this.preservesPitch = preservesPitch;
+        this.push();
+    }
+
+    private get value(): SpeedSettings {
+        return {
+            rate: this.playbackRate,
+            preservesPitch: this.preservesPitch,
+        };
+    }
+
+    /** Hand the current state to the speed effect running in the MAIN world. */
+    private push(): void {
+        sendWindowMessage("setSpeed", this.value).catch((error) => {
+            console.error("[SpeedController] MAIN world unreachable", error);
+        });
     }
 
     private updateSpeedUp(playbackRate: number, preset: number): number {
