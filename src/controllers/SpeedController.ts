@@ -125,7 +125,7 @@ export class SpeedController {
                 );
             case 3:
                 return (
-                    playbackRate - this.settings.radio?.speed.custom.plus_minus
+                    playbackRate - this.settings.radio.speed.custom.plus_minus
                 );
             default:
                 return playbackRate;

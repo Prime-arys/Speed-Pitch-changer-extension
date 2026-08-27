@@ -14,7 +14,7 @@ export function setupShortcutsBindings(
             (activeElement.tagName === "INPUT" ||
                 activeElement.tagName === "TEXTAREA" ||
                 (activeElement as HTMLElement).isContentEditable) &&
-            settings.switch?.ignore_text_field // this behavior is configurable
+            settings.switch.ignore_text_field // this behavior is configurable
         ) {
             return;
         }

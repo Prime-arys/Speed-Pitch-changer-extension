@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "@/utils/messaging";
 import {
-    DEFAULT_PITCH_ENGINE,
     PITCH_ENGINES,
     type CommandsData,
     type CustomSpeedPitch,
@@ -404,7 +403,7 @@ function Settings(): React.JSX.Element {
                     <select
                         id="pitch-engine"
                         className="px-1 py-0.5 text-sm bg-white border border-gray-300 rounded cursor-pointer"
-                        value={draft.pitch?.engine ?? DEFAULT_PITCH_ENGINE}
+                        value={draft.pitch.engine}
                         onChange={(e) =>
                             updatePitchEngine(e.target.value as PitchEngine)
                         }
