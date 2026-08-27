@@ -168,7 +168,7 @@ function Settings(): React.JSX.Element {
 
     if (!draft) {
         return (
-            <div className="text-center bg-secondary w-full box-border">
+            <div className="text-center bg-secondary w-full min-w-max box-border">
                 <h4 className="text-secondary font-title text-lg m-0 underline py-1.5 bg-primary">
                     Settings
                 </h4>
@@ -244,7 +244,7 @@ function Settings(): React.JSX.Element {
     };
 
     return (
-        <div className="text-center bg-secondary w-full box-border">
+        <div className="text-center bg-secondary w-full min-w-max box-border">
             <h4 className="text-secondary font-title text-lg m-0 underline py-1.5 bg-primary">
                 Settings
             </h4>

@@ -111,7 +111,7 @@ function Popup(): React.JSX.Element {
     });
 
     return (
-        <div className="text-center overflow-hidden w-full box-border">
+        <div className="text-center overflow-hidden w-full min-w-max box-border">
             <h4 className="text-secondary font-title text-lg underline m-0 p-1.5 bg-primary">
                 S/P Changer
             </h4>
