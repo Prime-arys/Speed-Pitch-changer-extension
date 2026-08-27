@@ -451,6 +451,12 @@ function Settings(): React.JSX.Element {
                 >
                     return
                 </Link>
+                <Link
+                    to="/info"
+                    className="mx-1 text-base font-[Liberation,sans-serif] no-underline text-link hover:text-link-hover"
+                >
+                    info
+                </Link>
             </div>
         </div>
     );
