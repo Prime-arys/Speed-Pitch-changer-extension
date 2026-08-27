@@ -7,6 +7,7 @@
   "scripts": {
     "dev:default": "wxt",
     "dev": "wxt -b firefox",
+    "dev:chrome": "wxt",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",

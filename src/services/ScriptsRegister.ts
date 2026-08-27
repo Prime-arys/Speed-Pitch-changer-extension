@@ -14,25 +14,32 @@ class ScriptsRegister {
         runAt: "document_start" | "document_end" | "document_idle",
         world: "ISOLATED" | "MAIN" = "ISOLATED", // 2 worlds: ISOLATED (default) and MAIN (for content scripts that need to run in the page context)
         config: ConfigData,
-        options?: { specificDomainsOnly?: boolean }
+        options?: { specificDomainsOnly?: boolean },
     ): Promise<void> {
         if (options?.specificDomainsOnly && config.specificList!.length === 0) {
             return; // Cancel registration if no specific domains are set
         }
-        await browser.scripting.registerContentScripts([
-            {
-                id: `${scriptName}-script`,
-                js: SCRIPTS[scriptName].map((file) => `/${file}.js`),
-                matches: options?.specificDomainsOnly
-                    ? config.specificList!.map((domain) => `*://${domain}/*`)
-                    : ["<all_urls>"],
-                excludeMatches:
-                    config.blacklist!.map((domain) => `*://${domain}/*`) || [],
-                runAt: runAt,
-                allFrames: true,
-                world: world,
-            },
-        ]);
+        try {
+            await browser.scripting.registerContentScripts([
+                {
+                    id: `${scriptName}-script`,
+                    js: SCRIPTS[scriptName].map((file) => `/${file}.js`),
+                    matches: options?.specificDomainsOnly
+                        ? config.specificList!.map(
+                              (domain) => `*://${domain}/*`,
+                          )
+                        : ["<all_urls>"],
+                    excludeMatches:
+                        config.blacklist!.map((domain) => `*://${domain}/*`) ||
+                        [],
+                    runAt: runAt,
+                    allFrames: true,
+                    world: world,
+                },
+            ]);
+        } catch (error) {
+            console.error(`Error registering script ${scriptName}:`, error);
+        }
     }
 }
 

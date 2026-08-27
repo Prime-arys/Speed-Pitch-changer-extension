@@ -39,6 +39,7 @@ export default defineConfig({
             "activeTab",
             "<all_urls>",
         ],
+        host_permissions: ["<all_urls>"],
         browser_specific_settings: {
             gecko: {
                 data_collection_permissions: {},
