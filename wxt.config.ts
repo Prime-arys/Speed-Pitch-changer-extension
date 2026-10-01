@@ -1,7 +1,14 @@
+import { readFile } from "node:fs/promises";
 import { defineConfig } from "wxt";
+import { minify } from "vite";
 import { reactCompilerPreset } from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import babel from "@rolldown/plugin-babel";
+
+
+// Worklet scripts, loaded by AudioWorklet.addModule() from the MAIN world.
+// (on /public folder)
+const WORKLETS = ["signalsmith-stretch-worklet.js", "soundtouch-processor.js"];
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -17,17 +24,34 @@ export default defineConfig({
         ],
     }),
 
+    hooks: {
+        // Minification of worklet scripts on production build
+        "build:publicAssets": async (wxt, files) => {
+            if (wxt.config.mode !== "production") return;
+            for (const [index, file] of files.entries()) {
+                if (!("absoluteSrc" in file) || !WORKLETS.includes(file.relativeDest)) {
+                    continue;
+                }
+                const source = await readFile(file.absoluteSrc, "utf8");
+                const { code, errors } = await minify(file.relativeDest, source, {
+                    module: true,
+                });
+                if (errors.length > 0) {
+                    throw new Error(`Failed to minify ${file.relativeDest}`, {
+                        cause: errors,
+                    });
+                }
+                files[index] = { relativeDest: file.relativeDest, contents: code };
+            }
+        },
+    },
+
     srcDir: "src",
     manifest: {
         // ...
         web_accessible_resources: [
             {
-                resources: [
-                    // Worklet scripts, loaded by AudioWorklet.addModule() from
-                    // the MAIN world.
-                    "signalsmith-stretch-worklet.js",
-                    "soundtouch-processor.js",
-                ],
+                resources: WORKLETS,
                 matches: ["<all_urls>"],
             },
         ],
